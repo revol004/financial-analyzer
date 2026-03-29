@@ -1,0 +1,27 @@
+import axios from 'axios';
+
+const API = axios.create({
+  baseURL: 'http://localhost:8000/api',
+});
+
+export const companiesApi = {
+  getAll: () => API.get('/companies/'),
+  create: (data: any) => API.post('/companies/', data),
+  delete: (id: number) => API.delete(`/companies/${id}`),
+};
+
+export const financialsApi = {
+  getByCompany: (companyId: number) => API.get(`/financials/${companyId}`),
+  upsert: (data: any) => API.post('/financials/', data),
+  import: (companyId: number, file: File) => {
+    const formData = new FormData();
+    formData.append('file', file);
+    return API.post(`/financials/import/${companyId}`, formData);
+  },
+};
+
+export const indicatorsApi = {
+  getAll: () => API.get('/indicators/'),
+  create: (data: any) => API.post('/indicators/', data),
+  calculate: (data: any) => API.post('/indicators/calculate', data),
+};
