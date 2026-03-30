@@ -5,6 +5,10 @@ from app.routers import companies, financials, indicators
 
 Base.metadata.create_all(bind=engine)
 
+from seed import seed
+
+seed()
+
 app = FastAPI(title="Financial Analyzer API")
 
 app.add_middleware(
