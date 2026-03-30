@@ -4,7 +4,7 @@ import {
   MenuItem, Chip, OutlinedInput, Table, TableBody, TableCell,
   TableContainer, TableHead, TableRow, Alert, CircularProgress,
   Divider, TextField, Dialog, DialogTitle, DialogContent,
-  DialogActions, Snackbar, Tabs, Tab, IconButton, Tooltip
+  DialogActions, Snackbar, Tabs, Tab, Tooltip
 } from '@mui/material';
 import CalculateIcon from '@mui/icons-material/Calculate';
 import DownloadIcon from '@mui/icons-material/Download';

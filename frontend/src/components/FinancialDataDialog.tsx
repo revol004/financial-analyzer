@@ -48,7 +48,7 @@ export default function FinancialDataDialog({ open, onClose, company, years }: P
         setFinancialData(init);
       });
     }
-  }, [open, company]);
+  }, [open, company, years]);
 
   const addVariable = () => {
     const v = newVariable.trim().toLowerCase().replace(/\s+/g, '_');
