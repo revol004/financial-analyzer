@@ -135,10 +135,18 @@ export default function Indicators() {
                   <TableCell sx={{ color: 'text.secondary' }}>{ind.description || '—'}</TableCell>
                   <TableCell>
                     <Tooltip title="Usuń wskaźnik">
-                      <IconButton color="error" size="small">
-                        <DeleteIcon />
-                      </IconButton>
-                    </Tooltip>
+  <IconButton
+    color="error"
+    size="small"
+    onClick={async () => {
+      if (!window.confirm(`Usunąć wskaźnik ${ind.display_name}?`)) return;
+      await indicatorsApi.delete(ind.id);
+      fetchIndicators();
+    }}
+  >
+    <DeleteIcon />
+  </IconButton>
+</Tooltip>
                   </TableCell>
                 </TableRow>
               ))

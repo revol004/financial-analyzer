@@ -7,10 +7,14 @@ import {
   DialogActions, Snackbar, Tabs, Tab, IconButton, Tooltip
 } from '@mui/material';
 import CalculateIcon from '@mui/icons-material/Calculate';
+import DownloadIcon from '@mui/icons-material/Download';
 import AddIcon from '@mui/icons-material/Add';
 import UploadIcon from '@mui/icons-material/Upload';
 import EditIcon from '@mui/icons-material/Edit';
 import { companiesApi, financialsApi, indicatorsApi } from '../services/api';
+import * as XLSX from 'xlsx';
+import { saveAs } from 'file-saver';
+
 
 interface Company { id: number; name: string; ticker: string; }
 interface Indicator { id: number; display_name: string; category?: string; }
@@ -128,6 +132,33 @@ export default function Dashboard() {
   const selectedIndicatorObjects = indicators.filter(i => selectedIndicators.includes(i.id));
   const company = companies.find(c => c.id === selectedCompany);
 
+const handleExportExcel = () => {
+  if (!results || !company) return;
+
+  const rows: any[] = [];
+
+  selectedIndicatorObjects.forEach(ind => {
+    const row: any = { 'Wskaźnik': ind.display_name };
+    sortedYears.forEach(y => {
+      const val = results[y]?.[ind.display_name];
+      row[y.toString()] = val !== null && val !== undefined
+        ? parseFloat((val * 100).toFixed(2))
+        : 'brak danych';
+    });
+    rows.push(row);
+  });
+
+  const worksheet = XLSX.utils.json_to_sheet(rows);
+  const workbook = XLSX.utils.book_new();
+  XLSX.utils.book_append_sheet(workbook, worksheet, 'Wskaźniki');
+
+  const excelBuffer = XLSX.write(workbook, { bookType: 'xlsx', type: 'array' });
+  const blob = new Blob([excelBuffer], { type: 'application/octet-stream' });
+  saveAs(blob, `${company.ticker}_wskazniki.xlsx`);
+};
+
+
+
   return (
     <Box sx={{ p: 4 }}>
       <Typography variant="h4" fontWeight="bold" gutterBottom>
@@ -227,16 +258,30 @@ export default function Dashboard() {
         </FormControl>
       </Paper>
 
-      <Button
-        variant="contained"
-        size="large"
-        startIcon={loading ? <CircularProgress size={20} color="inherit" /> : <CalculateIcon />}
-        onClick={handleCalculate}
-        disabled={!selectedCompany || selectedYears.length === 0 || selectedIndicators.length === 0 || loading}
-        sx={{ mb: 4, px: 4, py: 1.5 }}
-      >
-        {loading ? 'Obliczanie...' : 'Oblicz wskaźniki'}
-      </Button>
+      <Box sx={{ display: 'flex', gap: 2, mb: 4 }}>
+  <Button
+    variant="contained"
+    size="large"
+    startIcon={loading ? <CircularProgress size={20} color="inherit" /> : <CalculateIcon />}
+    onClick={handleCalculate}
+    disabled={!selectedCompany || selectedYears.length === 0 || selectedIndicators.length === 0 || loading}
+    sx={{ px: 4, py: 1.5 }}
+  >
+    {loading ? 'Obliczanie...' : 'Oblicz wskaźniki'}
+  </Button>
+
+  {results && (
+    <Button
+      variant="outlined"
+      size="large"
+      startIcon={<DownloadIcon />}
+      onClick={handleExportExcel}
+      sx={{ px: 4, py: 1.5 }}
+    >
+      Eksportuj do Excel
+    </Button>
+  )}
+</Box>
 
       {results && (
         <Paper sx={{ p: 3 }}>
