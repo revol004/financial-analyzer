@@ -14,10 +14,13 @@ interface Props {
   years: number[];
 }
 
-const COMMON_VARIABLES = [
-  'przychody', 'zysk_netto', 'zysk_operacyjny', 'kapital_wlasny',
-  'aktywa_ogółem', 'aktywa_obrotowe', 'zobowiazania_ogółem', 'zobowiazania_krotkoterminowe'
-];
+const COMMON_VARIABLES = (() => {
+  const saved = localStorage.getItem('defaultVariables');
+  return saved ? JSON.parse(saved) : [
+    'revenue', 'net_income', 'operating_income', 'equity',
+    'total_assets', 'current_assets', 'total_liabilities', 'current_liabilities'
+  ];
+})();
 
 export default function FinancialDataDialog({ open, onClose, company, years }: Props) {
   const [tab, setTab] = useState(0);

@@ -30,12 +30,12 @@ const COLOR_OPTIONS = [
 ];
 
 const DEFAULT_INDICATORS = [
-  { name: 'roe', display_name: 'ROE', formula: 'zysk_netto / kapital_wlasny', description: 'Zwrot z kapitału własnego', category: 'Rentowność' },
-  { name: 'roa', display_name: 'ROA', formula: 'zysk_netto / aktywa_ogółem', description: 'Zwrot z aktywów', category: 'Rentowność' },
-  { name: 'marza_netto', display_name: 'Marża netto', formula: 'zysk_netto / przychody', description: 'Marża zysku netto', category: 'Rentowność' },
-  { name: 'marza_operacyjna', display_name: 'Marża operacyjna', formula: 'zysk_operacyjny / przychody', description: 'Marża zysku operacyjnego', category: 'Rentowność' },
-  { name: 'current_ratio', display_name: 'Current Ratio', formula: 'aktywa_obrotowe / zobowiazania_krotkoterminowe', description: 'Wskaźnik płynności bieżącej', category: 'Płynność' },
-  { name: 'debt_ratio', display_name: 'Debt Ratio', formula: 'zobowiazania_ogółem / aktywa_ogółem', description: 'Wskaźnik zadłużenia', category: 'Zadłużenie' },
+  { name: 'roe', display_name: 'ROE', formula: 'net_income / equity', description: 'Return on Equity', category: 'Profitability' },
+  { name: 'roa', display_name: 'ROA', formula: 'net_income / total_assets', description: 'Return on Assets', category: 'Profitability' },
+  { name: 'net_margin', display_name: 'Net Margin', formula: 'net_income / revenue', description: 'Net Profit Margin', category: 'Profitability' },
+  { name: 'operating_margin', display_name: 'Operating Margin', formula: 'operating_income / revenue', description: 'Operating Profit Margin', category: 'Profitability' },
+  { name: 'current_ratio', display_name: 'Current Ratio', formula: 'current_assets / current_liabilities', description: 'Current Liquidity Ratio', category: 'Liquidity' },
+  { name: 'debt_ratio', display_name: 'Debt Ratio', formula: 'total_liabilities / total_assets', description: 'Total Debt Ratio', category: 'Leverage' },
 ];
 
 export default function Indicators() {
@@ -43,11 +43,22 @@ export default function Indicators() {
   const [dialogOpen, setDialogOpen] = useState(false);
   const [form, setForm] = useState(emptyForm);
   const [categoryColors, setCategoryColors] = useState<Record<string, string>>({
-    'Rentowność': 'success',
-    'Płynność': 'primary',
-    'Zadłużenie': 'error',
-    'Wartość': 'warning',
-  });
+  'Profitability': 'success',
+  'Liquidity': 'primary',
+  'Leverage': 'error',
+  'Value': 'warning',
+});
+
+const [defaultVariables, setDefaultVariables] = useState<string[]>(() => {
+  const saved = localStorage.getItem('defaultVariables');
+  return saved ? JSON.parse(saved) : [
+    'revenue', 'net_income', 'operating_income', 'equity',
+    'total_assets', 'current_assets', 'total_liabilities', 'current_liabilities'
+  ];
+});
+const [variableDialogOpen, setVariableDialogOpen] = useState(false);
+const [newVariableName, setNewVariableName] = useState('');
+
   const [snackbar, setSnackbar] = useState({ open: false, message: '', severity: 'success' as 'success' | 'error' });
 
   const fetchIndicators = async () => {
@@ -95,6 +106,26 @@ export default function Indicators() {
     if (!category) return 'default';
     return categoryColors[category] || 'default';
   };
+
+const handleAddVariable = () => {
+  const v = newVariableName.trim().toLowerCase().replace(/\s+/g, '_');
+  if (v && !defaultVariables.includes(v)) {
+    const updated = [...defaultVariables, v];
+    setDefaultVariables(updated);
+    localStorage.setItem('defaultVariables', JSON.stringify(updated));
+    setSnackbar({ open: true, message: `Zmienna "${v}" dodana!`, severity: 'success' });
+  }
+  setNewVariableName('');
+  setVariableDialogOpen(false);
+};
+
+const handleDeleteVariable = (variable: string) => {
+  if (!window.confirm(`Usunąć zmienną "${variable}" z domyślnych?`)) return;
+  const updated = defaultVariables.filter(v => v !== variable);
+  setDefaultVariables(updated);
+  localStorage.setItem('defaultVariables', JSON.stringify(updated));
+};
+
 
   return (
     <Box sx={{ p: 4 }}>
@@ -232,6 +263,54 @@ export default function Indicators() {
           </Button>
         </DialogActions>
       </Dialog>
+
+
+{/* Sekcja zmiennych */}
+<Paper sx={{ p: 3, mt: 4 }}>
+  <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 2 }}>
+    <Typography variant="h6" fontWeight="bold">Domyślne zmienne finansowe</Typography>
+    <Button
+      variant="outlined"
+      startIcon={<AddIcon />}
+      onClick={() => setVariableDialogOpen(true)}
+    >
+      Dodaj zmienną
+    </Button>
+  </Box>
+  <Typography variant="body2" color="text.secondary" sx={{ mb: 2 }}>
+    Te zmienne pojawiają się domyślnie przy wprowadzaniu danych finansowych dla każdej spółki.
+  </Typography>
+  <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1 }}>
+    {defaultVariables.map(variable => (
+      <Chip
+        key={variable}
+        label={variable}
+        onDelete={() => handleDeleteVariable(variable)}
+        sx={{ fontFamily: 'monospace' }}
+      />
+    ))}
+  </Box>
+</Paper>
+
+<Dialog open={variableDialogOpen} onClose={() => setVariableDialogOpen(false)} maxWidth="xs" fullWidth>
+  <DialogTitle>Dodaj domyślną zmienną</DialogTitle>
+  <DialogContent sx={{ pt: '16px !important' }}>
+    <TextField
+      label="Nazwa zmiennej (np. ebitda)"
+      value={newVariableName}
+      onChange={(e) => setNewVariableName(e.target.value)}
+      fullWidth
+      helperText="Używaj małych liter i podkreśleń zamiast spacji"
+      onKeyDown={(e) => e.key === 'Enter' && handleAddVariable()}
+    />
+  </DialogContent>
+  <DialogActions sx={{ p: 2 }}>
+    <Button onClick={() => setVariableDialogOpen(false)}>Anuluj</Button>
+    <Button variant="contained" onClick={handleAddVariable} disabled={!newVariableName}>
+      Dodaj
+    </Button>
+  </DialogActions>
+</Dialog>
 
       <Snackbar
         open={snackbar.open}

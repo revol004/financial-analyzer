@@ -20,10 +20,13 @@ interface Company { id: number; name: string; ticker: string; }
 interface Indicator { id: number; display_name: string; category?: string; }
 
 const YEARS = Array.from({ length: 15 }, (_, i) => 2024 - i);
-const COMMON_VARIABLES = [
-  'przychody', 'zysk_netto', 'zysk_operacyjny', 'kapital_wlasny',
-  'aktywa_ogółem', 'aktywa_obrotowe', 'zobowiazania_ogółem', 'zobowiazania_krotkoterminowe'
-];
+const COMMON_VARIABLES = (() => {
+  const saved = localStorage.getItem('defaultVariables');
+  return saved ? JSON.parse(saved) : [
+    'revenue', 'net_income', 'operating_income', 'equity',
+    'total_assets', 'current_assets', 'total_liabilities', 'current_liabilities'
+  ];
+})();
 
 export default function Dashboard() {
   const [companies, setCompanies] = useState<Company[]>([]);
