@@ -3,7 +3,7 @@ import {
   Box, Typography, Paper, Button, TextField, Dialog, DialogTitle,
   DialogContent, DialogActions, Table, TableBody, TableCell,
   TableContainer, TableHead, TableRow, IconButton, Chip, Alert,
-  Snackbar, Tooltip
+  Snackbar, Tooltip, Select, MenuItem, FormControl, InputLabel
 } from '@mui/material';
 import DeleteIcon from '@mui/icons-material/Delete';
 import AddIcon from '@mui/icons-material/Add';
@@ -19,14 +19,15 @@ interface Indicator {
   category?: string;
 }
 
-const emptyForm = { name: '', display_name: '', formula: '', description: '', category: '' };
+const emptyForm = { name: '', display_name: '', formula: '', description: '', category: '', categoryColor: 'default' };
 
-const CATEGORY_COLORS: Record<string, 'primary' | 'success' | 'warning' | 'error' | 'default'> = {
-  'Rentowność': 'success',
-  'Płynność': 'primary',
-  'Zadłużenie': 'error',
-  'Wartość': 'warning',
-};
+const COLOR_OPTIONS = [
+  { value: 'success', label: 'Zielony' },
+  { value: 'primary', label: 'Niebieski' },
+  { value: 'error', label: 'Czerwony' },
+  { value: 'warning', label: 'Pomarańczowy' },
+  { value: 'default', label: 'Szary' },
+];
 
 const DEFAULT_INDICATORS = [
   { name: 'roe', display_name: 'ROE', formula: 'zysk_netto / kapital_wlasny', description: 'Zwrot z kapitału własnego', category: 'Rentowność' },
@@ -41,6 +42,12 @@ export default function Indicators() {
   const [indicators, setIndicators] = useState<Indicator[]>([]);
   const [dialogOpen, setDialogOpen] = useState(false);
   const [form, setForm] = useState(emptyForm);
+  const [categoryColors, setCategoryColors] = useState<Record<string, string>>({
+    'Rentowność': 'success',
+    'Płynność': 'primary',
+    'Zadłużenie': 'error',
+    'Wartość': 'warning',
+  });
   const [snackbar, setSnackbar] = useState({ open: false, message: '', severity: 'success' as 'success' | 'error' });
 
   const fetchIndicators = async () => {
@@ -52,7 +59,17 @@ export default function Indicators() {
 
   const handleSubmit = async () => {
     try {
-      await indicatorsApi.create(form);
+      await indicatorsApi.create({
+        name: form.name,
+        display_name: form.display_name,
+        formula: form.formula,
+        description: form.description,
+        category: form.category,
+      });
+      // Zapisz kolor dla kategorii
+      if (form.category) {
+        setCategoryColors(prev => ({ ...prev, [form.category]: form.categoryColor }));
+      }
       setSnackbar({ open: true, message: 'Wskaźnik dodany!', severity: 'success' });
       setDialogOpen(false);
       setForm(emptyForm);
@@ -74,6 +91,11 @@ export default function Indicators() {
     fetchIndicators();
   };
 
+  const getChipColor = (category?: string): any => {
+    if (!category) return 'default';
+    return categoryColors[category] || 'default';
+  };
+
   return (
     <Box sx={{ p: 4 }}>
       <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 3 }}>
@@ -90,7 +112,6 @@ export default function Indicators() {
         </Box>
       </Box>
 
-      {/* Legenda formuł */}
       <Paper sx={{ p: 2, mb: 3, backgroundColor: '#e3f2fd' }}>
         <Typography variant="body2" fontWeight="bold" gutterBottom>
           <InfoIcon sx={{ fontSize: 16, mr: 0.5, verticalAlign: 'middle' }} />
@@ -128,25 +149,25 @@ export default function Indicators() {
                     <Chip
                       label={ind.category || 'Inne'}
                       size="small"
-                      color={CATEGORY_COLORS[ind.category || ''] || 'default'}
+                      color={getChipColor(ind.category)}
                     />
                   </TableCell>
                   <TableCell><code>{ind.formula}</code></TableCell>
                   <TableCell sx={{ color: 'text.secondary' }}>{ind.description || '—'}</TableCell>
                   <TableCell>
                     <Tooltip title="Usuń wskaźnik">
-  <IconButton
-    color="error"
-    size="small"
-    onClick={async () => {
-      if (!window.confirm(`Usunąć wskaźnik ${ind.display_name}?`)) return;
-      await indicatorsApi.delete(ind.id);
-      fetchIndicators();
-    }}
-  >
-    <DeleteIcon />
-  </IconButton>
-</Tooltip>
+                      <IconButton
+                        color="error"
+                        size="small"
+                        onClick={async () => {
+                          if (!window.confirm(`Usunąć wskaźnik ${ind.display_name}?`)) return;
+                          await indicatorsApi.delete(ind.id);
+                          fetchIndicators();
+                        }}
+                      >
+                        <DeleteIcon />
+                      </IconButton>
+                    </Tooltip>
                   </TableCell>
                 </TableRow>
               ))
@@ -155,10 +176,9 @@ export default function Indicators() {
         </Table>
       </TableContainer>
 
-      {/* Dialog dodawania wskaźnika */}
       <Dialog open={dialogOpen} onClose={() => setDialogOpen(false)} maxWidth="sm" fullWidth>
         <DialogTitle>Dodaj nowy wskaźnik</DialogTitle>
-        <DialogContent sx={{ display: 'flex', flexDirection: 'column', gap: 2, pt: 2 }}>
+        <DialogContent sx={{ display: 'flex', flexDirection: 'column', gap: 2, pt: '16px !important' }}>
           <TextField
             label="Nazwa wyświetlana (np. ROE)"
             value={form.display_name}
@@ -172,12 +192,28 @@ export default function Indicators() {
             fullWidth required
             helperText="Używaj nazw zmiennych finansowych i operatorów + - * / ( )"
           />
-          <TextField
-            label="Kategoria (np. Rentowność, Płynność)"
-            value={form.category}
-            onChange={(e) => setForm({ ...form, category: e.target.value })}
-            fullWidth
-          />
+          <Box sx={{ display: 'flex', gap: 2 }}>
+            <TextField
+              label="Kategoria (np. Rentowność)"
+              value={form.category}
+              onChange={(e) => setForm({ ...form, category: e.target.value })}
+              fullWidth
+            />
+            <FormControl sx={{ minWidth: 150 }}>
+              <InputLabel>Kolor kategorii</InputLabel>
+              <Select
+                value={form.categoryColor}
+                label="Kolor kategorii"
+                onChange={(e) => setForm({ ...form, categoryColor: e.target.value })}
+              >
+                {COLOR_OPTIONS.map(opt => (
+                  <MenuItem key={opt.value} value={opt.value}>
+                    <Chip label={opt.label} size="small" color={opt.value as any} sx={{ cursor: 'pointer' }} />
+                  </MenuItem>
+                ))}
+              </Select>
+            </FormControl>
+          </Box>
           <TextField
             label="Opis (opcjonalnie)"
             value={form.description}

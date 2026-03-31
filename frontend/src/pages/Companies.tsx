@@ -253,42 +253,50 @@ const [selectedYears] = useState<number[]>([2024, 2023, 2022, 2021, 2020]);
         </DialogActions>
       </Dialog>
 
-      {/* Dialog edycji spółki */}
-      <Dialog open={editDialogOpen} onClose={() => setEditDialogOpen(false)} maxWidth="sm" fullWidth>
-        <DialogTitle>Edytuj spółkę – {selectedCompany?.name}</DialogTitle>
-        <DialogContent sx={{ display: 'flex', flexDirection: 'column', gap: 2, pt: 2 }}>
-          <TextField
-            label="Nazwa spółki"
-            value={editForm.name}
-            onChange={(e) => setEditForm({ ...editForm, name: e.target.value })}
-            fullWidth required
-          />
-          <TextField
-            label="Ticker"
-            value={editForm.ticker}
-            onChange={(e) => setEditForm({ ...editForm, ticker: e.target.value.toUpperCase() })}
-            fullWidth required
-          />
-          <TextField
-            label="Rynek"
-            value={editForm.market}
-            onChange={(e) => setEditForm({ ...editForm, market: e.target.value })}
-            fullWidth
-          />
-          <TextField
-            label="Opis (opcjonalnie)"
-            value={editForm.description}
-            onChange={(e) => setEditForm({ ...editForm, description: e.target.value })}
-            fullWidth multiline rows={2}
-          />
-        </DialogContent>
-        <DialogActions sx={{ p: 2 }}>
-          <Button onClick={() => setEditDialogOpen(false)}>Anuluj</Button>
-          <Button variant="contained" onClick={handleEditSubmit} disabled={!editForm.name || !editForm.ticker}>
-            Zapisz zmiany
-          </Button>
-        </DialogActions>
-      </Dialog>
+     {/* Dialog edycji spółki */}
+<Dialog open={editDialogOpen} onClose={() => setEditDialogOpen(false)} maxWidth="sm" fullWidth>
+  <DialogTitle>Edytuj spółkę – {selectedCompany?.name}</DialogTitle>
+  <DialogContent sx={{ display: 'flex', flexDirection: 'column', gap: 2, pt: '16px !important' }}>
+    <TextField
+      label="Nazwa spółki"
+      value={editForm.name}
+      onChange={(e) => setEditForm({ ...editForm, name: e.target.value })}
+      fullWidth
+      required
+      InputLabelProps={{ shrink: true }}
+    />
+    <TextField
+      label="Ticker"
+      value={editForm.ticker}
+      onChange={(e) => setEditForm({ ...editForm, ticker: e.target.value.toUpperCase() })}
+      fullWidth
+      required
+      InputLabelProps={{ shrink: true }}
+    />
+    <TextField
+      label="Rynek"
+      value={editForm.market}
+      onChange={(e) => setEditForm({ ...editForm, market: e.target.value })}
+      fullWidth
+      InputLabelProps={{ shrink: true }}
+    />
+    <TextField
+      label="Opis (opcjonalnie)"
+      value={editForm.description}
+      onChange={(e) => setEditForm({ ...editForm, description: e.target.value })}
+      fullWidth
+      multiline
+      rows={2}
+      InputLabelProps={{ shrink: true }}
+    />
+  </DialogContent>
+  <DialogActions sx={{ p: 2 }}>
+    <Button onClick={() => setEditDialogOpen(false)}>Anuluj</Button>
+    <Button variant="contained" onClick={handleEditSubmit} disabled={!editForm.name || !editForm.ticker}>
+      Zapisz zmiany
+    </Button>
+  </DialogActions>
+</Dialog>
 
 <FinancialDataDialog
   open={financialDialogOpen}

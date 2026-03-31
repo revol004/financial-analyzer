@@ -7,13 +7,13 @@ import {
   DialogActions, Snackbar, Tabs, Tab, Tooltip
 } from '@mui/material';
 import CalculateIcon from '@mui/icons-material/Calculate';
-import DownloadIcon from '@mui/icons-material/Download';
 import AddIcon from '@mui/icons-material/Add';
 import UploadIcon from '@mui/icons-material/Upload';
 import EditIcon from '@mui/icons-material/Edit';
-import { companiesApi, financialsApi, indicatorsApi } from '../services/api';
+import DownloadIcon from '@mui/icons-material/Download';
 import * as XLSX from 'xlsx';
 import { saveAs } from 'file-saver';
+import { companiesApi, financialsApi, indicatorsApi } from '../services/api';
 import IndicatorChart from '../components/IndicatorChart';
 
 interface Company { id: number; name: string; ticker: string; }
@@ -28,17 +28,17 @@ const COMMON_VARIABLES = [
 export default function Dashboard() {
   const [companies, setCompanies] = useState<Company[]>([]);
   const [indicators, setIndicators] = useState<Indicator[]>([]);
-  const [selectedCompany, setSelectedCompany] = useState<number | ''>('');
+  const [selectedCompanies, setSelectedCompanies] = useState<number[]>([]);
   const [selectedYears, setSelectedYears] = useState<number[]>([2024, 2023, 2022]);
   const [selectedIndicators, setSelectedIndicators] = useState<number[]>([]);
-  const [results, setResults] = useState<any>(null);
+  const [results, setResults] = useState<Record<number, any>>({});
   const [loading, setLoading] = useState(false);
   const [tab, setTab] = useState(0);
 
-  // Dialog danych finansowych
   const [dataDialogOpen, setDataDialogOpen] = useState(false);
+  const [activeCompany, setActiveCompany] = useState<Company | null>(null);
   const [financialData, setFinancialData] = useState<Record<number, Record<string, string>>>({});
-  const [existingData, setExistingData] = useState<any>({});
+  const [existingData, setExistingData] = useState<Record<number, any>>({});
   const [variables, setVariables] = useState<string[]>(COMMON_VARIABLES);
   const [newVariable, setNewVariable] = useState('');
   const [snackbar, setSnackbar] = useState({ open: false, message: '', severity: 'success' as 'success' | 'error' });
@@ -48,33 +48,50 @@ export default function Dashboard() {
     indicatorsApi.getAll().then(r => setIndicators(r.data));
   }, []);
 
-  const handleCompanyChange = async (companyId: number) => {
-    setSelectedCompany(companyId);
-    setResults(null);
-    const res = await financialsApi.getByCompany(companyId);
-    setExistingData(res.data);
+  const handleCompanyChange = async (companyIds: number[]) => {
+    setSelectedCompanies(companyIds);
+    setResults({});
+    const newExisting: Record<number, any> = {};
+    for (const id of companyIds) {
+      if (!existingData[id]) {
+        const res = await financialsApi.getByCompany(id);
+        newExisting[id] = res.data;
+      } else {
+        newExisting[id] = existingData[id];
+      }
+    }
+    setExistingData(newExisting);
   };
 
-  const openDataDialog = () => {
+  const openDataDialog = async (company: Company) => {
+    setActiveCompany(company);
+    const res = await financialsApi.getByCompany(company.id);
+    const existing = res.data;
+    const allVars = new Set<string>(COMMON_VARIABLES);
+    Object.values(existing).forEach((yearData: any) => {
+      Object.keys(yearData).forEach(v => allVars.add(v));
+    });
+    setVariables(Array.from(allVars));
     const init: Record<number, Record<string, string>> = {};
     for (const year of selectedYears) {
       init[year] = {};
-      for (const v of variables) {
-        init[year][v] = existingData[year]?.[v]?.toString() || '';
-      }
+      allVars.forEach(v => {
+        init[year][v] = existing[year]?.[v]?.toString() || '';
+      });
     }
     setFinancialData(init);
     setDataDialogOpen(true);
   };
 
   const handleSaveData = async () => {
+    if (!activeCompany) return;
     try {
       for (const year of selectedYears) {
         for (const variable of variables) {
           const val = financialData[year]?.[variable];
           if (val !== '' && val !== undefined && !isNaN(Number(val))) {
             await financialsApi.upsert({
-              company_id: selectedCompany,
+              company_id: activeCompany.id,
               year,
               variable_name: variable,
               value: parseFloat(val)
@@ -82,8 +99,8 @@ export default function Dashboard() {
           }
         }
       }
-      const res = await financialsApi.getByCompany(selectedCompany as number);
-      setExistingData(res.data);
+      const res = await financialsApi.getByCompany(activeCompany.id);
+      setExistingData(prev => ({ ...prev, [activeCompany.id]: res.data }));
       setSnackbar({ open: true, message: 'Dane zapisane!', severity: 'success' });
       setDataDialogOpen(false);
     } catch {
@@ -91,13 +108,13 @@ export default function Dashboard() {
     }
   };
 
-  const handleImport = async (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleImport = async (e: React.ChangeEvent<HTMLInputElement>, companyId: number) => {
     const file = e.target.files?.[0];
-    if (!file || !selectedCompany) return;
+    if (!file) return;
     try {
-      await financialsApi.import(selectedCompany as number, file);
-      const res = await financialsApi.getByCompany(selectedCompany as number);
-      setExistingData(res.data);
+      await financialsApi.import(companyId, file);
+      const res = await financialsApi.getByCompany(companyId);
+      setExistingData(prev => ({ ...prev, [companyId]: res.data }));
       setSnackbar({ open: true, message: 'Import zakończony sukcesem!', severity: 'success' });
     } catch {
       setSnackbar({ open: true, message: 'Błąd importu pliku.', severity: 'error' });
@@ -105,19 +122,47 @@ export default function Dashboard() {
   };
 
   const handleCalculate = async () => {
-    if (!selectedCompany || selectedYears.length === 0 || selectedIndicators.length === 0) return;
+    if (selectedCompanies.length === 0 || selectedYears.length === 0 || selectedIndicators.length === 0) return;
     setLoading(true);
     try {
-      const res = await indicatorsApi.calculate({
-        company_id: selectedCompany,
-        indicator_ids: selectedIndicators,
-        years: selectedYears.sort()
-      });
-      setResults(res.data);
+      const newResults: Record<number, any> = {};
+      for (const companyId of selectedCompanies) {
+        const res = await indicatorsApi.calculate({
+          company_id: companyId,
+          indicator_ids: selectedIndicators,
+          years: selectedYears.sort()
+        });
+        newResults[companyId] = res.data;
+      }
+      setResults(newResults);
     } catch {
       setSnackbar({ open: true, message: 'Błąd obliczania wskaźników.', severity: 'error' });
     }
     setLoading(false);
+  };
+
+  const handleExportExcel = () => {
+    if (Object.keys(results).length === 0) return;
+    const rows: any[] = [];
+    selectedIndicatorObjects.forEach(ind => {
+      const row: any = { 'Wskaźnik': ind.display_name };
+      sortedYears.forEach(y => {
+        selectedCompanyObjects.forEach(company => {
+          const val = results[company.id]?.[y]?.[ind.display_name];
+          row[`${company.ticker} ${y}`] = val !== null && val !== undefined
+            ? parseFloat((val * 100).toFixed(2))
+            : 'N/A';
+        });
+      });
+      rows.push(row);
+    });
+    const worksheet = XLSX.utils.json_to_sheet(rows);
+    const workbook = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(workbook, worksheet, 'Wskaźniki');
+    const excelBuffer = XLSX.write(workbook, { bookType: 'xlsx', type: 'array' });
+    const blob = new Blob([excelBuffer], { type: 'application/octet-stream' });
+    const tickers = selectedCompanyObjects.map(c => c.ticker).join('_');
+    saveAs(blob, `${tickers}_wskazniki.xlsx`);
   };
 
   const addVariable = () => {
@@ -130,34 +175,7 @@ export default function Dashboard() {
 
   const sortedYears = [...selectedYears].sort();
   const selectedIndicatorObjects = indicators.filter(i => selectedIndicators.includes(i.id));
-  const company = companies.find(c => c.id === selectedCompany);
-
-const handleExportExcel = () => {
-  if (!results || !company) return;
-
-  const rows: any[] = [];
-
-  selectedIndicatorObjects.forEach(ind => {
-    const row: any = { 'Wskaźnik': ind.display_name };
-    sortedYears.forEach(y => {
-      const val = results[y]?.[ind.display_name];
-      row[y.toString()] = val !== null && val !== undefined
-        ? parseFloat((val * 100).toFixed(2))
-        : 'brak danych';
-    });
-    rows.push(row);
-  });
-
-  const worksheet = XLSX.utils.json_to_sheet(rows);
-  const workbook = XLSX.utils.book_new();
-  XLSX.utils.book_append_sheet(workbook, worksheet, 'Wskaźniki');
-
-  const excelBuffer = XLSX.write(workbook, { bookType: 'xlsx', type: 'array' });
-  const blob = new Blob([excelBuffer], { type: 'application/octet-stream' });
-  saveAs(blob, `${company.ticker}_wskazniki.xlsx`);
-};
-
-
+  const selectedCompanyObjects = companies.filter(c => selectedCompanies.includes(c.id));
 
   return (
     <Box sx={{ p: 4 }}>
@@ -165,53 +183,78 @@ const handleExportExcel = () => {
         Kalkulator wskaźników
       </Typography>
 
+      {/* 1. Wybór spółek */}
       <Paper sx={{ p: 3, mb: 3 }}>
-        <Typography variant="h6" gutterBottom>1. Wybierz spółkę</Typography>
-        <Box sx={{ display: 'flex', gap: 2, alignItems: 'center', flexWrap: 'wrap' }}>
-          <FormControl sx={{ minWidth: 250 }}>
-            <InputLabel>Spółka</InputLabel>
-            <Select
-              value={selectedCompany}
-              label="Spółka"
-              onChange={(e) => handleCompanyChange(e.target.value as number)}
-            >
-              {companies.map(c => (
-                <MenuItem key={c.id} value={c.id}>
-                  <strong>{c.ticker}</strong>&nbsp;– {c.name}
-                </MenuItem>
-              ))}
-            </Select>
-          </FormControl>
+        <Typography variant="h6" gutterBottom>1. Wybierz spółki</Typography>
+        <FormControl fullWidth>
+          <InputLabel>Spółki</InputLabel>
+          <Select
+            multiple
+            value={selectedCompanies}
+            onChange={(e) => handleCompanyChange(e.target.value as number[])}
+            input={<OutlinedInput label="Spółki" />}
+            renderValue={(selected) => (
+              <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
+                {companies
+                  .filter(c => (selected as number[]).includes(c.id))
+                  .map(c => (
+                    <Chip
+                      key={c.id}
+                      label={c.ticker}
+                      size="small"
+                      color="primary"
+                      onDelete={(e) => {
+                        e.stopPropagation();
+                        handleCompanyChange(selectedCompanies.filter(id => id !== c.id));
+                      }}
+                      onMouseDown={(e) => e.stopPropagation()}
+                    />
+                  ))}
+              </Box>
+            )}
+          >
+            {companies.map(c => (
+              <MenuItem key={c.id} value={c.id} sx={{
+                backgroundColor: selectedCompanies.includes(c.id) ? '#1976d2 !important' : 'inherit',
+                color: selectedCompanies.includes(c.id) ? 'white !important' : 'inherit',
+                '&.Mui-selected': { backgroundColor: '#1976d2 !important', color: 'white !important' },
+                '&.Mui-selected:hover': { backgroundColor: '#1565c0 !important' },
+              }}>
+                <strong>{c.ticker}</strong>&nbsp;– {c.name}
+              </MenuItem>
+            ))}
+          </Select>
+        </FormControl>
 
-          {selectedCompany && (
-            <>
-              <Tooltip title="Wprowadź dane ręcznie">
-                <Button variant="outlined" startIcon={<EditIcon />} onClick={openDataDialog}>
-                  Wprowadź dane
-                </Button>
-              </Tooltip>
-              <Tooltip title="Importuj z CSV/Excel">
-                <Button variant="outlined" startIcon={<UploadIcon />} component="label">
-                  Import CSV/Excel
-                  <input type="file" hidden accept=".csv,.xlsx" onChange={handleImport} />
-                </Button>
-              </Tooltip>
-            </>
-          )}
-        </Box>
-
-        {selectedCompany && Object.keys(existingData).length > 0 && (
-          <Alert severity="success" sx={{ mt: 2 }}>
-            Dane dostępne za lata: {Object.keys(existingData).sort().join(', ')}
-          </Alert>
-        )}
-        {selectedCompany && Object.keys(existingData).length === 0 && (
-          <Alert severity="warning" sx={{ mt: 2 }}>
-            Brak danych dla tej spółki – wprowadź dane ręcznie lub zaimportuj plik.
-          </Alert>
+        {/* Przyciski danych dla wybranych spółek */}
+        {selectedCompanyObjects.length > 0 && (
+          <Box sx={{ mt: 2, display: 'flex', flexWrap: 'wrap', gap: 1 }}>
+            {selectedCompanyObjects.map(company => (
+              <Box key={company.id} sx={{ display: 'flex', gap: 1, alignItems: 'center' }}>
+                <Typography variant="body2" fontWeight="bold">{company.ticker}:</Typography>
+                <Tooltip title="Wprowadź dane ręcznie">
+                  <Button variant="outlined" size="small" startIcon={<EditIcon />} onClick={() => openDataDialog(company)}>
+                    Dane
+                  </Button>
+                </Tooltip>
+                <Tooltip title="Importuj z CSV/Excel">
+                  <Button variant="outlined" size="small" startIcon={<UploadIcon />} component="label">
+                    Import
+                    <input type="file" hidden accept=".csv,.xlsx" onChange={(e) => handleImport(e, company.id)} />
+                  </Button>
+                </Tooltip>
+                {existingData[company.id] && Object.keys(existingData[company.id]).length > 0 ? (
+                  <Chip label={`dane: ${Object.keys(existingData[company.id]).sort().join(', ')}`} size="small" color="success" />
+                ) : (
+                  <Chip label="brak danych" size="small" color="warning" />
+                )}
+              </Box>
+            ))}
+          </Box>
         )}
       </Paper>
 
+      {/* 2. Wybór lat */}
       <Paper sx={{ p: 3, mb: 3 }}>
         <Typography variant="h6" gutterBottom>2. Wybierz lata</Typography>
         <FormControl fullWidth>
@@ -223,15 +266,38 @@ const handleExportExcel = () => {
             input={<OutlinedInput label="Lata" />}
             renderValue={(selected) => (
               <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
-                {(selected as number[]).sort().map(y => <Chip key={y} label={y} size="small" />)}
+                {(selected as number[]).sort().map(y => (
+                  <Chip
+                    key={y}
+                    label={y}
+                    size="small"
+                    color="primary"
+                    onDelete={(e) => {
+                      e.stopPropagation();
+                      setSelectedYears(selectedYears.filter(year => year !== y));
+                    }}
+                    onMouseDown={(e) => e.stopPropagation()}
+                  />
+                ))}
               </Box>
             )}
           >
-            {YEARS.map(y => <MenuItem key={y} value={y}>{y}</MenuItem>)}
+            {YEARS.map(y => (
+              <MenuItem key={y} value={y} sx={{
+                backgroundColor: selectedYears.includes(y) ? '#1976d2 !important' : 'inherit',
+                color: selectedYears.includes(y) ? 'white !important' : 'inherit',
+                fontWeight: selectedYears.includes(y) ? 'bold' : 'normal',
+                '&.Mui-selected': { backgroundColor: '#1976d2 !important', color: 'white !important' },
+                '&.Mui-selected:hover': { backgroundColor: '#1565c0 !important' },
+              }}>
+                {y}
+              </MenuItem>
+            ))}
           </Select>
         </FormControl>
       </Paper>
 
+      {/* 3. Wybór wskaźników */}
       <Paper sx={{ p: 3, mb: 3 }}>
         <Typography variant="h6" gutterBottom>3. Wybierz wskaźniki</Typography>
         <FormControl fullWidth>
@@ -245,12 +311,29 @@ const handleExportExcel = () => {
               <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
                 {indicators
                   .filter(i => (selected as number[]).includes(i.id))
-                  .map(i => <Chip key={i.id} label={i.display_name} size="small" color="primary" />)}
+                  .map(i => (
+                    <Chip
+                      key={i.id}
+                      label={i.display_name}
+                      size="small"
+                      color="primary"
+                      onDelete={(e) => {
+                        e.stopPropagation();
+                        setSelectedIndicators(selectedIndicators.filter(id => id !== i.id));
+                      }}
+                      onMouseDown={(e) => e.stopPropagation()}
+                    />
+                  ))}
               </Box>
             )}
           >
             {indicators.map(i => (
-              <MenuItem key={i.id} value={i.id}>
+              <MenuItem key={i.id} value={i.id} sx={{
+                backgroundColor: selectedIndicators.includes(i.id) ? '#1976d2 !important' : 'inherit',
+                color: selectedIndicators.includes(i.id) ? 'white !important' : 'inherit',
+                '&.Mui-selected': { backgroundColor: '#1976d2 !important', color: 'white !important' },
+                '&.Mui-selected:hover': { backgroundColor: '#1565c0 !important' },
+              }}>
                 {i.display_name} {i.category && `(${i.category})`}
               </MenuItem>
             ))}
@@ -258,35 +341,37 @@ const handleExportExcel = () => {
         </FormControl>
       </Paper>
 
+      {/* Przyciski */}
       <Box sx={{ display: 'flex', gap: 2, mb: 4 }}>
-  <Button
-    variant="contained"
-    size="large"
-    startIcon={loading ? <CircularProgress size={20} color="inherit" /> : <CalculateIcon />}
-    onClick={handleCalculate}
-    disabled={!selectedCompany || selectedYears.length === 0 || selectedIndicators.length === 0 || loading}
-    sx={{ px: 4, py: 1.5 }}
-  >
-    {loading ? 'Obliczanie...' : 'Oblicz wskaźniki'}
-  </Button>
+        <Button
+          variant="contained"
+          size="large"
+          startIcon={loading ? <CircularProgress size={20} color="inherit" /> : <CalculateIcon />}
+          onClick={handleCalculate}
+          disabled={selectedCompanies.length === 0 || selectedYears.length === 0 || selectedIndicators.length === 0 || loading}
+          sx={{ px: 4, py: 1.5 }}
+        >
+          {loading ? 'Obliczanie...' : 'Oblicz wskaźniki'}
+        </Button>
 
-  {results && (
-    <Button
-      variant="outlined"
-      size="large"
-      startIcon={<DownloadIcon />}
-      onClick={handleExportExcel}
-      sx={{ px: 4, py: 1.5 }}
-    >
-      Eksportuj do Excel
-    </Button>
-  )}
-</Box>
+        {Object.keys(results).length > 0 && (
+          <Button
+            variant="outlined"
+            size="large"
+            startIcon={<DownloadIcon />}
+            onClick={handleExportExcel}
+            sx={{ px: 4, py: 1.5 }}
+          >
+            Eksportuj do Excel
+          </Button>
+        )}
+      </Box>
 
-      {results && (
+      {/* Tabela wyników */}
+      {Object.keys(results).length > 0 && (
         <Paper sx={{ p: 3 }}>
           <Typography variant="h6" gutterBottom>
-            Wyniki – {company?.name} ({company?.ticker})
+            Wyniki porównawcze
           </Typography>
           <Divider sx={{ mb: 2 }} />
           <TableContainer>
@@ -294,27 +379,33 @@ const handleExportExcel = () => {
               <TableHead sx={{ backgroundColor: '#1565c0' }}>
                 <TableRow>
                   <TableCell sx={{ color: 'white', fontWeight: 'bold' }}>Wskaźnik</TableCell>
-                  {sortedYears.map(y => (
-                    <TableCell key={y} sx={{ color: 'white', fontWeight: 'bold' }} align="right">{y}</TableCell>
-                  ))}
+                  {sortedYears.map(y =>
+                    selectedCompanyObjects.map(company => (
+                      <TableCell key={`${company.id}-${y}`} sx={{ color: 'white', fontWeight: 'bold' }} align="right">
+                        {company.ticker} {y}
+                      </TableCell>
+                    ))
+                  )}
                 </TableRow>
               </TableHead>
               <TableBody>
                 {selectedIndicatorObjects.map(ind => (
                   <TableRow key={ind.id} hover>
                     <TableCell><strong>{ind.display_name}</strong></TableCell>
-                    {sortedYears.map(y => {
-                      const val = results[y]?.[ind.display_name];
-                      return (
-                        <TableCell key={y} align="right">
-                          {val === null || val === undefined ? (
-                            <Chip label="brak danych" size="small" color="warning" />
-                          ) : (
-                            <strong>{(val * 100).toFixed(2)}%</strong>
-                          )}
-                        </TableCell>
-                      );
-                    })}
+                    {sortedYears.map(y =>
+                      selectedCompanyObjects.map(company => {
+                        const val = results[company.id]?.[y]?.[ind.display_name];
+                        return (
+                          <TableCell key={`${company.id}-${y}`} align="right">
+                            {val === null || val === undefined ? (
+                              <Chip label="brak" size="small" color="warning" />
+                            ) : (
+                              <strong>{(val * 100).toFixed(2)}%</strong>
+                            )}
+                          </TableCell>
+                        );
+                      })
+                    )}
                   </TableRow>
                 ))}
               </TableBody>
@@ -323,19 +414,28 @@ const handleExportExcel = () => {
         </Paper>
       )}
 
-      {/* Dialog wprowadzania danych */}
+      {/* Wykres */}
+      {Object.keys(results).length > 0 && (
+        <IndicatorChart
+          results={results}
+          indicators={selectedIndicatorObjects}
+          years={selectedYears}
+          companies={selectedCompanyObjects}
+        />
+      )}
+
+      {/* Dialog danych finansowych */}
       <Dialog open={dataDialogOpen} onClose={() => setDataDialogOpen(false)} maxWidth="lg" fullWidth>
         <DialogTitle>
-          Dane finansowe – {company?.name}
+          Dane finansowe – {activeCompany?.name}
           <Typography variant="body2" color="text.secondary">
-            Wartości w tysiącach PLN (lub innej jednostce – zachowaj spójność)
+            Wartości w tysiącach PLN (zachowaj spójność jednostek)
           </Typography>
         </DialogTitle>
         <DialogContent>
           <Tabs value={tab} onChange={(_, v) => setTab(v)} sx={{ mb: 2 }}>
             {sortedYears.map((y, i) => <Tab key={y} label={y} value={i} />)}
           </Tabs>
-
           {sortedYears.map((year, i) => (
             <Box key={year} hidden={tab !== i}>
               <TableContainer component={Paper} variant="outlined">
@@ -368,7 +468,6 @@ const handleExportExcel = () => {
                   </TableBody>
                 </Table>
               </TableContainer>
-
               <Box sx={{ display: 'flex', gap: 1, mt: 2, alignItems: 'center' }}>
                 <TextField
                   size="small"
@@ -390,14 +489,6 @@ const handleExportExcel = () => {
           <Button variant="contained" onClick={handleSaveData}>Zapisz dane</Button>
         </DialogActions>
       </Dialog>
-     {results && (
-        <IndicatorChart
-          results={results}
-          indicators={selectedIndicatorObjects}
-          years={selectedYears}
-        />
-      )}
-
 
       <Snackbar
         open={snackbar.open}
