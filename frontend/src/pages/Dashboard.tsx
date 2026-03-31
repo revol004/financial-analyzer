@@ -14,7 +14,7 @@ import EditIcon from '@mui/icons-material/Edit';
 import { companiesApi, financialsApi, indicatorsApi } from '../services/api';
 import * as XLSX from 'xlsx';
 import { saveAs } from 'file-saver';
-
+import IndicatorChart from '../components/IndicatorChart';
 
 interface Company { id: number; name: string; ticker: string; }
 interface Indicator { id: number; display_name: string; category?: string; }
@@ -390,6 +390,14 @@ const handleExportExcel = () => {
           <Button variant="contained" onClick={handleSaveData}>Zapisz dane</Button>
         </DialogActions>
       </Dialog>
+     {results && (
+        <IndicatorChart
+          results={results}
+          indicators={selectedIndicatorObjects}
+          years={selectedYears}
+        />
+      )}
+
 
       <Snackbar
         open={snackbar.open}
