@@ -28,3 +28,4 @@ class IndicatorDefinition(Base):
     formula = Column(Text)
     description = Column(Text, nullable=True)
     category = Column(String, nullable=True)
+    is_percentage = Column(Integer, default=1)

@@ -26,23 +26,23 @@ def seed():
 
     # Dane finansowe PKN Orlen (w mln PLN)
     pkn_data = {
-        2022: {"przychody": 278887, "zysk_netto": 13955, "zysk_operacyjny": 16894, "kapital_wlasny": 62744, "aktywa_ogółem": 155448, "aktywa_obrotowe": 55371, "zobowiazania_ogółem": 92704, "zobowiazania_krotkoterminowe": 45231},
-        2023: {"przychody": 241100, "zysk_netto": 10609, "zysk_operacyjny": 13200, "kapital_wlasny": 71300, "aktywa_ogółem": 163200, "aktywa_obrotowe": 51200, "zobowiazania_ogółem": 91900, "zobowiazania_krotkoterminowe": 42100},
-        2024: {"przychody": 235000, "zysk_netto": 8900, "zysk_operacyjny": 11500, "kapital_wlasny": 78100, "aktywa_ogółem": 170000, "aktywa_obrotowe": 49800, "zobowiazania_ogółem": 91900, "zobowiazania_krotkoterminowe": 40200},
+        2022: {"revenue": 278887, "net_income": 13955, "operating_income": 16894, "equity": 62744, "total_assets": 155448, "current_assets": 55371, "total_liabilities": 92704, "current_liabilities": 45231},
+        2023: {"revenue": 241100, "net_income": 10609, "operating_income": 13200, "equity": 71300, "total_assets": 163200, "current_assets": 51200, "total_liabilities": 91900, "current_liabilities": 42100},
+        2024: {"revenue": 235000, "net_income": 8900, "operating_income": 11500, "equity": 78100, "total_assets": 170000, "current_assets": 49800, "total_liabilities": 91900, "current_liabilities": 40200},
     }
 
     # Dane finansowe CD Projekt (w mln PLN)
     cdr_data = {
-        2022: {"przychody": 1084, "zysk_netto": 233, "zysk_operacyjny": 290, "kapital_wlasny": 3264, "aktywa_ogółem": 3891, "aktywa_obrotowe": 1205, "zobowiazania_ogółem": 627, "zobowiazania_krotkoterminowe": 312},
-        2023: {"przychody": 1429, "zysk_netto": 481, "zysk_operacyjny": 590, "kapital_wlasny": 3644, "aktywa_ogółem": 4200, "aktywa_obrotowe": 1456, "zobowiazania_ogółem": 556, "zobowiazania_krotkoterminowe": 289},
-        2024: {"przychody": 1100, "zysk_netto": 320, "zysk_operacyjny": 410, "kapital_wlasny": 3900, "aktywa_ogółem": 4400, "aktywa_obrotowe": 1300, "zobowiazania_ogółem": 500, "zobowiazania_krotkoterminowe": 260},
+        2022: {"revenue": 1084, "net_income": 233, "operating_income": 290, "equity": 3264, "total_assets": 3891, "current_assets": 1205, "total_liabilities": 627, "current_liabilities": 312},
+        2023: {"revenue": 1429, "net_income": 481, "operating_income": 590, "equity": 3644, "total_assets": 4200, "current_assets": 1456, "total_liabilities": 556, "current_liabilities": 289},
+        2024: {"revenue": 1100, "net_income": 320, "operating_income": 410, "equity": 3900, "total_assets": 4400, "current_assets": 1300, "total_liabilities": 500, "current_liabilities": 260},
     }
 
     # Dane finansowe KGHM (w mln PLN)
     kgh_data = {
-        2022: {"przychody": 33718, "zysk_netto": 3302, "zysk_operacyjny": 4100, "kapital_wlasny": 28900, "aktywa_ogółem": 48200, "aktywa_obrotowe": 12100, "zobowiazania_ogółem": 19300, "zobowiazania_krotkoterminowe": 8100},
-        2023: {"przychody": 29800, "zysk_netto": 1200, "zysk_operacyjny": 1800, "kapital_wlasny": 29500, "aktywa_ogółem": 49100, "aktywa_obrotowe": 11200, "zobowiazania_ogółem": 19600, "zobowiazania_krotkoterminowe": 7800},
-        2024: {"przychody": 31200, "zysk_netto": 1800, "zysk_operacyjny": 2400, "kapital_wlasny": 30100, "aktywa_ogółem": 50200, "aktywa_obrotowe": 11800, "zobowiazania_ogółem": 20100, "zobowiazania_krotkoterminowe": 8200},
+        2022: {"revenue": 33718, "net_income": 3302, "operating_income": 4100, "equity": 28900, "total_assets": 48200, "current_assets": 12100, "total_liabilities": 19300, "current_liabilities": 8100},
+        2023: {"revenue": 29800, "net_income": 1200, "operating_income": 1800, "equity": 29500, "total_assets": 49100, "current_assets": 11200, "total_liabilities": 19600, "current_liabilities": 7800},
+        2024: {"revenue": 31200, "net_income": 1800, "operating_income": 2400, "equity": 30100, "total_assets": 50200, "current_assets": 11800, "total_liabilities": 20100, "current_liabilities": 8200},
     }
 
     for company, data in [(pkn, pkn_data), (cdr, cdr_data), (kgh, kgh_data)]:
@@ -57,12 +57,12 @@ def seed():
 
     # Wskaźniki
     indicators = [
-        IndicatorDefinition(name="roe", display_name="ROE", formula="zysk_netto / kapital_wlasny", description="Zwrot z kapitału własnego", category="Rentowność"),
-        IndicatorDefinition(name="roa", display_name="ROA", formula="zysk_netto / aktywa_ogółem", description="Zwrot z aktywów", category="Rentowność"),
-        IndicatorDefinition(name="marza_netto", display_name="Marża netto", formula="zysk_netto / przychody", description="Marża zysku netto", category="Rentowność"),
-        IndicatorDefinition(name="marza_operacyjna", display_name="Marża operacyjna", formula="zysk_operacyjny / przychody", description="Marża zysku operacyjnego", category="Rentowność"),
-        IndicatorDefinition(name="current_ratio", display_name="Current Ratio", formula="aktywa_obrotowe / zobowiazania_krotkoterminowe", description="Wskaźnik płynności bieżącej", category="Płynność"),
-        IndicatorDefinition(name="debt_ratio", display_name="Debt Ratio", formula="zobowiazania_ogółem / aktywa_ogółem", description="Wskaźnik zadłużenia", category="Zadłużenie"),
+        IndicatorDefinition(name="roe", display_name="ROE", formula="net_income / equity", description="Zwrot z kapitału własnego", category="Rentowność"),
+        IndicatorDefinition(name="roa", display_name="ROA", formula="net_income / total_assets", description="Zwrot z aktywów", category="Rentowność"),
+        IndicatorDefinition(name="marza_netto", display_name="Marża netto", formula="net_income / revenue", description="Marża zysku netto", category="Rentowność"),
+        IndicatorDefinition(name="marza_operacyjna", display_name="Marża operacyjna", formula="operating_income / revenue", description="Marża zysku operacyjnego", category="Rentowność"),
+        IndicatorDefinition(name="current_ratio", display_name="Current Ratio", formula="current_assets / current_liabilities", description="Wskaźnik płynności bieżącej", category="Płynność"),
+        IndicatorDefinition(name="debt_ratio", display_name="Debt Ratio", formula="total_liabilities / total_assets", description="Wskaźnik zadłużenia", category="Zadłużenie"),
     ]
     for ind in indicators:
         db.add(ind)

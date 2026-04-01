@@ -3,12 +3,15 @@ import {
   Box, Typography, Paper, Button, TextField, Dialog, DialogTitle,
   DialogContent, DialogActions, Table, TableBody, TableCell,
   TableContainer, TableHead, TableRow, IconButton, Chip, Alert,
-  Snackbar, Tooltip, Select, MenuItem, FormControl, InputLabel
+  Snackbar, Tooltip, Select, MenuItem, FormControl, InputLabel,
+  Switch, FormControlLabel
 } from '@mui/material';
 import DeleteIcon from '@mui/icons-material/Delete';
 import AddIcon from '@mui/icons-material/Add';
 import InfoIcon from '@mui/icons-material/Info';
 import { indicatorsApi } from '../services/api';
+
+
 
 interface Indicator {
   id: number;
@@ -17,9 +20,10 @@ interface Indicator {
   formula: string;
   description?: string;
   category?: string;
+  is_percentage: number;
 }
 
-const emptyForm = { name: '', display_name: '', formula: '', description: '', category: '', categoryColor: 'default' };
+const emptyForm = { name: '', display_name: '', formula: '', description: '', category: '', categoryColor: 'default', is_percentage: 1 };
 
 const COLOR_OPTIONS = [
   { value: 'success', label: 'Zielony' },
@@ -71,12 +75,13 @@ const [newVariableName, setNewVariableName] = useState('');
   const handleSubmit = async () => {
     try {
       await indicatorsApi.create({
-        name: form.name,
-        display_name: form.display_name,
-        formula: form.formula,
-        description: form.description,
-        category: form.category,
-      });
+  name: form.name,
+  display_name: form.display_name,
+  formula: form.formula,
+  description: form.description,
+  category: form.category,
+  is_percentage: form.is_percentage,
+});
       // Zapisz kolor dla kategorii
       if (form.category) {
         setCategoryColors(prev => ({ ...prev, [form.category]: form.categoryColor }));
@@ -162,7 +167,8 @@ const handleDeleteVariable = (variable: string) => {
               <TableCell sx={{ color: 'white', fontWeight: 'bold' }}>Kategoria</TableCell>
               <TableCell sx={{ color: 'white', fontWeight: 'bold' }}>Formuła</TableCell>
               <TableCell sx={{ color: 'white', fontWeight: 'bold' }}>Opis</TableCell>
-              <TableCell sx={{ color: 'white', fontWeight: 'bold' }}>Akcje</TableCell>
+<TableCell sx={{ color: 'white', fontWeight: 'bold' }}>Typ</TableCell>
+<TableCell sx={{ color: 'white', fontWeight: 'bold' }}>Akcje</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
@@ -185,8 +191,15 @@ const handleDeleteVariable = (variable: string) => {
                   </TableCell>
                   <TableCell><code>{ind.formula}</code></TableCell>
                   <TableCell sx={{ color: 'text.secondary' }}>{ind.description || '—'}</TableCell>
-                  <TableCell>
-                    <Tooltip title="Usuń wskaźnik">
+<TableCell>
+  <Chip
+    label={ind.is_percentage ? '%' : '123'}
+    size="small"
+    color={ind.is_percentage ? 'success' : 'default'}
+  />
+</TableCell>
+<TableCell>
+  <Tooltip title="Usuń wskaźnik">
                       <IconButton
                         color="error"
                         size="small"
@@ -252,6 +265,16 @@ const handleDeleteVariable = (variable: string) => {
             fullWidth multiline rows={2}
           />
         </DialogContent>
+<FormControlLabel
+  control={
+    <Switch
+      checked={form.is_percentage === 1}
+      onChange={(e) => setForm({ ...form, is_percentage: e.target.checked ? 1 : 0 })}
+    />
+  }
+  label="Wynik (wizualnie) w procentach"
+/>
+
         <DialogActions sx={{ p: 2 }}>
           <Button onClick={() => setDialogOpen(false)}>Anuluj</Button>
           <Button

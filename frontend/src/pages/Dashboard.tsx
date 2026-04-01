@@ -17,7 +17,7 @@ import { companiesApi, financialsApi, indicatorsApi } from '../services/api';
 import IndicatorChart from '../components/IndicatorChart';
 
 interface Company { id: number; name: string; ticker: string; }
-interface Indicator { id: number; display_name: string; category?: string; }
+interface Indicator { id: number; display_name: string; category?: string; is_percentage?: number; }
 
 const YEARS = Array.from({ length: 15 }, (_, i) => 2024 - i);
 const COMMON_VARIABLES = (() => {
@@ -153,8 +153,10 @@ export default function Dashboard() {
         selectedCompanyObjects.forEach(company => {
           const val = results[company.id]?.[y]?.[ind.display_name];
           row[`${company.ticker} ${y}`] = val !== null && val !== undefined
-            ? parseFloat((val * 100).toFixed(2))
-            : 'N/A';
+  ? ind.is_percentage
+    ? parseFloat((val * 100).toFixed(2))
+    : parseFloat(val.toFixed(4))
+  : 'N/A';
         });
       });
       rows.push(row);
@@ -402,8 +404,10 @@ export default function Dashboard() {
                           <TableCell key={`${company.id}-${y}`} align="right">
                             {val === null || val === undefined ? (
                               <Chip label="brak" size="small" color="warning" />
-                            ) : (
-                              <strong>{(val * 100).toFixed(2)}%</strong>
+                            ) :  ind.is_percentage ? (
+  <strong>{(val * 100).toFixed(2)}%</strong>
+) : (
+  <strong>{val.toFixed(4)}</strong>
                             )}
                           </TableCell>
                         );
