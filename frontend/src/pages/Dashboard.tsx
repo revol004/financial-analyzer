@@ -37,7 +37,7 @@ export default function Dashboard() {
   const [results, setResults] = useState<Record<number, any>>({});
   const [loading, setLoading] = useState(false);
   const [tab, setTab] = useState(0);
-
+const [indicatorTab, setIndicatorTab] = useState<string>('all');
   const [dataDialogOpen, setDataDialogOpen] = useState(false);
   const [activeCompany, setActiveCompany] = useState<Company | null>(null);
   const [financialData, setFinancialData] = useState<Record<number, Record<string, string>>>({});
@@ -303,48 +303,66 @@ export default function Dashboard() {
       </Paper>
 
       {/* 3. Wybór wskaźników */}
-      <Paper sx={{ p: 3, mb: 3 }}>
-        <Typography variant="h6" gutterBottom>3. Wybierz wskaźniki</Typography>
-        <FormControl fullWidth>
-          <InputLabel>Wskaźniki</InputLabel>
-          <Select
-            multiple
-            value={selectedIndicators}
-            onChange={(e) => setSelectedIndicators(e.target.value as number[])}
-            input={<OutlinedInput label="Wskaźniki" />}
-            renderValue={(selected) => (
-              <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
-                {indicators
-                  .filter(i => (selected as number[]).includes(i.id))
-                  .map(i => (
-                    <Chip
-                      key={i.id}
-                      label={i.display_name}
-                      size="small"
-                      color="primary"
-                      onDelete={(e) => {
-                        e.stopPropagation();
-                        setSelectedIndicators(selectedIndicators.filter(id => id !== i.id));
-                      }}
-                      onMouseDown={(e) => e.stopPropagation()}
-                    />
-                  ))}
-              </Box>
-            )}
-          >
-            {indicators.map(i => (
-              <MenuItem key={i.id} value={i.id} sx={{
-                backgroundColor: selectedIndicators.includes(i.id) ? '#1976d2 !important' : 'inherit',
-                color: selectedIndicators.includes(i.id) ? 'white !important' : 'inherit',
-                '&.Mui-selected': { backgroundColor: '#1976d2 !important', color: 'white !important' },
-                '&.Mui-selected:hover': { backgroundColor: '#1565c0 !important' },
-              }}>
-                {i.display_name} {i.category && `(${i.category})`}
-              </MenuItem>
-            ))}
-          </Select>
-        </FormControl>
-      </Paper>
+      {/* 3. Wybierz wskaźniki */}
+<Paper sx={{ p: 3, mb: 3 }}>
+  <Typography variant="h6" gutterBottom>3. Wybierz wskaźniki</Typography>
+  
+  {/* Zakładki kategorii */}
+  <Tabs
+    value={indicatorTab}
+    onChange={(_, v) => setIndicatorTab(v)}
+    sx={{ mb: 2, borderBottom: 1, borderColor: 'divider' }}
+    variant="scrollable"
+    scrollButtons="auto"
+  >
+    <Tab label="All" value="all" />
+    {Array.from(new Set(indicators.map(i => i.category || 'Other'))).map(cat => (
+      <Tab key={cat} label={cat} value={cat} />
+    ))}
+  </Tabs>
+
+  {/* Lista wskaźników dla wybranej zakładki */}
+  <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1, mb: 2 }}>
+    {indicators
+      .filter(i => indicatorTab === 'all' || (i.category || 'Other') === indicatorTab)
+      .map(i => (
+        <Chip
+          key={i.id}
+          label={i.display_name}
+          onClick={() => {
+            if (selectedIndicators.includes(i.id)) {
+              setSelectedIndicators(selectedIndicators.filter(id => id !== i.id));
+            } else {
+              setSelectedIndicators([...selectedIndicators, i.id]);
+            }
+          }}
+          color={selectedIndicators.includes(i.id) ? 'primary' : 'default'}
+          variant={selectedIndicators.includes(i.id) ? 'filled' : 'outlined'}
+          sx={{ cursor: 'pointer' }}
+        />
+      ))}
+  </Box>
+
+  {/* Podsumowanie wybranych */}
+  {selectedIndicators.length > 0 && (
+    <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5, pt: 1, borderTop: 1, borderColor: 'divider' }}>
+      <Typography variant="body2" color="text.secondary" sx={{ mr: 1, alignSelf: 'center' }}>
+        Wybrane:
+      </Typography>
+      {indicators
+        .filter(i => selectedIndicators.includes(i.id))
+        .map(i => (
+          <Chip
+            key={i.id}
+            label={i.display_name}
+            size="small"
+            color="primary"
+            onDelete={() => setSelectedIndicators(selectedIndicators.filter(id => id !== i.id))}
+          />
+        ))}
+    </Box>
+  )}
+</Paper>
 
       {/* Przyciski */}
       <Box sx={{ display: 'flex', gap: 2, mb: 4 }}>
