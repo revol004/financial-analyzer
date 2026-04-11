@@ -9,11 +9,14 @@ import io
 
 router = APIRouter()
 
+
 class FinancialDataCreate(BaseModel):
     company_id: int
     year: int
+    quarter: Optional[int] = None
     variable_name: str
     value: float
+
 
 class FinancialDataResponse(BaseModel):
     id: int
@@ -21,12 +24,21 @@ class FinancialDataResponse(BaseModel):
     year: int
     variable_name: str
     value: float
+
     class Config:
         from_attributes = True
 
+
 @router.get("/{company_id}")
-def get_financials(company_id: int, db: Session = Depends(get_db)):
-    data = db.query(FinancialData).filter(FinancialData.company_id == company_id).all()
+def get_financials(
+    company_id: int, quarter: Optional[int] = None, db: Session = Depends(get_db)
+):
+    query = db.query(FinancialData).filter(FinancialData.company_id == company_id)
+    if quarter is not None:
+        query = query.filter(FinancialData.quarter == quarter)
+    else:
+       query = query.filter(FinancialData.quarter.is_(None))
+    data = query.all()
     result = {}
     for row in data:
         if row.year not in result:
@@ -34,13 +46,19 @@ def get_financials(company_id: int, db: Session = Depends(get_db)):
         result[row.year][row.variable_name] = row.value
     return result
 
+
 @router.post("/", response_model=FinancialDataResponse)
 def upsert_financial(data: FinancialDataCreate, db: Session = Depends(get_db)):
-    existing = db.query(FinancialData).filter(
-        FinancialData.company_id == data.company_id,
-        FinancialData.year == data.year,
-        FinancialData.variable_name == data.variable_name
-    ).first()
+    existing = (
+        db.query(FinancialData)
+        .filter(
+            FinancialData.company_id == data.company_id,
+            FinancialData.year == data.year,
+            FinancialData.quarter == data.quarter,
+            FinancialData.variable_name == data.variable_name,
+        )
+        .first()
+    )
     if existing:
         existing.value = data.value
         db.commit()
@@ -52,8 +70,11 @@ def upsert_financial(data: FinancialDataCreate, db: Session = Depends(get_db)):
     db.refresh(db_data)
     return db_data
 
+
 @router.post("/import/{company_id}")
-def import_csv(company_id: int, file: UploadFile = File(...), db: Session = Depends(get_db)):
+def import_csv(
+    company_id: int, file: UploadFile = File(...), db: Session = Depends(get_db)
+):
     company = db.query(Company).filter(Company.id == company_id).first()
     if not company:
         raise HTTPException(status_code=404, detail="Company not found")
@@ -73,15 +94,26 @@ def import_csv(company_id: int, file: UploadFile = File(...), db: Session = Depe
         for col in df.columns:
             if col == "year":
                 continue
-            existing = db.query(FinancialData).filter(
-                FinancialData.company_id == company_id,
-                FinancialData.year == year,
-                FinancialData.variable_name == col
-            ).first()
+            existing = (
+                db.query(FinancialData)
+                .filter(
+                    FinancialData.company_id == company_id,
+                    FinancialData.year == year,
+                    FinancialData.variable_name == col,
+                )
+                .first()
+            )
             if existing:
                 existing.value = float(row[col])
             else:
-                db.add(FinancialData(company_id=company_id, year=year, variable_name=col, value=float(row[col])))
+                db.add(
+                    FinancialData(
+                        company_id=company_id,
+                        year=year,
+                        variable_name=col,
+                        value=float(row[col]),
+                    )
+                )
             imported += 1
     db.commit()
     return {"message": f"Imported {imported} records"}

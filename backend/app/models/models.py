@@ -16,6 +16,7 @@ class FinancialData(Base):
     id = Column(Integer, primary_key=True, index=True)
     company_id = Column(Integer, ForeignKey("companies.id"))
     year = Column(Integer)
+    quarter = Column(Integer, nullable=True)
     variable_name = Column(String)
     value = Column(Float)
     company = relationship("Company", back_populates="financials")

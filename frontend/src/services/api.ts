@@ -12,8 +12,9 @@ export const companiesApi = {
 };
 
 export const financialsApi = {
-  getByCompany: (companyId: number) => API.get(`/financials/${companyId}`),
-  upsert: (data: any) => API.post('/financials/', data),
+  getByCompany: (companyId: number, quarter?: number) =>
+  API.get(`/financials/${companyId}`, { params: quarter !== undefined ? { quarter } : {} }),
+upsert: (data: any) => API.post('/financials/', data),
   import: (companyId: number, file: File) => {
     const formData = new FormData();
     formData.append('file', file);

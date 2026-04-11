@@ -193,9 +193,9 @@ const handleDeleteVariable = (variable: string) => {
                   <TableCell sx={{ color: 'text.secondary' }}>{ind.description || '—'}</TableCell>
 <TableCell>
   <Chip
-    label={ind.is_percentage ? '-' : '%'}
+    label={ind.is_percentage ? '%' : '-'}
     size="small"
-    color={ind.is_percentage ? 'default' : 'success'}
+    color={ind.is_percentage ? 'success' : 'default'}
   />
 </TableCell>
 <TableCell>
@@ -272,7 +272,7 @@ const handleDeleteVariable = (variable: string) => {
       onChange={(e) => setForm({ ...form, is_percentage: e.target.checked ? 1 : 0 })}
     />
   }
-  label="Wynik w procentach"
+  label="Wynik w procentach (na wykresie)"
 />
 
         <DialogActions sx={{ p: 2 }}>

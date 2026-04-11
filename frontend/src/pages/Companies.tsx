@@ -13,7 +13,7 @@ import ExpandLessIcon from '@mui/icons-material/ExpandLess';
 import { companiesApi, financialsApi } from '../services/api';
 import TableChartIcon from '@mui/icons-material/TableChart';
 import FinancialDataDialog from '../components/FinancialDataDialog';
-
+import UploadIcon from '@mui/icons-material/Upload';
 interface Company {
   id: number;
   name: string;
@@ -24,7 +24,8 @@ interface Company {
 
 const emptyForm = { name: '', ticker: '', market: 'GPW', description: '' };
 
-export default function Companies() {
+interface Props { mode: 'annual' | 'quarterly'; }
+export default function Companies({ mode }: Props) {
   const [companies, setCompanies] = useState<Company[]>([]);
   const [dialogOpen, setDialogOpen] = useState(false);
   const [editDialogOpen, setEditDialogOpen] = useState(false);
@@ -98,14 +99,42 @@ const [selectedYears] = useState<number[]>([2024, 2023, 2022, 2021, 2020]);
     }
   };
 
+const handleImportCompany = async (e: React.ChangeEvent<HTMLInputElement>) => {
+  const file = e.target.files?.[0];
+  if (!file) return;
+  try {
+    await financialsApi.import(0, file);
+    setSnackbar({ open: true, message: 'Import zakończony!', severity: 'success' });
+    fetchCompanies();
+  } catch {
+    setSnackbar({ open: true, message: 'Błąd importu.', severity: 'error' });
+  }
+};
+
   return (
-    <Box sx={{ p: 4 }}>
-      <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 3 }}>
-        <Typography variant="h4" fontWeight="bold">Spółki</Typography>
+  <Box sx={{ p: 4 }}>
+    <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 3 }}>
+      <Typography variant="h4" fontWeight="bold">Spółki</Typography>
+      <Box sx={{ display: 'flex', gap: 1 }}>
+        <Button
+          variant="outlined"
+          startIcon={<UploadIcon />}
+          component="label"
+          sx={{ whiteSpace: 'nowrap' }}
+        >
+          Importuj z CSV
+          <input
+            type="file"
+            hidden
+            accept=".csv,.xlsx"
+            onChange={handleImportCompany}
+          />
+        </Button>
         <Button variant="contained" startIcon={<AddIcon />} onClick={() => setDialogOpen(true)}>
           Dodaj spółkę
         </Button>
       </Box>
+    </Box>
 
       <TableContainer component={Paper}>
         <Table>
@@ -306,6 +335,7 @@ const [selectedYears] = useState<number[]>([2024, 2023, 2022, 2021, 2020]);
   }}
   company={financialCompany}
   years={selectedYears}
+  mode={mode}
 />
 
       <Snackbar

@@ -12,45 +12,82 @@ interface Props {
   onClose: () => void;
   company: { id: number; name: string } | null;
   years: number[];
+  mode?: 'annual' | 'quarterly';
 }
 
-const COMMON_VARIABLES = [
-  'przychody', 'zysk_netto', 'zysk_operacyjny', 'kapital_wlasny',
-  'aktywa_ogółem', 'aktywa_obrotowe', 'zobowiazania_ogółem', 'zobowiazania_krotkoterminowe'
-];
+const COMMON_VARIABLES = (() => {
+  const saved = localStorage.getItem('defaultVariables');
+  return saved ? JSON.parse(saved) : [
+    'revenue', 'net_income', 'operating_income', 'equity',
+    'total_assets', 'current_assets', 'total_liabilities', 'current_liabilities'
+  ];
+})();
 
-export default function FinancialDataDialog({ open, onClose, company, years }: Props) {
+const QUARTERS = ['Q1', 'Q2', 'Q3', 'Q4'];
+
+interface Period {
+  label: string;
+  year: number;
+  quarter: number | null;
+}
+
+export default function FinancialDataDialog({ open, onClose, company, years, mode = 'annual' }: Props) {
   const [tab, setTab] = useState(0);
   const [variables, setVariables] = useState<string[]>(COMMON_VARIABLES);
-  const [financialData, setFinancialData] = useState<Record<number, Record<string, string>>>({});
+  const [financialData, setFinancialData] = useState<Record<string, Record<string, string>>>({});
   const [newVariable, setNewVariable] = useState('');
+  const [newYear, setNewYear] = useState('');
+  const [extraYears, setExtraYears] = useState<number[]>([]);
   const [saving, setSaving] = useState(false);
 
-  const sortedYears = [...years].sort((a, b) => a - b);
+  useEffect(() => {
+    if (company?.id) {
+      const saved = localStorage.getItem(`extraYears_${company.id}`);
+      setExtraYears(saved ? JSON.parse(saved) : []);
+    }
+  }, [company?.id]);
+
+  const allYears = [...years, ...extraYears]
+    .filter((v, i, a) => a.indexOf(v) === i)
+    .sort((a, b) => a - b);
+
+  // Generuj okresy – roczne lub kwartalne
+  const periods: Period[] = mode === 'annual'
+    ? allYears.map(y => ({ label: y.toString(), year: y, quarter: null }))
+    : allYears.flatMap(y =>
+        QUARTERS.map((q, qi) => ({ label: `${q} ${y}`, year: y, quarter: qi + 1 }))
+      );
 
   useEffect(() => {
     if (open && company) {
-      financialsApi.getByCompany(company.id).then(res => {
-        const existing = res.data;
-        const init: Record<number, Record<string, string>> = {};
-
-        // Zbierz wszystkie zmienne z istniejących danych
+      const fetchData = async () => {
+        const init: Record<string, Record<string, string>> = {};
         const allVars = new Set<string>(COMMON_VARIABLES);
-        Object.values(existing).forEach((yearData: any) => {
-          Object.keys(yearData).forEach(v => allVars.add(v));
-        });
+
+        for (const year of allYears) {
+          const res = await financialsApi.getByCompany(company.id, mode === 'quarterly' ? undefined : undefined);
+          Object.values(res.data).forEach((yearData: any) => {
+            Object.keys(yearData).forEach(v => allVars.add(v));
+          });
+        }
+
         setVariables(Array.from(allVars));
 
-        for (const year of years) {
-          init[year] = {};
+        for (const period of periods) {
+          const res = await financialsApi.getByCompany(
+            company.id,
+            period.quarter !== null ? period.quarter : undefined
+          );
+          init[period.label] = {};
           allVars.forEach(v => {
-            init[year][v] = existing[year]?.[v]?.toString() || '';
+            init[period.label][v] = res.data[period.year]?.[v]?.toString() || '';
           });
         }
         setFinancialData(init);
-      });
+      };
+      fetchData();
     }
-  }, [open, company]);
+  }, [open, company, mode]);
 
   const addVariable = () => {
     const v = newVariable.trim().toLowerCase().replace(/\s+/g, '_');
@@ -58,25 +95,38 @@ export default function FinancialDataDialog({ open, onClose, company, years }: P
       setVariables(prev => [...prev, v]);
       setFinancialData(prev => {
         const updated = { ...prev };
-        for (const year of years) {
-          updated[year] = { ...updated[year], [v]: '' };
-        }
+        periods.forEach(p => {
+          updated[p.label] = { ...updated[p.label], [v]: '' };
+        });
         return updated;
       });
       setNewVariable('');
     }
   };
 
+  const handleAddYear = () => {
+    const y = parseInt(newYear);
+    if (!isNaN(y) && y > 1900 && y < 2100 && !allYears.includes(y)) {
+      const updated = [...extraYears, y];
+      setExtraYears(updated);
+      if (company?.id) {
+        localStorage.setItem(`extraYears_${company.id}`, JSON.stringify(updated));
+      }
+      setNewYear('');
+    }
+  };
+
   const handleSave = async () => {
     if (!company) return;
     setSaving(true);
-    for (const year of years) {
+    for (const period of periods) {
       for (const variable of variables) {
-        const val = financialData[year]?.[variable];
+        const val = financialData[period.label]?.[variable];
         if (val !== '' && val !== undefined && !isNaN(Number(val))) {
           await financialsApi.upsert({
             company_id: company.id,
-            year,
+            year: period.year,
+            quarter: period.quarter,
             variable_name: variable,
             value: parseFloat(val)
           });
@@ -92,16 +142,22 @@ export default function FinancialDataDialog({ open, onClose, company, years }: P
       <DialogTitle>
         Dane finansowe – {company?.name}
         <Typography variant="body2" color="text.secondary">
-          Wartości w tysiącach PLN (zachowaj spójność jednostek)
+          {mode === 'annual' ? 'Dane roczne' : 'Dane kwartalne'} – wartości w tysiącach PLN
         </Typography>
       </DialogTitle>
       <DialogContent>
-        <Tabs value={tab} onChange={(_, v) => setTab(v)} sx={{ mb: 2 }}>
-          {sortedYears.map((y, i) => <Tab key={y} label={y} value={i} />)}
+        <Tabs
+          value={tab}
+          onChange={(_, v) => setTab(v)}
+          sx={{ mb: 2 }}
+          variant="scrollable"
+          scrollButtons="auto"
+        >
+          {periods.map((p, i) => <Tab key={p.label} label={p.label} value={i} />)}
         </Tabs>
 
-        {sortedYears.map((year, i) => (
-          <Box key={year} hidden={tab !== i}>
+        {periods.map((period, i) => (
+          <Box key={period.label} hidden={tab !== i}>
             <TableContainer component={Paper} variant="outlined">
               <Table size="small">
                 <TableHead>
@@ -118,10 +174,10 @@ export default function FinancialDataDialog({ open, onClose, company, years }: P
                         <TextField
                           size="small"
                           type="number"
-                          value={financialData[year]?.[variable] || ''}
+                          value={financialData[period.label]?.[variable] || ''}
                           onChange={(e) => setFinancialData(prev => ({
                             ...prev,
-                            [year]: { ...prev[year], [variable]: e.target.value }
+                            [period.label]: { ...prev[period.label], [variable]: e.target.value }
                           }))}
                           placeholder="np. 1500000"
                           sx={{ width: 200 }}
@@ -133,18 +189,35 @@ export default function FinancialDataDialog({ open, onClose, company, years }: P
               </Table>
             </TableContainer>
 
-            <Box sx={{ display: 'flex', gap: 1, mt: 2, alignItems: 'center' }}>
-              <TextField
-                size="small"
-                label="Dodaj nową zmienną"
-                value={newVariable}
-                onChange={(e) => setNewVariable(e.target.value)}
-                placeholder="np. ebitda"
-                onKeyDown={(e) => e.key === 'Enter' && addVariable()}
-              />
-              <Button startIcon={<AddIcon />} onClick={addVariable} variant="outlined">
-                Dodaj
-              </Button>
+            <Box sx={{ display: 'flex', gap: 2, mt: 2, alignItems: 'center', flexWrap: 'wrap' }}>
+              <Box sx={{ display: 'flex', gap: 1, alignItems: 'center' }}>
+                <TextField
+                  size="small"
+                  label="Dodaj nową zmienną"
+                  value={newVariable}
+                  onChange={(e) => setNewVariable(e.target.value)}
+                  placeholder="np. ebitda"
+                  onKeyDown={(e) => e.key === 'Enter' && addVariable()}
+                />
+                <Button startIcon={<AddIcon />} onClick={addVariable} variant="outlined">
+                  Dodaj
+                </Button>
+              </Box>
+              <Box sx={{ display: 'flex', gap: 1, alignItems: 'center' }}>
+                <TextField
+                  size="small"
+                  label="Dodaj rok"
+                  value={newYear}
+                  onChange={(e) => setNewYear(e.target.value)}
+                  placeholder="np. 2019"
+                  type="number"
+                  sx={{ width: 120 }}
+                  onKeyDown={(e) => e.key === 'Enter' && handleAddYear()}
+                />
+                <Button startIcon={<AddIcon />} onClick={handleAddYear} variant="outlined">
+                  Dodaj rok
+                </Button>
+              </Box>
             </Box>
           </Box>
         ))}
