@@ -1,0 +1,1255 @@
+(node:21640) [DEP_WEBPACK_DEV_SERVER_ON_AFTER_SETUP_MIDDLEWARE] DeprecationWarning: 'onAfterSetupMiddleware' option is deprecated. Please use the 'setupMiddlewares' option.
+(Use `node --trace-deprecation ...` to show where the warning was created)
+(node:21640) [DEP_WEBPACK_DEV_SERVER_ON_BEFORE_SETUP_MIDDLEWARE] DeprecationWarning: 'onBeforeSetupMiddleware' option is deprecated. Please use the 'setupMiddlewares' option.
+ERROR in src/components/FinancialDataDialog.tsx:41:10
+TS2451: Cannot redeclare block-scoped variable 'saving'.
+  [0m [90m 39 |[39m   [36mconst[39m [newYear[33m,[39m setNewYear] [33m=[39m useState([32m''[39m)[33m;[39m
+   [90m 40 |[39m   [36mconst[39m [extraYears[33m,[39m setExtraYears] [33m=[39m useState[33m<[39m[33mnumber[39m[][33m>[39m([])[33m;[39m
+  [31m[1m>[22m[39m[90m 41 |[39m   [36mconst[39m [saving[33m,[39m setSaving] [33m=[39m useState([36mfalse[39m)[33m;[39m
+   [90m    |[39m          [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
+   [90m 42 |[39m [36mconst[39m [saving[33m,[39m setSaving] [33m=[39m useState([36mfalse[39m)[33m;[39m
+   [90m 43 |[39m   useEffect(() [33m=>[39m {
+   [90m 44 |[39m     [36mif[39m (company[33m?[39m[33m.[39mid) {[0m
+
+ERROR in src/components/FinancialDataDialog.tsx:41:18
+TS2451: Cannot redeclare block-scoped variable 'setSaving'.
+  [0m [90m 39 |[39m   [36mconst[39m [newYear[33m,[39m setNewYear] [33m=[39m useState([32m''[39m)[33m;[39m
+   [90m 40 |[39m   [36mconst[39m [extraYears[33m,[39m setExtraYears] [33m=[39m useState[33m<[39m[33mnumber[39m[][33m>[39m([])[33m;[39m
+  [31m[1m>[22m[39m[90m 41 |[39m   [36mconst[39m [saving[33m,[39m setSaving] [33m=[39m useState([36mfalse[39m)[33m;[39m
+   [90m    |[39m                  [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
+   [90m 42 |[39m [36mconst[39m [saving[33m,[39m setSaving] [33m=[39m useState([36mfalse[39m)[33m;[39m
+   [90m 43 |[39m   useEffect(() [33m=>[39m {
+   [90m 44 |[39m     [36mif[39m (company[33m?[39m[33m.[39mid) {[0m
+
+ERROR in src/components/FinancialDataDialog.tsx:42:8
+TS2451: Cannot redeclare block-scoped variable 'saving'.
+  [0m [90m 40 |[39m   [36mconst[39m [extraYears[33m,[39m setExtraYears] [33m=[39m useState[33m<[39m[33mnumber[39m[][33m>[39m([])[33m;[39m
+   [90m 41 |[39m   [36mconst[39m [saving[33m,[39m setSaving] [33m=[39m useState([36mfalse[39m)[33m;[39m
+  [31m[1m>[22m[39m[90m 42 |[39m [36mconst[39m [saving[33m,[39m setSaving] [33m=[39m useState([36mfalse[39m)[33m;[39m
+   [90m    |[39m        [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
+   [90m 43 |[39m   useEffect(() [33m=>[39m {
+   [90m 44 |[39m     [36mif[39m (company[33m?[39m[33m.[39mid) {
+   [90m 45 |[39m       [36mconst[39m saved [33m=[39m localStorage[33m.[39mgetItem([32m`extraYears_${company.id}`[39m)[33m;[39m[0m
+
+ERROR in src/components/FinancialDataDialog.tsx:42:16
+TS2451: Cannot redeclare block-scoped variable 'setSaving'.
+  [0m [90m 40 |[39m   [36mconst[39m [extraYears[33m,[39m setExtraYears] [33m=[39m useState[33m<[39m[33mnumber[39m[][33m>[39m([])[33m;[39m
+   [90m 41 |[39m   [36mconst[39m [saving[33m,[39m setSaving] [33m=[39m useState([36mfalse[39m)[33m;[39m
+  [31m[1m>[22m[39m[90m 42 |[39m [36mconst[39m [saving[33m,[39m setSaving] [33m=[39m useState([36mfalse[39m)[33m;[39m
+   [90m    |[39m                [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
+   [90m 43 |[39m   useEffect(() [33m=>[39m {
+   [90m 44 |[39m     [36mif[39m (company[33m?[39m[33m.[39mid) {
+   [90m 45 |[39m       [36mconst[39m saved [33m=[39m localStorage[33m.[39mgetItem([32m`extraYears_${company.id}`[39m)[33m;[39m[0m
+
+ERROR in src/components/FinancialDataDialog.tsx:41:10
+TS2451: Cannot redeclare block-scoped variable 'saving'.
+  [0m [90m 39 |[39m   [36mconst[39m [newYear[33m,[39m setNewYear] [33m=[39m useState([32m''[39m)[33m;[39m
+   [90m 40 |[39m   [36mconst[39m [extraYears[33m,[39m setExtraYears] [33m=[39m useState[33m<[39m[33mnumber[39m[][33m>[39m([])[33m;[39m
+  [31m[1m>[22m[39m[90m 41 |[39m   [36mconst[39m [saving[33m,[39m setSaving] [33m=[39m useState([36mfalse[39m)[33m;[39m
+   [90m    |[39m          [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
+   [90m 42 |[39m [36mconst[39m [saving[33m,[39m setSaving] [33m=[39m useState([36mfalse[39m)[33m;[39m
+   [90m 43 |[39m   useEffect(() [33m=>[39m {
+   [90m 44 |[39m     [36mif[39m (company[33m?[39m[33m.[39mid) {[0m
+
+ERROR in src/components/FinancialDataDialog.tsx:41:18
+TS2451: Cannot redeclare block-scoped variable 'setSaving'.
+  [0m [90m 39 |[39m   [36mconst[39m [newYear[33m,[39m setNewYear] [33m=[39m useState([32m''[39m)[33m;[39m
+   [90m 40 |[39m   [36mconst[39m [extraYears[33m,[39m setExtraYears] [33m=[39m useState[33m<[39m[33mnumber[39m[][33m>[39m([])[33m;[39m
+  [31m[1m>[22m[39m[90m 41 |[39m   [36mconst[39m [saving[33m,[39m setSaving] [33m=[39m useState([36mfalse[39m)[33m;[39m
+   [90m    |[39m                  [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
+   [90m 42 |[39m [36mconst[39m [saving[33m,[39m setSaving] [33m=[39m useState([36mfalse[39m)[33m;[39m
+   [90m 43 |[39m   useEffect(() [33m=>[39m {
+   [90m 44 |[39m     [36mif[39m (company[33m?[39m[33m.[39mid) {[0m
+
+ERROR in src/components/FinancialDataDialog.tsx:42:8
+TS2451: Cannot redeclare block-scoped variable 'saving'.
+  [0m [90m 40 |[39m   [36mconst[39m [extraYears[33m,[39m setExtraYears] [33m=[39m useState[33m<[39m[33mnumber[39m[][33m>[39m([])[33m;[39m
+   [90m 41 |[39m   [36mconst[39m [saving[33m,[39m setSaving] [33m=[39m useState([36mfalse[39m)[33m;[39m
+  [31m[1m>[22m[39m[90m 42 |[39m [36mconst[39m [saving[33m,[39m setSaving] [33m=[39m useState([36mfalse[39m)[33m;[39m
+   [90m    |[39m        [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
+   [90m 43 |[39m   useEffect(() [33m=>[39m {
+   [90m 44 |[39m     [36mif[39m (company[33m?[39m[33m.[39mid) {
+   [90m 45 |[39m       [36mconst[39m saved [33m=[39m localStorage[33m.[39mgetItem([32m`extraYears_${company.id}`[39m)[33m;[39m[0m
+
+ERROR in src/components/FinancialDataDialog.tsx:42:16
+TS2451: Cannot redeclare block-scoped variable 'setSaving'.
+  [0m [90m 40 |[39m   [36mconst[39m [extraYears[33m,[39m setExtraYears] [33m=[39m useState[33m<[39m[33mnumber[39m[][33m>[39m([])[33m;[39m
+   [90m 41 |[39m   [36mconst[39m [saving[33m,[39m setSaving] [33m=[39m useState([36mfalse[39m)[33m;[39m
+  [31m[1m>[22m[39m[90m 42 |[39m [36mconst[39m [saving[33m,[39m setSaving] [33m=[39m useState([36mfalse[39m)[33m;[39m
+   [90m    |[39m                [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
+   [90m 43 |[39m   useEffect(() [33m=>[39m {
+   [90m 44 |[39m     [36mif[39m (company[33m?[39m[33m.[39mid) {
+   [90m 45 |[39m       [36mconst[39m saved [33m=[39m localStorage[33m.[39mgetItem([32m`extraYears_${company.id}`[39m)[33m;[39m[0m
+
+ERROR in src/components/FinancialDataDialog.tsx:64:3
+TS2304: Cannot find name 'setLoadingData'.
+  [0m [90m 62 |[39m     [36mif[39m (open [33m&&[39m company) {
+   [90m 63 |[39m      [36mconst[39m fetchData [33m=[39m [36masync[39m () [33m=>[39m {
+  [31m[1m>[22m[39m[90m 64 |[39m   setLoadingData([36mtrue[39m)[33m;[39m
+   [90m    |[39m   [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
+   [90m 65 |[39m   [36mconst[39m init[33m:[39m [33mRecord[39m[33m<[39m[33mstring[39m[33m,[39m [33mRecord[39m[33m<[39m[33mstring[39m[33m,[39m string[33m>>[39m [33m=[39m {}[33m;[39m
+   [90m 66 |[39m   [36mconst[39m allVars [33m=[39m [36mnew[39m [33mSet[39m[33m<[39m[33mstring[39m[33m>[39m([33mCOMMON_VARIABLES[39m)[33m;[39m
+   [90m 67 |[39m[0m
+
+ERROR in src/components/FinancialDataDialog.tsx:41:10
+TS2451: Cannot redeclare block-scoped variable 'saving'.
+  [0m [90m 39 |[39m   [36mconst[39m [newYear[33m,[39m setNewYear] [33m=[39m useState([32m''[39m)[33m;[39m
+   [90m 40 |[39m   [36mconst[39m [extraYears[33m,[39m setExtraYears] [33m=[39m useState[33m<[39m[33mnumber[39m[][33m>[39m([])[33m;[39m
+  [31m[1m>[22m[39m[90m 41 |[39m   [36mconst[39m [saving[33m,[39m setSaving] [33m=[39m useState([36mfalse[39m)[33m;[39m
+   [90m    |[39m          [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
+   [90m 42 |[39m [36mconst[39m [saving[33m,[39m setSaving] [33m=[39m useState([36mfalse[39m)[33m;[39m
+   [90m 43 |[39m   useEffect(() [33m=>[39m {
+   [90m 44 |[39m     [36mif[39m (company[33m?[39m[33m.[39mid) {[0m
+
+ERROR in src/components/FinancialDataDialog.tsx:41:18
+TS2451: Cannot redeclare block-scoped variable 'setSaving'.
+  [0m [90m 39 |[39m   [36mconst[39m [newYear[33m,[39m setNewYear] [33m=[39m useState([32m''[39m)[33m;[39m
+   [90m 40 |[39m   [36mconst[39m [extraYears[33m,[39m setExtraYears] [33m=[39m useState[33m<[39m[33mnumber[39m[][33m>[39m([])[33m;[39m
+  [31m[1m>[22m[39m[90m 41 |[39m   [36mconst[39m [saving[33m,[39m setSaving] [33m=[39m useState([36mfalse[39m)[33m;[39m
+   [90m    |[39m                  [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
+   [90m 42 |[39m [36mconst[39m [saving[33m,[39m setSaving] [33m=[39m useState([36mfalse[39m)[33m;[39m
+   [90m 43 |[39m   useEffect(() [33m=>[39m {
+   [90m 44 |[39m     [36mif[39m (company[33m?[39m[33m.[39mid) {[0m
+
+ERROR in src/components/FinancialDataDialog.tsx:42:8
+TS2451: Cannot redeclare block-scoped variable 'saving'.
+  [0m [90m 40 |[39m   [36mconst[39m [extraYears[33m,[39m setExtraYears] [33m=[39m useState[33m<[39m[33mnumber[39m[][33m>[39m([])[33m;[39m
+   [90m 41 |[39m   [36mconst[39m [saving[33m,[39m setSaving] [33m=[39m useState([36mfalse[39m)[33m;[39m
+  [31m[1m>[22m[39m[90m 42 |[39m [36mconst[39m [saving[33m,[39m setSaving] [33m=[39m useState([36mfalse[39m)[33m;[39m
+   [90m    |[39m        [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
+   [90m 43 |[39m   useEffect(() [33m=>[39m {
+   [90m 44 |[39m     [36mif[39m (company[33m?[39m[33m.[39mid) {
+   [90m 45 |[39m       [36mconst[39m saved [33m=[39m localStorage[33m.[39mgetItem([32m`extraYears_${company.id}`[39m)[33m;[39m[0m
+
+ERROR in src/components/FinancialDataDialog.tsx:42:16
+TS2451: Cannot redeclare block-scoped variable 'setSaving'.
+  [0m [90m 40 |[39m   [36mconst[39m [extraYears[33m,[39m setExtraYears] [33m=[39m useState[33m<[39m[33mnumber[39m[][33m>[39m([])[33m;[39m
+   [90m 41 |[39m   [36mconst[39m [saving[33m,[39m setSaving] [33m=[39m useState([36mfalse[39m)[33m;[39m
+  [31m[1m>[22m[39m[90m 42 |[39m [36mconst[39m [saving[33m,[39m setSaving] [33m=[39m useState([36mfalse[39m)[33m;[39m
+   [90m    |[39m                [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
+   [90m 43 |[39m   useEffect(() [33m=>[39m {
+   [90m 44 |[39m     [36mif[39m (company[33m?[39m[33m.[39mid) {
+   [90m 45 |[39m       [36mconst[39m saved [33m=[39m localStorage[33m.[39mgetItem([32m`extraYears_${company.id}`[39m)[33m;[39m[0m
+
+ERROR in src/components/FinancialDataDialog.tsx:64:3
+TS2304: Cannot find name 'setLoadingData'.
+  [0m [90m 62 |[39m     [36mif[39m (open [33m&&[39m company) {
+   [90m 63 |[39m      [36mconst[39m fetchData [33m=[39m [36masync[39m () [33m=>[39m {
+  [31m[1m>[22m[39m[90m 64 |[39m   setLoadingData([36mtrue[39m)[33m;[39m
+   [90m    |[39m   [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
+   [90m 65 |[39m   [36mconst[39m init[33m:[39m [33mRecord[39m[33m<[39m[33mstring[39m[33m,[39m [33mRecord[39m[33m<[39m[33mstring[39m[33m,[39m string[33m>>[39m [33m=[39m {}[33m;[39m
+   [90m 66 |[39m   [36mconst[39m allVars [33m=[39m [36mnew[39m [33mSet[39m[33m<[39m[33mstring[39m[33m>[39m([33mCOMMON_VARIABLES[39m)[33m;[39m
+   [90m 67 |[39m[0m
+
+ERROR in src/components/FinancialDataDialog.tsx:105:3
+TS2304: Cannot find name 'setLoadingData'.
+  [0m [90m 103 |[39m
+   [90m 104 |[39m   setFinancialData(init)[33m;[39m
+  [31m[1m>[22m[39m[90m 105 |[39m   setLoadingData([36mfalse[39m)[33m;[39m
+   [90m     |[39m   [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
+   [90m 106 |[39m }[33m;[39m
+   [90m 107 |[39m       fetchData()[33m;[39m
+   [90m 108 |[39m     }[0m
+
+ERROR in src/components/FinancialDataDialog.tsx:41:10
+TS2451: Cannot redeclare block-scoped variable 'saving'.
+  [0m [90m 39 |[39m   [36mconst[39m [newYear[33m,[39m setNewYear] [33m=[39m useState([32m''[39m)[33m;[39m
+   [90m 40 |[39m   [36mconst[39m [extraYears[33m,[39m setExtraYears] [33m=[39m useState[33m<[39m[33mnumber[39m[][33m>[39m([])[33m;[39m
+  [31m[1m>[22m[39m[90m 41 |[39m   [36mconst[39m [saving[33m,[39m setSaving] [33m=[39m useState([36mfalse[39m)[33m;[39m
+   [90m    |[39m          [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
+   [90m 42 |[39m [36mconst[39m [saving[33m,[39m setSaving] [33m=[39m useState([36mfalse[39m)[33m;[39m
+   [90m 43 |[39m   useEffect(() [33m=>[39m {
+   [90m 44 |[39m     [36mif[39m (company[33m?[39m[33m.[39mid) {[0m
+
+ERROR in src/components/FinancialDataDialog.tsx:41:18
+TS2451: Cannot redeclare block-scoped variable 'setSaving'.
+  [0m [90m 39 |[39m   [36mconst[39m [newYear[33m,[39m setNewYear] [33m=[39m useState([32m''[39m)[33m;[39m
+   [90m 40 |[39m   [36mconst[39m [extraYears[33m,[39m setExtraYears] [33m=[39m useState[33m<[39m[33mnumber[39m[][33m>[39m([])[33m;[39m
+  [31m[1m>[22m[39m[90m 41 |[39m   [36mconst[39m [saving[33m,[39m setSaving] [33m=[39m useState([36mfalse[39m)[33m;[39m
+   [90m    |[39m                  [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
+   [90m 42 |[39m [36mconst[39m [saving[33m,[39m setSaving] [33m=[39m useState([36mfalse[39m)[33m;[39m
+   [90m 43 |[39m   useEffect(() [33m=>[39m {
+   [90m 44 |[39m     [36mif[39m (company[33m?[39m[33m.[39mid) {[0m
+
+ERROR in src/components/FinancialDataDialog.tsx:42:8
+TS2451: Cannot redeclare block-scoped variable 'saving'.
+  [0m [90m 40 |[39m   [36mconst[39m [extraYears[33m,[39m setExtraYears] [33m=[39m useState[33m<[39m[33mnumber[39m[][33m>[39m([])[33m;[39m
+   [90m 41 |[39m   [36mconst[39m [saving[33m,[39m setSaving] [33m=[39m useState([36mfalse[39m)[33m;[39m
+  [31m[1m>[22m[39m[90m 42 |[39m [36mconst[39m [saving[33m,[39m setSaving] [33m=[39m useState([36mfalse[39m)[33m;[39m
+   [90m    |[39m        [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
+   [90m 43 |[39m   useEffect(() [33m=>[39m {
+   [90m 44 |[39m     [36mif[39m (company[33m?[39m[33m.[39mid) {
+   [90m 45 |[39m       [36mconst[39m saved [33m=[39m localStorage[33m.[39mgetItem([32m`extraYears_${company.id}`[39m)[33m;[39m[0m
+
+ERROR in src/components/FinancialDataDialog.tsx:42:16
+TS2451: Cannot redeclare block-scoped variable 'setSaving'.
+  [0m [90m 40 |[39m   [36mconst[39m [extraYears[33m,[39m setExtraYears] [33m=[39m useState[33m<[39m[33mnumber[39m[][33m>[39m([])[33m;[39m
+   [90m 41 |[39m   [36mconst[39m [saving[33m,[39m setSaving] [33m=[39m useState([36mfalse[39m)[33m;[39m
+  [31m[1m>[22m[39m[90m 42 |[39m [36mconst[39m [saving[33m,[39m setSaving] [33m=[39m useState([36mfalse[39m)[33m;[39m
+   [90m    |[39m                [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
+   [90m 43 |[39m   useEffect(() [33m=>[39m {
+   [90m 44 |[39m     [36mif[39m (company[33m?[39m[33m.[39mid) {
+   [90m 45 |[39m       [36mconst[39m saved [33m=[39m localStorage[33m.[39mgetItem([32m`extraYears_${company.id}`[39m)[33m;[39m[0m
+
+ERROR in src/components/FinancialDataDialog.tsx:64:3
+TS2304: Cannot find name 'setLoadingData'.
+  [0m [90m 62 |[39m     [36mif[39m (open [33m&&[39m company) {
+   [90m 63 |[39m      [36mconst[39m fetchData [33m=[39m [36masync[39m () [33m=>[39m {
+  [31m[1m>[22m[39m[90m 64 |[39m   setLoadingData([36mtrue[39m)[33m;[39m
+   [90m    |[39m   [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
+   [90m 65 |[39m   [36mconst[39m init[33m:[39m [33mRecord[39m[33m<[39m[33mstring[39m[33m,[39m [33mRecord[39m[33m<[39m[33mstring[39m[33m,[39m string[33m>>[39m [33m=[39m {}[33m;[39m
+   [90m 66 |[39m   [36mconst[39m allVars [33m=[39m [36mnew[39m [33mSet[39m[33m<[39m[33mstring[39m[33m>[39m([33mCOMMON_VARIABLES[39m)[33m;[39m
+   [90m 67 |[39m[0m
+
+ERROR in src/components/FinancialDataDialog.tsx:105:3
+TS2304: Cannot find name 'setLoadingData'.
+  [0m [90m 103 |[39m
+   [90m 104 |[39m   setFinancialData(init)[33m;[39m
+  [31m[1m>[22m[39m[90m 105 |[39m   setLoadingData([36mfalse[39m)[33m;[39m
+   [90m     |[39m   [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
+   [90m 106 |[39m }[33m;[39m
+   [90m 107 |[39m       fetchData()[33m;[39m
+   [90m 108 |[39m     }[0m
+
+ERROR in src/components/FinancialDataDialog.tsx:167:8
+TS17008: JSX element 'DialogContent' has no corresponding closing tag.
+  [0m [90m 165 |[39m         [33m<[39m[33m/[39m[33mTypography[39m[33m>[39m
+   [90m 166 |[39m       [33m<[39m[33m/[39m[33mDialogTitle[39m[33m>[39m
+  [31m[1m>[22m[39m[90m 167 |[39m       [33m<[39m[33mDialogContent[39m[33m>[39m
+   [90m     |[39m        [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
+   [90m 168 |[39m   {loadingData [33m?[39m (
+   [90m 169 |[39m     [33m<[39m[33mBox[39m sx[33m=[39m{{ display[33m:[39m [32m'flex'[39m[33m,[39m justifyContent[33m:[39m [32m'center'[39m[33m,[39m alignItems[33m:[39m [32m'center'[39m[33m,[39m py[33m:[39m [35m8[39m }}[33m>[39m
+   [90m 170 |[39m       [33m<[39m[33mCircularProgress[39m [33m/[39m[33m>[39m[0m
+
+ERROR in src/components/FinancialDataDialog.tsx:168:4
+TS2304: Cannot find name 'loadingData'.
+  [0m [90m 166 |[39m       [33m<[39m[33m/[39m[33mDialogTitle[39m[33m>[39m
+   [90m 167 |[39m       [33m<[39m[33mDialogContent[39m[33m>[39m
+  [31m[1m>[22m[39m[90m 168 |[39m   {loadingData [33m?[39m (
+   [90m     |[39m    [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
+   [90m 169 |[39m     [33m<[39m[33mBox[39m sx[33m=[39m{{ display[33m:[39m [32m'flex'[39m[33m,[39m justifyContent[33m:[39m [32m'center'[39m[33m,[39m alignItems[33m:[39m [32m'center'[39m[33m,[39m py[33m:[39m [35m8[39m }}[33m>[39m
+   [90m 170 |[39m       [33m<[39m[33mCircularProgress[39m [33m/[39m[33m>[39m
+   [90m 171 |[39m       [33m<[39m[33mTypography[39m sx[33m=[39m{{ ml[33m:[39m [35m2[39m }} color[33m=[39m[32m"text.secondary"[39m[33m>[39m[0m
+
+ERROR in src/components/FinancialDataDialog.tsx:170:8
+TS2304: Cannot find name 'CircularProgress'.
+  [0m [90m 168 |[39m   {loadingData [33m?[39m (
+   [90m 169 |[39m     [33m<[39m[33mBox[39m sx[33m=[39m{{ display[33m:[39m [32m'flex'[39m[33m,[39m justifyContent[33m:[39m [32m'center'[39m[33m,[39m alignItems[33m:[39m [32m'center'[39m[33m,[39m py[33m:[39m [35m8[39m }}[33m>[39m
+  [31m[1m>[22m[39m[90m 170 |[39m       [33m<[39m[33mCircularProgress[39m [33m/[39m[33m>[39m
+   [90m     |[39m        [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
+   [90m 171 |[39m       [33m<[39m[33mTypography[39m sx[33m=[39m{{ ml[33m:[39m [35m2[39m }} color[33m=[39m[32m"text.secondary"[39m[33m>[39m
+   [90m 172 |[39m         [33mŁadowanie[39m danych[33m...[39m
+   [90m 173 |[39m       [33m<[39m[33m/[39m[33mTypography[39m[33m>[39m[0m
+
+ERROR in src/components/FinancialDataDialog.tsx:176:5
+TS2657: JSX expressions must have one parent element.
+  [0m [90m 174 |[39m     [33m<[39m[33m/[39m[33mBox[39m[33m>[39m
+   [90m 175 |[39m   ) [33m:[39m (
+  [31m[1m>[22m[39m[90m 176 |[39m     [33m<[39m[33m>[39m
+   [90m     |[39m     [31m[1m^[22m[39m[31m[1m^[22m[39m
+  [31m[1m>[22m[39m[90m 177 |[39m       [33m<[39m[33mTabs[39m
+   [90m     |[39m [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
+  [31m[1m>[22m[39m[90m 178 |[39m         value[33m=[39m{tab}
+   [90m     |[39m [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
+  [31m[1m>[22m[39m[90m 179 |[39m         onChange[33m=[39m{(_[33m,[39m v) [33m=>[39m setTab(v)}
+   [90m     |[39m [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
+  [31m[1m>[22m[39m[90m 180 |[39m         sx[33m=[39m{{ mb[33m:[39m [35m2[39m }}
+   [90m     |[39m [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
+  [31m[1m>[22m[39m[90m 181 |[39m         variant[33m=[39m[32m"scrollable"[39m
+   [90m     |[39m [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
+  [31m[1m>[22m[39m[90m 182 |[39m         scrollButtons[33m=[39m[32m"auto"[39m
+   [90m     |[39m [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
+  [31m[1m>[22m[39m[90m 183 |[39m       [33m>[39m
+   [90m     |[39m [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
+  [31m[1m>[22m[39m[90m 184 |[39m         {periods[33m.[39mmap((p[33m,[39m i) [33m=>[39m [33m<[39m[33mTab[39m key[33m=[39m{p[33m.[39mlabel} label[33m=[39m{p[33m.[39mlabel} value[33m=[39m{i} [33m/[39m[33m>[39m)}
+   [90m     |[39m [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
+  [31m[1m>[22m[39m[90m 185 |[39m       [33m<[39m[33m/[39m[33mTabs[39m[33m>[39m
+   [90m     |[39m [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
+  [31m[1m>[22m[39m[90m 186 |[39m       {periods[33m.[39mmap((period[33m,[39m i) [33m=>[39m (
+   [90m     |[39m [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
+  [31m[1m>[22m[39m[90m 187 |[39m           [33m<[39m[33mBox[39m key[33m=[39m{period[33m.[39mlabel} hidden[33m=[39m{tab [33m!==[39m i}[33m>[39m
+   [90m     |[39m [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
+  [31m[1m>[22m[39m[90m 188 |[39m             [33m<[39m[33mTableContainer[39m component[33m=[39m{[33mPaper[39m} variant[33m=[39m[32m"outlined"[39m[33m>[39m
+   [90m     |[39m [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
+  [31m[1m>[22m[39m[90m 189 |[39m               [33m<[39m[33mTable[39m size[33m=[39m[32m"small"[39m[33m>[39m
+   [90m     |[39m [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
+  [31m[1m>[22m[39m[90m 190 |[39m                 [33m<[39m[33mTableHead[39m[33m>[39m
+   [90m     |[39m [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
+  [31m[1m>[22m[39m[90m 191 |[39m                   [33m<[39m[33mTableRow[39m sx[33m=[39m{{ backgroundColor[33m:[39m [32m'#f5f5f5'[39m }}[33m>[39m
+   [90m     |[39m [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
+  [31m[1m>[22m[39m[90m 192 |[39m                     [33m<[39m[33mTableCell[39m[33m>[39m[33m<[39m[33mstrong[39m[33m>[39m[33mZmienna[39m[33m<[39m[33m/[39m[33mstrong[39m[33m>[39m[33m<[39m[33m/[39m[33mTableCell[39m[33m>[39m
+   [90m     |[39m [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
+  [31m[1m>[22m[39m[90m 193 |[39m                     [33m<[39m[33mTableCell[39m[33m>[39m[33m<[39m[33mstrong[39m[33m>[39m[33mWartość[39m[33m<[39m[33m/[39m[33mstrong[39m[33m>[39m[33m<[39m[33m/[39m[33mTableCell[39m[33m>[39m
+   [90m     |[39m [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
+  [31m[1m>[22m[39m[90m 194 |[39m                   [33m<[39m[33m/[39m[33mTableRow[39m[33m>[39m
+   [90m     |[39m [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
+  [31m[1m>[22m[39m[90m 195 |[39m                 [33m<[39m[33m/[39m[33mTableHead[39m[33m>[39m
+   [90m     |[39m [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
+  [31m[1m>[22m[39m[90m 196 |[39m                 [33m<[39m[33mTableBody[39m[33m>[39m
+   [90m     |[39m [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
+  [31m[1m>[22m[39m[90m 197 |[39m                   {variables[33m.[39mmap(variable [33m=>[39m (
+   [90m     |[39m [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
+  [31m[1m>[22m[39m[90m 198 |[39m                     [33m<[39m[33mTableRow[39m key[33m=[39m{variable} hover[33m>[39m
+   [90m     |[39m [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
+  [31m[1m>[22m[39m[90m 199 |[39m                       [33m<[39m[33mTableCell[39m sx[33m=[39m{{ fontFamily[33m:[39m [32m'monospace'[39m }}[33m>[39m{variable}[33m<[39m[33m/[39m[33mTableCell[39m[33m>[39m
+   [90m     |[39m [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
+  [31m[1m>[22m[39m[90m 200 |[39m                       [33m<[39m[33mTableCell[39m[33m>[39m
+   [90m     |[39m [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
+  [31m[1m>[22m[39m[90m 201 |[39m                         [33m<[39m[33mTextField[39m
+   [90m     |[39m [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
+  [31m[1m>[22m[39m[90m 202 |[39m                           size[33m=[39m[32m"small"[39m
+   [90m     |[39m [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
+  [31m[1m>[22m[39m[90m 203 |[39m                           type[33m=[39m[32m"number"[39m
+   [90m     |[39m [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
+  [31m[1m>[22m[39m[90m 204 |[39m                           value[33m=[39m{financialData[period[33m.[39mlabel][33m?[39m[33m.[39m[variable] [33m||[39m [32m''[39m}
+   [90m     |[39m [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
+  [31m[1m>[22m[39m[90m 205 |[39m                           onChange[33m=[39m{(e) [33m=>[39m setFinancialData(prev [33m=>[39m ({
+   [90m     |[39m [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
+  [31m[1m>[22m[39m[90m 206 |[39m                             [33m...[39mprev[33m,[39m
+   [90m     |[39m [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
+  [31m[1m>[22m[39m[90m 207 |[39m                             [period[33m.[39mlabel][33m:[39m { [33m...[39mprev[period[33m.[39mlabel][33m,[39m [variable][33m:[39m e[33m.[39mtarget[33m.[39mvalue }
+   [90m     |[39m [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
+  [31m[1m>[22m[39m[90m 208 |[39m                           }))}
+   [90m     |[39m [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
+  [31m[1m>[22m[39m[90m 209 |[39m                           placeholder[33m=[39m[32m"np. 1500000"[39m
+   [90m     |[39m [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
+  [31m[1m>[22m[39m[90m 210 |[39m                           sx[33m=[39m{{ width[33m:[39m [35m200[39m }}
+   [90m     |[39m [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
+  [31m[1m>[22m[39m[90m 211 |[39m                         [33m/[39m[33m>[39m
+   [90m     |[39m [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
+  [31m[1m>[22m[39m[90m 212 |[39m                       [33m<[39m[33m/[39m[33mTableCell[39m[33m>[39m
+   [90m     |[39m [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
+  [31m[1m>[22m[39m[90m 213 |[39m                     [33m<[39m[33m/[39m[33mTableRow[39m[33m>[39m
+   [90m     |[39m [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
+  [31m[1m>[22m[39m[90m 214 |[39m                   ))}
+   [90m     |[39m [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
+  [31m[1m>[22m[39m[90m 215 |[39m                 [33m<[39m[33m/[39m[33mTableBody[39m[33m>[39m
+   [90m     |[39m [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
+  [31m[1m>[22m[39m[90m 216 |[39m               [33m<[39m[33m/[39m[33mTable[39m[33m>[39m
+   [90m     |[39m [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
+  [31m[1m>[22m[39m[90m 217 |[39m             [33m<[39m[33m/[39m[33mTableContainer[39m[33m>[39m
+   [90m     |[39m [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
+  [31m[1m>[22m[39m[90m 218 |[39m
+   [90m     |[39m [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
+  [31m[1m>[22m[39m[90m 219 |[39m             [33m<[39m[33mBox[39m sx[33m=[39m{{ display[33m:[39m [32m'flex'[39m[33m,[39m gap[33m:[39m [35m2[39m[33m,[39m mt[33m:[39m [35m2[39m[33m,[39m alignItems[33m:[39m [32m'center'[39m[33m,[39m flexWrap[33m:[39m [32m'wrap'[39m }}[33m>[39m
+   [90m     |[39m [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
+  [31m[1m>[22m[39m[90m 220 |[39m               [33m<[39m[33mBox[39m sx[33m=[39m{{ display[33m:[39m [32m'flex'[39m[33m,[39m gap[33m:[39m [35m1[39m[33m,[39m alignItems[33m:[39m [32m'center'[39m }}[33m>[39m
+   [90m     |[39m [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
+  [31m[1m>[22m[39m[90m 221 |[39m                 [33m<[39m[33mTextField[39m
+   [90m     |[39m [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
+  [31m[1m>[22m[39m[90m 222 |[39m                   size[33m=[39m[32m"small"[39m
+   [90m     |[39m [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
+  [31m[1m>[22m[39m[90m 223 |[39m                   label[33m=[39m[32m"Dodaj nową zmienną"[39m
+   [90m     |[39m [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
+  [31m[1m>[22m[39m[90m 224 |[39m                   value[33m=[39m{newVariable}
+   [90m     |[39m [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
+  [31m[1m>[22m[39m[90m 225 |[39m                   onChange[33m=[39m{(e) [33m=>[39m setNewVariable(e[33m.[39mtarget[33m.[39mvalue)}
+   [90m     |[39m [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
+  [31m[1m>[22m[39m[90m 226 |[39m                   placeholder[33m=[39m[32m"np. ebitda"[39m
+   [90m     |[39m [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
+  [31m[1m>[22m[39m[90m 227 |[39m                   onKeyDown[33m=[39m{(e) [33m=>[39m e[33m.[39mkey [33m===[39m [32m'Enter'[39m [33m&&[39m addVariable()}
+   [90m     |[39m [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
+  [31m[1m>[22m[39m[90m 228 |[39m                 [33m/[39m[33m>[39m
+   [90m     |[39m [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
+  [31m[1m>[22m[39m[90m 229 |[39m                 [33m<[39m[33mButton[39m startIcon[33m=[39m{[33m<[39m[33mAddIcon[39m [33m/[39m[33m>[39m} onClick[33m=[39m{addVariable} variant[33m=[39m[32m"outlined"[39m[33m>[39m
+   [90m     |[39m [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
+  [31m[1m>[22m[39m[90m 230 |[39m                   [33mDodaj[39m
+   [90m     |[39m [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
+  [31m[1m>[22m[39m[90m 231 |[39m                 [33m<[39m[33m/[39m[33mButton[39m[33m>[39m
+   [90m     |[39m [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
+  [31m[1m>[22m[39m[90m 232 |[39m               [33m<[39m[33m/[39m[33mBox[39m[33m>[39m
+   [90m     |[39m [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
+  [31m[1m>[22m[39m[90m 233 |[39m               [33m<[39m[33mBox[39m sx[33m=[39m{{ display[33m:[39m [32m'flex'[39m[33m,[39m gap[33m:[39m [35m1[39m[33m,[39m alignItems[33m:[39m [32m'center'[39m }}[33m>[39m
+   [90m     |[39m [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
+  [31m[1m>[22m[39m[90m 234 |[39m                 [33m<[39m[33mTextField[39m
+   [90m     |[39m [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
+  [31m[1m>[22m[39m[90m 235 |[39m                   size[33m=[39m[32m"small"[39m
+   [90m     |[39m [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
+  [31m[1m>[22m[39m[90m 236 |[39m                   label[33m=[39m[32m"Dodaj rok"[39m
+   [90m     |[39m [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
+  [31m[1m>[22m[39m[90m 237 |[39m                   value[33m=[39m{newYear}
+   [90m     |[39m [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
+  [31m[1m>[22m[39m[90m 238 |[39m                   onChange[33m=[39m{(e) [33m=>[39m setNewYear(e[33m.[39mtarget[33m.[39mvalue)}
+   [90m     |[39m [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
+  [31m[1m>[22m[39m[90m 239 |[39m                   placeholder[33m=[39m[32m"np. 2019"[39m
+   [90m     |[39m [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
+  [31m[1m>[22m[39m[90m 240 |[39m                   type[33m=[39m[32m"number"[39m
+   [90m     |[39m [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
+  [31m[1m>[22m[39m[90m 241 |[39m                   sx[33m=[39m{{ width[33m:[39m [35m120[39m }}
+   [90m     |[39m [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
+  [31m[1m>[22m[39m[90m 242 |[39m                   onKeyDown[33m=[39m{(e) [33m=>[39m e[33m.[39mkey [33m===[39m [32m'Enter'[39m [33m&&[39m handleAddYear()}
+   [90m     |[39m [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
+  [31m[1m>[22m[39m[90m 243 |[39m                 [33m/[39m[33m>[39m
+   [90m     |[39m [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
+  [31m[1m>[22m[39m[90m 244 |[39m                 [33m<[39m[33mButton[39m startIcon[33m=[39m{[33m<[39m[33mAddIcon[39m [33m/[39m[33m>[39m} onClick[33m=[39m{handleAddYear} variant[33m=[39m[32m"outlined"[39m[33m>[39m
+   [90m     |[39m [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
+  [31m[1m>[22m[39m[90m 245 |[39m                   [33mDodaj[39m rok
+   [90m     |[39m [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
+  [31m[1m>[22m[39m[90m 246 |[39m                 [33m<[39m[33m/[39m[33mButton[39m[33m>[39m
+   [90m     |[39m [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
+  [31m[1m>[22m[39m[90m 247 |[39m               [33m<[39m[33m/[39m[33mBox[39m[33m>[39m
+   [90m     |[39m [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
+  [31m[1m>[22m[39m[90m 248 |[39m             [33m<[39m[33m/[39m[33mBox[39m[33m>[39m
+   [90m     |[39m [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
+  [31m[1m>[22m[39m[90m 249 |[39m           [33m<[39m[33m/[39m[33mBox[39m[33m>[39m
+   [90m     |[39m [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
+  [31m[1m>[22m[39m[90m 250 |[39m         ))}
+   [90m     |[39m [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
+  [31m[1m>[22m[39m[90m 251 |[39m       [33m<[39m[33m/[39m[33mDialogContent[39m[33m>[39m
+   [90m     |[39m [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
+  [31m[1m>[22m[39m[90m 252 |[39m       [33m<[39m[33mDialogActions[39m sx[33m=[39m{{ p[33m:[39m [35m2[39m }}[33m>[39m
+   [90m     |[39m [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
+  [31m[1m>[22m[39m[90m 253 |[39m         [33m<[39m[33mButton[39m onClick[33m=[39m{onClose}[33m>[39m[33mAnuluj[39m[33m<[39m[33m/[39m[33mButton[39m[33m>[39m
+   [90m     |[39m [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
+  [31m[1m>[22m[39m[90m 254 |[39m         [33m<[39m[33mButton[39m variant[33m=[39m[32m"contained"[39m onClick[33m=[39m{handleSave} disabled[33m=[39m{saving}[33m>[39m
+   [90m     |[39m [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
+  [31m[1m>[22m[39m[90m 255 |[39m           {saving [33m?[39m [32m'Zapisywanie...'[39m [33m:[39m [32m'Zapisz dane'[39m}
+   [90m     |[39m [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
+  [31m[1m>[22m[39m[90m 256 |[39m         [33m<[39m[33m/[39m[33mButton[39m[33m>[39m
+   [90m     |[39m [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
+  [31m[1m>[22m[39m[90m 257 |[39m       [33m<[39m[33m/[39m[33mDialogActions[39m[33m>[39m
+   [90m     |[39m [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
+   [90m 258 |[39m     [33m<[39m[33m/[39m[33mDialog[39m[33m>[39m
+   [90m 259 |[39m   )[33m;[39m
+   [90m 260 |[39m }[0m
+
+ERROR in src/components/FinancialDataDialog.tsx:251:9
+TS17015: Expected corresponding closing tag for JSX fragment.
+  [0m [90m 249 |[39m           [33m<[39m[33m/[39m[33mBox[39m[33m>[39m
+   [90m 250 |[39m         ))}
+  [31m[1m>[22m[39m[90m 251 |[39m       [33m<[39m[33m/[39m[33mDialogContent[39m[33m>[39m
+   [90m     |[39m         [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
+   [90m 252 |[39m       [33m<[39m[33mDialogActions[39m sx[33m=[39m{{ p[33m:[39m [35m2[39m }}[33m>[39m
+   [90m 253 |[39m         [33m<[39m[33mButton[39m onClick[33m=[39m{onClose}[33m>[39m[33mAnuluj[39m[33m<[39m[33m/[39m[33mButton[39m[33m>[39m
+   [90m 254 |[39m         [33m<[39m[33mButton[39m variant[33m=[39m[32m"contained"[39m onClick[33m=[39m{handleSave} disabled[33m=[39m{saving}[33m>[39m[0m
+
+ERROR in src/components/FinancialDataDialog.tsx:258:5
+TS1005: ')' expected.
+  [0m [90m 256 |[39m         [33m<[39m[33m/[39m[33mButton[39m[33m>[39m
+   [90m 257 |[39m       [33m<[39m[33m/[39m[33mDialogActions[39m[33m>[39m
+  [31m[1m>[22m[39m[90m 258 |[39m     [33m<[39m[33m/[39m[33mDialog[39m[33m>[39m
+   [90m     |[39m     [31m[1m^[22m[39m[31m[1m^[22m[39m
+   [90m 259 |[39m   )[33m;[39m
+   [90m 260 |[39m }[0m
+
+ERROR in src/components/FinancialDataDialog.tsx:41:10
+TS2451: Cannot redeclare block-scoped variable 'saving'.
+  [0m [90m 39 |[39m   [36mconst[39m [newYear[33m,[39m setNewYear] [33m=[39m useState([32m''[39m)[33m;[39m
+   [90m 40 |[39m   [36mconst[39m [extraYears[33m,[39m setExtraYears] [33m=[39m useState[33m<[39m[33mnumber[39m[][33m>[39m([])[33m;[39m
+  [31m[1m>[22m[39m[90m 41 |[39m   [36mconst[39m [saving[33m,[39m setSaving] [33m=[39m useState([36mfalse[39m)[33m;[39m
+   [90m    |[39m          [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
+   [90m 42 |[39m [36mconst[39m [saving[33m,[39m setSaving] [33m=[39m useState([36mfalse[39m)[33m;[39m
+   [90m 43 |[39m   useEffect(() [33m=>[39m {
+   [90m 44 |[39m     [36mif[39m (company[33m?[39m[33m.[39mid) {[0m
+
+ERROR in src/components/FinancialDataDialog.tsx:41:18
+TS2451: Cannot redeclare block-scoped variable 'setSaving'.
+  [0m [90m 39 |[39m   [36mconst[39m [newYear[33m,[39m setNewYear] [33m=[39m useState([32m''[39m)[33m;[39m
+   [90m 40 |[39m   [36mconst[39m [extraYears[33m,[39m setExtraYears] [33m=[39m useState[33m<[39m[33mnumber[39m[][33m>[39m([])[33m;[39m
+  [31m[1m>[22m[39m[90m 41 |[39m   [36mconst[39m [saving[33m,[39m setSaving] [33m=[39m useState([36mfalse[39m)[33m;[39m
+   [90m    |[39m                  [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
+   [90m 42 |[39m [36mconst[39m [saving[33m,[39m setSaving] [33m=[39m useState([36mfalse[39m)[33m;[39m
+   [90m 43 |[39m   useEffect(() [33m=>[39m {
+   [90m 44 |[39m     [36mif[39m (company[33m?[39m[33m.[39mid) {[0m
+
+ERROR in src/components/FinancialDataDialog.tsx:42:8
+TS2451: Cannot redeclare block-scoped variable 'saving'.
+  [0m [90m 40 |[39m   [36mconst[39m [extraYears[33m,[39m setExtraYears] [33m=[39m useState[33m<[39m[33mnumber[39m[][33m>[39m([])[33m;[39m
+   [90m 41 |[39m   [36mconst[39m [saving[33m,[39m setSaving] [33m=[39m useState([36mfalse[39m)[33m;[39m
+  [31m[1m>[22m[39m[90m 42 |[39m [36mconst[39m [saving[33m,[39m setSaving] [33m=[39m useState([36mfalse[39m)[33m;[39m
+   [90m    |[39m        [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
+   [90m 43 |[39m   useEffect(() [33m=>[39m {
+   [90m 44 |[39m     [36mif[39m (company[33m?[39m[33m.[39mid) {
+   [90m 45 |[39m       [36mconst[39m saved [33m=[39m localStorage[33m.[39mgetItem([32m`extraYears_${company.id}`[39m)[33m;[39m[0m
+
+ERROR in src/components/FinancialDataDialog.tsx:42:16
+TS2451: Cannot redeclare block-scoped variable 'setSaving'.
+  [0m [90m 40 |[39m   [36mconst[39m [extraYears[33m,[39m setExtraYears] [33m=[39m useState[33m<[39m[33mnumber[39m[][33m>[39m([])[33m;[39m
+   [90m 41 |[39m   [36mconst[39m [saving[33m,[39m setSaving] [33m=[39m useState([36mfalse[39m)[33m;[39m
+  [31m[1m>[22m[39m[90m 42 |[39m [36mconst[39m [saving[33m,[39m setSaving] [33m=[39m useState([36mfalse[39m)[33m;[39m
+   [90m    |[39m                [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
+   [90m 43 |[39m   useEffect(() [33m=>[39m {
+   [90m 44 |[39m     [36mif[39m (company[33m?[39m[33m.[39mid) {
+   [90m 45 |[39m       [36mconst[39m saved [33m=[39m localStorage[33m.[39mgetItem([32m`extraYears_${company.id}`[39m)[33m;[39m[0m
+
+ERROR in src/components/FinancialDataDialog.tsx:64:3
+TS2304: Cannot find name 'setLoadingData'.
+  [0m [90m 62 |[39m     [36mif[39m (open [33m&&[39m company) {
+   [90m 63 |[39m      [36mconst[39m fetchData [33m=[39m [36masync[39m () [33m=>[39m {
+  [31m[1m>[22m[39m[90m 64 |[39m   setLoadingData([36mtrue[39m)[33m;[39m
+   [90m    |[39m   [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
+   [90m 65 |[39m   [36mconst[39m init[33m:[39m [33mRecord[39m[33m<[39m[33mstring[39m[33m,[39m [33mRecord[39m[33m<[39m[33mstring[39m[33m,[39m string[33m>>[39m [33m=[39m {}[33m;[39m
+   [90m 66 |[39m   [36mconst[39m allVars [33m=[39m [36mnew[39m [33mSet[39m[33m<[39m[33mstring[39m[33m>[39m([33mCOMMON_VARIABLES[39m)[33m;[39m
+   [90m 67 |[39m[0m
+
+ERROR in src/components/FinancialDataDialog.tsx:105:3
+TS2304: Cannot find name 'setLoadingData'.
+  [0m [90m 103 |[39m
+   [90m 104 |[39m   setFinancialData(init)[33m;[39m
+  [31m[1m>[22m[39m[90m 105 |[39m   setLoadingData([36mfalse[39m)[33m;[39m
+   [90m     |[39m   [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
+   [90m 106 |[39m }[33m;[39m
+   [90m 107 |[39m       fetchData()[33m;[39m
+   [90m 108 |[39m     }[0m
+
+ERROR in src/components/FinancialDataDialog.tsx:41:10
+TS2451: Cannot redeclare block-scoped variable 'saving'.
+  [0m [90m 39 |[39m   [36mconst[39m [newYear[33m,[39m setNewYear] [33m=[39m useState([32m''[39m)[33m;[39m
+   [90m 40 |[39m   [36mconst[39m [extraYears[33m,[39m setExtraYears] [33m=[39m useState[33m<[39m[33mnumber[39m[][33m>[39m([])[33m;[39m
+  [31m[1m>[22m[39m[90m 41 |[39m   [36mconst[39m [saving[33m,[39m setSaving] [33m=[39m useState([36mfalse[39m)[33m;[39m
+   [90m    |[39m          [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
+   [90m 42 |[39m [36mconst[39m [saving[33m,[39m setSaving] [33m=[39m useState([36mfalse[39m)[33m;[39m
+   [90m 43 |[39m   useEffect(() [33m=>[39m {
+   [90m 44 |[39m     [36mif[39m (company[33m?[39m[33m.[39mid) {[0m
+
+ERROR in src/components/FinancialDataDialog.tsx:41:18
+TS2451: Cannot redeclare block-scoped variable 'setSaving'.
+  [0m [90m 39 |[39m   [36mconst[39m [newYear[33m,[39m setNewYear] [33m=[39m useState([32m''[39m)[33m;[39m
+   [90m 40 |[39m   [36mconst[39m [extraYears[33m,[39m setExtraYears] [33m=[39m useState[33m<[39m[33mnumber[39m[][33m>[39m([])[33m;[39m
+  [31m[1m>[22m[39m[90m 41 |[39m   [36mconst[39m [saving[33m,[39m setSaving] [33m=[39m useState([36mfalse[39m)[33m;[39m
+   [90m    |[39m                  [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
+   [90m 42 |[39m [36mconst[39m [saving[33m,[39m setSaving] [33m=[39m useState([36mfalse[39m)[33m;[39m
+   [90m 43 |[39m   useEffect(() [33m=>[39m {
+   [90m 44 |[39m     [36mif[39m (company[33m?[39m[33m.[39mid) {[0m
+
+ERROR in src/components/FinancialDataDialog.tsx:42:8
+TS2451: Cannot redeclare block-scoped variable 'saving'.
+  [0m [90m 40 |[39m   [36mconst[39m [extraYears[33m,[39m setExtraYears] [33m=[39m useState[33m<[39m[33mnumber[39m[][33m>[39m([])[33m;[39m
+   [90m 41 |[39m   [36mconst[39m [saving[33m,[39m setSaving] [33m=[39m useState([36mfalse[39m)[33m;[39m
+  [31m[1m>[22m[39m[90m 42 |[39m [36mconst[39m [saving[33m,[39m setSaving] [33m=[39m useState([36mfalse[39m)[33m;[39m
+   [90m    |[39m        [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
+   [90m 43 |[39m   useEffect(() [33m=>[39m {
+   [90m 44 |[39m     [36mif[39m (company[33m?[39m[33m.[39mid) {
+   [90m 45 |[39m       [36mconst[39m saved [33m=[39m localStorage[33m.[39mgetItem([32m`extraYears_${company.id}`[39m)[33m;[39m[0m
+
+ERROR in src/components/FinancialDataDialog.tsx:42:16
+TS2451: Cannot redeclare block-scoped variable 'setSaving'.
+  [0m [90m 40 |[39m   [36mconst[39m [extraYears[33m,[39m setExtraYears] [33m=[39m useState[33m<[39m[33mnumber[39m[][33m>[39m([])[33m;[39m
+   [90m 41 |[39m   [36mconst[39m [saving[33m,[39m setSaving] [33m=[39m useState([36mfalse[39m)[33m;[39m
+  [31m[1m>[22m[39m[90m 42 |[39m [36mconst[39m [saving[33m,[39m setSaving] [33m=[39m useState([36mfalse[39m)[33m;[39m
+   [90m    |[39m                [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
+   [90m 43 |[39m   useEffect(() [33m=>[39m {
+   [90m 44 |[39m     [36mif[39m (company[33m?[39m[33m.[39mid) {
+   [90m 45 |[39m       [36mconst[39m saved [33m=[39m localStorage[33m.[39mgetItem([32m`extraYears_${company.id}`[39m)[33m;[39m[0m
+
+ERROR in src/components/FinancialDataDialog.tsx:64:3
+TS2304: Cannot find name 'setLoadingData'.
+  [0m [90m 62 |[39m     [36mif[39m (open [33m&&[39m company) {
+   [90m 63 |[39m      [36mconst[39m fetchData [33m=[39m [36masync[39m () [33m=>[39m {
+  [31m[1m>[22m[39m[90m 64 |[39m   setLoadingData([36mtrue[39m)[33m;[39m
+   [90m    |[39m   [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
+   [90m 65 |[39m   [36mconst[39m init[33m:[39m [33mRecord[39m[33m<[39m[33mstring[39m[33m,[39m [33mRecord[39m[33m<[39m[33mstring[39m[33m,[39m string[33m>>[39m [33m=[39m {}[33m;[39m
+   [90m 66 |[39m   [36mconst[39m allVars [33m=[39m [36mnew[39m [33mSet[39m[33m<[39m[33mstring[39m[33m>[39m([33mCOMMON_VARIABLES[39m)[33m;[39m
+   [90m 67 |[39m[0m
+
+ERROR in src/components/FinancialDataDialog.tsx:105:3
+TS2304: Cannot find name 'setLoadingData'.
+  [0m [90m 103 |[39m
+   [90m 104 |[39m   setFinancialData(init)[33m;[39m
+  [31m[1m>[22m[39m[90m 105 |[39m   setLoadingData([36mfalse[39m)[33m;[39m
+   [90m     |[39m   [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
+   [90m 106 |[39m }[33m;[39m
+   [90m 107 |[39m       fetchData()[33m;[39m
+   [90m 108 |[39m     }[0m
+
+ERROR in src/components/FinancialDataDialog.tsx:167:8
+TS17008: JSX element 'DialogContent' has no corresponding closing tag.
+  [0m [90m 165 |[39m         [33m<[39m[33m/[39m[33mTypography[39m[33m>[39m
+   [90m 166 |[39m       [33m<[39m[33m/[39m[33mDialogTitle[39m[33m>[39m
+  [31m[1m>[22m[39m[90m 167 |[39m       [33m<[39m[33mDialogContent[39m[33m>[39m
+   [90m     |[39m        [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
+   [90m 168 |[39m   {loadingData [33m?[39m (
+   [90m 169 |[39m     [33m<[39m[33mBox[39m sx[33m=[39m{{ display[33m:[39m [32m'flex'[39m[33m,[39m justifyContent[33m:[39m [32m'center'[39m[33m,[39m alignItems[33m:[39m [32m'center'[39m[33m,[39m py[33m:[39m [35m8[39m }}[33m>[39m
+   [90m 170 |[39m       [33m<[39m[33mCircularProgress[39m [33m/[39m[33m>[39m[0m
+
+ERROR in src/components/FinancialDataDialog.tsx:168:4
+TS2304: Cannot find name 'loadingData'.
+  [0m [90m 166 |[39m       [33m<[39m[33m/[39m[33mDialogTitle[39m[33m>[39m
+   [90m 167 |[39m       [33m<[39m[33mDialogContent[39m[33m>[39m
+  [31m[1m>[22m[39m[90m 168 |[39m   {loadingData [33m?[39m (
+   [90m     |[39m    [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
+   [90m 169 |[39m     [33m<[39m[33mBox[39m sx[33m=[39m{{ display[33m:[39m [32m'flex'[39m[33m,[39m justifyContent[33m:[39m [32m'center'[39m[33m,[39m alignItems[33m:[39m [32m'center'[39m[33m,[39m py[33m:[39m [35m8[39m }}[33m>[39m
+   [90m 170 |[39m       [33m<[39m[33mCircularProgress[39m [33m/[39m[33m>[39m
+   [90m 171 |[39m       [33m<[39m[33mTypography[39m sx[33m=[39m{{ ml[33m:[39m [35m2[39m }} color[33m=[39m[32m"text.secondary"[39m[33m>[39m[0m
+
+ERROR in src/components/FinancialDataDialog.tsx:170:8
+TS2304: Cannot find name 'CircularProgress'.
+  [0m [90m 168 |[39m   {loadingData [33m?[39m (
+   [90m 169 |[39m     [33m<[39m[33mBox[39m sx[33m=[39m{{ display[33m:[39m [32m'flex'[39m[33m,[39m justifyContent[33m:[39m [32m'center'[39m[33m,[39m alignItems[33m:[39m [32m'center'[39m[33m,[39m py[33m:[39m [35m8[39m }}[33m>[39m
+  [31m[1m>[22m[39m[90m 170 |[39m       [33m<[39m[33mCircularProgress[39m [33m/[39m[33m>[39m
+   [90m     |[39m        [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
+   [90m 171 |[39m       [33m<[39m[33mTypography[39m sx[33m=[39m{{ ml[33m:[39m [35m2[39m }} color[33m=[39m[32m"text.secondary"[39m[33m>[39m
+   [90m 172 |[39m         [33mŁadowanie[39m danych[33m...[39m
+   [90m 173 |[39m       [33m<[39m[33m/[39m[33mTypography[39m[33m>[39m[0m
+
+ERROR in src/components/FinancialDataDialog.tsx:176:5
+TS2657: JSX expressions must have one parent element.
+  [0m [90m 174 |[39m     [33m<[39m[33m/[39m[33mBox[39m[33m>[39m
+   [90m 175 |[39m   ) [33m:[39m (
+  [31m[1m>[22m[39m[90m 176 |[39m     [33m<[39m[33m>[39m
+   [90m     |[39m     [31m[1m^[22m[39m[31m[1m^[22m[39m
+  [31m[1m>[22m[39m[90m 177 |[39m       [33m<[39m[33mTabs[39m
+   [90m     |[39m [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
+  [31m[1m>[22m[39m[90m 178 |[39m         value[33m=[39m{tab}
+   [90m     |[39m [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
+  [31m[1m>[22m[39m[90m 179 |[39m         onChange[33m=[39m{(_[33m,[39m v) [33m=>[39m setTab(v)}
+   [90m     |[39m [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
+  [31m[1m>[22m[39m[90m 180 |[39m         sx[33m=[39m{{ mb[33m:[39m [35m2[39m }}
+   [90m     |[39m [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
+  [31m[1m>[22m[39m[90m 181 |[39m         variant[33m=[39m[32m"scrollable"[39m
+   [90m     |[39m [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
+  [31m[1m>[22m[39m[90m 182 |[39m         scrollButtons[33m=[39m[32m"auto"[39m
+   [90m     |[39m [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
+  [31m[1m>[22m[39m[90m 183 |[39m       [33m>[39m
+   [90m     |[39m [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
+  [31m[1m>[22m[39m[90m 184 |[39m         {periods[33m.[39mmap((p[33m,[39m i) [33m=>[39m [33m<[39m[33mTab[39m key[33m=[39m{p[33m.[39mlabel} label[33m=[39m{p[33m.[39mlabel} value[33m=[39m{i} [33m/[39m[33m>[39m)}
+   [90m     |[39m [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
+  [31m[1m>[22m[39m[90m 185 |[39m       [33m<[39m[33m/[39m[33mTabs[39m[33m>[39m
+   [90m     |[39m [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
+  [31m[1m>[22m[39m[90m 186 |[39m       {periods[33m.[39mmap((period[33m,[39m i) [33m=>[39m (
+   [90m     |[39m [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
+  [31m[1m>[22m[39m[90m 187 |[39m           [33m<[39m[33mBox[39m key[33m=[39m{period[33m.[39mlabel} hidden[33m=[39m{tab [33m!==[39m i}[33m>[39m
+   [90m     |[39m [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
+  [31m[1m>[22m[39m[90m 188 |[39m             [33m<[39m[33mTableContainer[39m component[33m=[39m{[33mPaper[39m} variant[33m=[39m[32m"outlined"[39m[33m>[39m
+   [90m     |[39m [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
+  [31m[1m>[22m[39m[90m 189 |[39m               [33m<[39m[33mTable[39m size[33m=[39m[32m"small"[39m[33m>[39m
+   [90m     |[39m [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
+  [31m[1m>[22m[39m[90m 190 |[39m                 [33m<[39m[33mTableHead[39m[33m>[39m
+   [90m     |[39m [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
+  [31m[1m>[22m[39m[90m 191 |[39m                   [33m<[39m[33mTableRow[39m sx[33m=[39m{{ backgroundColor[33m:[39m [32m'#f5f5f5'[39m }}[33m>[39m
+   [90m     |[39m [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
+  [31m[1m>[22m[39m[90m 192 |[39m                     [33m<[39m[33mTableCell[39m[33m>[39m[33m<[39m[33mstrong[39m[33m>[39m[33mZmienna[39m[33m<[39m[33m/[39m[33mstrong[39m[33m>[39m[33m<[39m[33m/[39m[33mTableCell[39m[33m>[39m
+   [90m     |[39m [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
+  [31m[1m>[22m[39m[90m 193 |[39m                     [33m<[39m[33mTableCell[39m[33m>[39m[33m<[39m[33mstrong[39m[33m>[39m[33mWartość[39m[33m<[39m[33m/[39m[33mstrong[39m[33m>[39m[33m<[39m[33m/[39m[33mTableCell[39m[33m>[39m
+   [90m     |[39m [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
+  [31m[1m>[22m[39m[90m 194 |[39m                   [33m<[39m[33m/[39m[33mTableRow[39m[33m>[39m
+   [90m     |[39m [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
+  [31m[1m>[22m[39m[90m 195 |[39m                 [33m<[39m[33m/[39m[33mTableHead[39m[33m>[39m
+   [90m     |[39m [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
+  [31m[1m>[22m[39m[90m 196 |[39m                 [33m<[39m[33mTableBody[39m[33m>[39m
+   [90m     |[39m [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
+  [31m[1m>[22m[39m[90m 197 |[39m                   {variables[33m.[39mmap(variable [33m=>[39m (
+   [90m     |[39m [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
+  [31m[1m>[22m[39m[90m 198 |[39m                     [33m<[39m[33mTableRow[39m key[33m=[39m{variable} hover[33m>[39m
+   [90m     |[39m [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
+  [31m[1m>[22m[39m[90m 199 |[39m                       [33m<[39m[33mTableCell[39m sx[33m=[39m{{ fontFamily[33m:[39m [32m'monospace'[39m }}[33m>[39m{variable}[33m<[39m[33m/[39m[33mTableCell[39m[33m>[39m
+   [90m     |[39m [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
+  [31m[1m>[22m[39m[90m 200 |[39m                       [33m<[39m[33mTableCell[39m[33m>[39m
+   [90m     |[39m [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
+  [31m[1m>[22m[39m[90m 201 |[39m                         [33m<[39m[33mTextField[39m
+   [90m     |[39m [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
+  [31m[1m>[22m[39m[90m 202 |[39m                           size[33m=[39m[32m"small"[39m
+   [90m     |[39m [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
+  [31m[1m>[22m[39m[90m 203 |[39m                           type[33m=[39m[32m"number"[39m
+   [90m     |[39m [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
+  [31m[1m>[22m[39m[90m 204 |[39m                           value[33m=[39m{financialData[period[33m.[39mlabel][33m?[39m[33m.[39m[variable] [33m||[39m [32m''[39m}
+   [90m     |[39m [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
+  [31m[1m>[22m[39m[90m 205 |[39m                           onChange[33m=[39m{(e) [33m=>[39m setFinancialData(prev [33m=>[39m ({
+   [90m     |[39m [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
+  [31m[1m>[22m[39m[90m 206 |[39m                             [33m...[39mprev[33m,[39m
+   [90m     |[39m [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
+  [31m[1m>[22m[39m[90m 207 |[39m                             [period[33m.[39mlabel][33m:[39m { [33m...[39mprev[period[33m.[39mlabel][33m,[39m [variable][33m:[39m e[33m.[39mtarget[33m.[39mvalue }
+   [90m     |[39m [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
+  [31m[1m>[22m[39m[90m 208 |[39m                           }))}
+   [90m     |[39m [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
+  [31m[1m>[22m[39m[90m 209 |[39m                           placeholder[33m=[39m[32m"np. 1500000"[39m
+   [90m     |[39m [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
+  [31m[1m>[22m[39m[90m 210 |[39m                           sx[33m=[39m{{ width[33m:[39m [35m200[39m }}
+   [90m     |[39m [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
+  [31m[1m>[22m[39m[90m 211 |[39m                         [33m/[39m[33m>[39m
+   [90m     |[39m [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
+  [31m[1m>[22m[39m[90m 212 |[39m                       [33m<[39m[33m/[39m[33mTableCell[39m[33m>[39m
+   [90m     |[39m [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
+  [31m[1m>[22m[39m[90m 213 |[39m                     [33m<[39m[33m/[39m[33mTableRow[39m[33m>[39m
+   [90m     |[39m [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
+  [31m[1m>[22m[39m[90m 214 |[39m                   ))}
+   [90m     |[39m [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
+  [31m[1m>[22m[39m[90m 215 |[39m                 [33m<[39m[33m/[39m[33mTableBody[39m[33m>[39m
+   [90m     |[39m [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
+  [31m[1m>[22m[39m[90m 216 |[39m               [33m<[39m[33m/[39m[33mTable[39m[33m>[39m
+   [90m     |[39m [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
+  [31m[1m>[22m[39m[90m 217 |[39m             [33m<[39m[33m/[39m[33mTableContainer[39m[33m>[39m
+   [90m     |[39m [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
+  [31m[1m>[22m[39m[90m 218 |[39m
+   [90m     |[39m [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
+  [31m[1m>[22m[39m[90m 219 |[39m             [33m<[39m[33mBox[39m sx[33m=[39m{{ display[33m:[39m [32m'flex'[39m[33m,[39m gap[33m:[39m [35m2[39m[33m,[39m mt[33m:[39m [35m2[39m[33m,[39m alignItems[33m:[39m [32m'center'[39m[33m,[39m flexWrap[33m:[39m [32m'wrap'[39m }}[33m>[39m
+   [90m     |[39m [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
+  [31m[1m>[22m[39m[90m 220 |[39m               [33m<[39m[33mBox[39m sx[33m=[39m{{ display[33m:[39m [32m'flex'[39m[33m,[39m gap[33m:[39m [35m1[39m[33m,[39m alignItems[33m:[39m [32m'center'[39m }}[33m>[39m
+   [90m     |[39m [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
+  [31m[1m>[22m[39m[90m 221 |[39m                 [33m<[39m[33mTextField[39m
+   [90m     |[39m [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
+  [31m[1m>[22m[39m[90m 222 |[39m                   size[33m=[39m[32m"small"[39m
+   [90m     |[39m [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
+  [31m[1m>[22m[39m[90m 223 |[39m                   label[33m=[39m[32m"Dodaj nową zmienną"[39m
+   [90m     |[39m [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
+  [31m[1m>[22m[39m[90m 224 |[39m                   value[33m=[39m{newVariable}
+   [90m     |[39m [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
+  [31m[1m>[22m[39m[90m 225 |[39m                   onChange[33m=[39m{(e) [33m=>[39m setNewVariable(e[33m.[39mtarget[33m.[39mvalue)}
+   [90m     |[39m [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
+  [31m[1m>[22m[39m[90m 226 |[39m                   placeholder[33m=[39m[32m"np. ebitda"[39m
+   [90m     |[39m [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
+  [31m[1m>[22m[39m[90m 227 |[39m                   onKeyDown[33m=[39m{(e) [33m=>[39m e[33m.[39mkey [33m===[39m [32m'Enter'[39m [33m&&[39m addVariable()}
+   [90m     |[39m [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
+  [31m[1m>[22m[39m[90m 228 |[39m                 [33m/[39m[33m>[39m
+   [90m     |[39m [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
+  [31m[1m>[22m[39m[90m 229 |[39m                 [33m<[39m[33mButton[39m startIcon[33m=[39m{[33m<[39m[33mAddIcon[39m [33m/[39m[33m>[39m} onClick[33m=[39m{addVariable} variant[33m=[39m[32m"outlined"[39m[33m>[39m
+   [90m     |[39m [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
+  [31m[1m>[22m[39m[90m 230 |[39m                   [33mDodaj[39m
+   [90m     |[39m [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
+  [31m[1m>[22m[39m[90m 231 |[39m                 [33m<[39m[33m/[39m[33mButton[39m[33m>[39m
+   [90m     |[39m [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
+  [31m[1m>[22m[39m[90m 232 |[39m               [33m<[39m[33m/[39m[33mBox[39m[33m>[39m
+   [90m     |[39m [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
+  [31m[1m>[22m[39m[90m 233 |[39m               [33m<[39m[33mBox[39m sx[33m=[39m{{ display[33m:[39m [32m'flex'[39m[33m,[39m gap[33m:[39m [35m1[39m[33m,[39m alignItems[33m:[39m [32m'center'[39m }}[33m>[39m
+   [90m     |[39m [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
+  [31m[1m>[22m[39m[90m 234 |[39m                 [33m<[39m[33mTextField[39m
+   [90m     |[39m [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
+  [31m[1m>[22m[39m[90m 235 |[39m                   size[33m=[39m[32m"small"[39m
+   [90m     |[39m [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
+  [31m[1m>[22m[39m[90m 236 |[39m                   label[33m=[39m[32m"Dodaj rok"[39m
+   [90m     |[39m [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
+  [31m[1m>[22m[39m[90m 237 |[39m                   value[33m=[39m{newYear}
+   [90m     |[39m [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
+  [31m[1m>[22m[39m[90m 238 |[39m                   onChange[33m=[39m{(e) [33m=>[39m setNewYear(e[33m.[39mtarget[33m.[39mvalue)}
+   [90m     |[39m [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
+  [31m[1m>[22m[39m[90m 239 |[39m                   placeholder[33m=[39m[32m"np. 2019"[39m
+   [90m     |[39m [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
+  [31m[1m>[22m[39m[90m 240 |[39m                   type[33m=[39m[32m"number"[39m
+   [90m     |[39m [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
+  [31m[1m>[22m[39m[90m 241 |[39m                   sx[33m=[39m{{ width[33m:[39m [35m120[39m }}
+   [90m     |[39m [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
+  [31m[1m>[22m[39m[90m 242 |[39m                   onKeyDown[33m=[39m{(e) [33m=>[39m e[33m.[39mkey [33m===[39m [32m'Enter'[39m [33m&&[39m handleAddYear()}
+   [90m     |[39m [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
+  [31m[1m>[22m[39m[90m 243 |[39m                 [33m/[39m[33m>[39m
+   [90m     |[39m [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
+  [31m[1m>[22m[39m[90m 244 |[39m                 [33m<[39m[33mButton[39m startIcon[33m=[39m{[33m<[39m[33mAddIcon[39m [33m/[39m[33m>[39m} onClick[33m=[39m{handleAddYear} variant[33m=[39m[32m"outlined"[39m[33m>[39m
+   [90m     |[39m [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
+  [31m[1m>[22m[39m[90m 245 |[39m                   [33mDodaj[39m rok
+   [90m     |[39m [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
+  [31m[1m>[22m[39m[90m 246 |[39m                 [33m<[39m[33m/[39m[33mButton[39m[33m>[39m
+   [90m     |[39m [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
+  [31m[1m>[22m[39m[90m 247 |[39m               [33m<[39m[33m/[39m[33mBox[39m[33m>[39m
+   [90m     |[39m [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
+  [31m[1m>[22m[39m[90m 248 |[39m             [33m<[39m[33m/[39m[33mBox[39m[33m>[39m
+   [90m     |[39m [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
+  [31m[1m>[22m[39m[90m 249 |[39m           [33m<[39m[33m/[39m[33mBox[39m[33m>[39m
+   [90m     |[39m [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
+  [31m[1m>[22m[39m[90m 250 |[39m         ))}
+   [90m     |[39m [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
+  [31m[1m>[22m[39m[90m 251 |[39m       [33m<[39m[33m/[39m[33mDialogContent[39m[33m>[39m
+   [90m     |[39m [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
+  [31m[1m>[22m[39m[90m 252 |[39m       [33m<[39m[33mDialogActions[39m sx[33m=[39m{{ p[33m:[39m [35m2[39m }}[33m>[39m
+   [90m     |[39m [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
+  [31m[1m>[22m[39m[90m 253 |[39m         [33m<[39m[33mButton[39m onClick[33m=[39m{onClose}[33m>[39m[33mAnuluj[39m[33m<[39m[33m/[39m[33mButton[39m[33m>[39m
+   [90m     |[39m [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
+  [31m[1m>[22m[39m[90m 254 |[39m         [33m<[39m[33mButton[39m variant[33m=[39m[32m"contained"[39m onClick[33m=[39m{handleSave} disabled[33m=[39m{saving}[33m>[39m
+   [90m     |[39m [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
+  [31m[1m>[22m[39m[90m 255 |[39m           {saving [33m?[39m [32m'Zapisywanie...'[39m [33m:[39m [32m'Zapisz dane'[39m}
+   [90m     |[39m [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
+  [31m[1m>[22m[39m[90m 256 |[39m         [33m<[39m[33m/[39m[33mButton[39m[33m>[39m
+   [90m     |[39m [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
+  [31m[1m>[22m[39m[90m 257 |[39m       [33m<[39m[33m/[39m[33mDialogActions[39m[33m>[39m
+   [90m     |[39m [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
+   [90m 258 |[39m     [33m<[39m[33m/[39m[33mDialog[39m[33m>[39m
+   [90m 259 |[39m   )[33m;[39m
+   [90m 260 |[39m }[0m
+
+ERROR in src/components/FinancialDataDialog.tsx:251:9
+TS17015: Expected corresponding closing tag for JSX fragment.
+  [0m [90m 249 |[39m           [33m<[39m[33m/[39m[33mBox[39m[33m>[39m
+   [90m 250 |[39m         ))}
+  [31m[1m>[22m[39m[90m 251 |[39m       [33m<[39m[33m/[39m[33mDialogContent[39m[33m>[39m
+   [90m     |[39m         [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
+   [90m 252 |[39m       [33m<[39m[33mDialogActions[39m sx[33m=[39m{{ p[33m:[39m [35m2[39m }}[33m>[39m
+   [90m 253 |[39m         [33m<[39m[33mButton[39m onClick[33m=[39m{onClose}[33m>[39m[33mAnuluj[39m[33m<[39m[33m/[39m[33mButton[39m[33m>[39m
+   [90m 254 |[39m         [33m<[39m[33mButton[39m variant[33m=[39m[32m"contained"[39m onClick[33m=[39m{handleSave} disabled[33m=[39m{saving}[33m>[39m[0m
+
+ERROR in src/components/FinancialDataDialog.tsx:258:5
+TS1005: ')' expected.
+  [0m [90m 256 |[39m         [33m<[39m[33m/[39m[33mButton[39m[33m>[39m
+   [90m 257 |[39m       [33m<[39m[33m/[39m[33mDialogActions[39m[33m>[39m
+  [31m[1m>[22m[39m[90m 258 |[39m     [33m<[39m[33m/[39m[33mDialog[39m[33m>[39m
+   [90m     |[39m     [31m[1m^[22m[39m[31m[1m^[22m[39m
+   [90m 259 |[39m   )[33m;[39m
+   [90m 260 |[39m }[0m
+
+ERROR in src/components/FinancialDataDialog.tsx:41:10
+TS2451: Cannot redeclare block-scoped variable 'saving'.
+  [0m [90m 39 |[39m   [36mconst[39m [newYear[33m,[39m setNewYear] [33m=[39m useState([32m''[39m)[33m;[39m
+   [90m 40 |[39m   [36mconst[39m [extraYears[33m,[39m setExtraYears] [33m=[39m useState[33m<[39m[33mnumber[39m[][33m>[39m([])[33m;[39m
+  [31m[1m>[22m[39m[90m 41 |[39m   [36mconst[39m [saving[33m,[39m setSaving] [33m=[39m useState([36mfalse[39m)[33m;[39m
+   [90m    |[39m          [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
+   [90m 42 |[39m [36mconst[39m [saving[33m,[39m setSaving] [33m=[39m useState([36mfalse[39m)[33m;[39m
+   [90m 43 |[39m   useEffect(() [33m=>[39m {
+   [90m 44 |[39m     [36mif[39m (company[33m?[39m[33m.[39mid) {[0m
+
+ERROR in src/components/FinancialDataDialog.tsx:41:18
+TS2451: Cannot redeclare block-scoped variable 'setSaving'.
+  [0m [90m 39 |[39m   [36mconst[39m [newYear[33m,[39m setNewYear] [33m=[39m useState([32m''[39m)[33m;[39m
+   [90m 40 |[39m   [36mconst[39m [extraYears[33m,[39m setExtraYears] [33m=[39m useState[33m<[39m[33mnumber[39m[][33m>[39m([])[33m;[39m
+  [31m[1m>[22m[39m[90m 41 |[39m   [36mconst[39m [saving[33m,[39m setSaving] [33m=[39m useState([36mfalse[39m)[33m;[39m
+   [90m    |[39m                  [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
+   [90m 42 |[39m [36mconst[39m [saving[33m,[39m setSaving] [33m=[39m useState([36mfalse[39m)[33m;[39m
+   [90m 43 |[39m   useEffect(() [33m=>[39m {
+   [90m 44 |[39m     [36mif[39m (company[33m?[39m[33m.[39mid) {[0m
+
+ERROR in src/components/FinancialDataDialog.tsx:42:8
+TS2451: Cannot redeclare block-scoped variable 'saving'.
+  [0m [90m 40 |[39m   [36mconst[39m [extraYears[33m,[39m setExtraYears] [33m=[39m useState[33m<[39m[33mnumber[39m[][33m>[39m([])[33m;[39m
+   [90m 41 |[39m   [36mconst[39m [saving[33m,[39m setSaving] [33m=[39m useState([36mfalse[39m)[33m;[39m
+  [31m[1m>[22m[39m[90m 42 |[39m [36mconst[39m [saving[33m,[39m setSaving] [33m=[39m useState([36mfalse[39m)[33m;[39m
+   [90m    |[39m        [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
+   [90m 43 |[39m   useEffect(() [33m=>[39m {
+   [90m 44 |[39m     [36mif[39m (company[33m?[39m[33m.[39mid) {
+   [90m 45 |[39m       [36mconst[39m saved [33m=[39m localStorage[33m.[39mgetItem([32m`extraYears_${company.id}`[39m)[33m;[39m[0m
+
+ERROR in src/components/FinancialDataDialog.tsx:42:16
+TS2451: Cannot redeclare block-scoped variable 'setSaving'.
+  [0m [90m 40 |[39m   [36mconst[39m [extraYears[33m,[39m setExtraYears] [33m=[39m useState[33m<[39m[33mnumber[39m[][33m>[39m([])[33m;[39m
+   [90m 41 |[39m   [36mconst[39m [saving[33m,[39m setSaving] [33m=[39m useState([36mfalse[39m)[33m;[39m
+  [31m[1m>[22m[39m[90m 42 |[39m [36mconst[39m [saving[33m,[39m setSaving] [33m=[39m useState([36mfalse[39m)[33m;[39m
+   [90m    |[39m                [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
+   [90m 43 |[39m   useEffect(() [33m=>[39m {
+   [90m 44 |[39m     [36mif[39m (company[33m?[39m[33m.[39mid) {
+   [90m 45 |[39m       [36mconst[39m saved [33m=[39m localStorage[33m.[39mgetItem([32m`extraYears_${company.id}`[39m)[33m;[39m[0m
+
+ERROR in src/components/FinancialDataDialog.tsx:64:3
+TS2304: Cannot find name 'setLoadingData'.
+  [0m [90m 62 |[39m     [36mif[39m (open [33m&&[39m company) {
+   [90m 63 |[39m      [36mconst[39m fetchData [33m=[39m [36masync[39m () [33m=>[39m {
+  [31m[1m>[22m[39m[90m 64 |[39m   setLoadingData([36mtrue[39m)[33m;[39m
+   [90m    |[39m   [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
+   [90m 65 |[39m   [36mconst[39m init[33m:[39m [33mRecord[39m[33m<[39m[33mstring[39m[33m,[39m [33mRecord[39m[33m<[39m[33mstring[39m[33m,[39m string[33m>>[39m [33m=[39m {}[33m;[39m
+   [90m 66 |[39m   [36mconst[39m allVars [33m=[39m [36mnew[39m [33mSet[39m[33m<[39m[33mstring[39m[33m>[39m([33mCOMMON_VARIABLES[39m)[33m;[39m
+   [90m 67 |[39m[0m
+
+ERROR in src/components/FinancialDataDialog.tsx:105:3
+TS2304: Cannot find name 'setLoadingData'.
+  [0m [90m 103 |[39m
+   [90m 104 |[39m   setFinancialData(init)[33m;[39m
+  [31m[1m>[22m[39m[90m 105 |[39m   setLoadingData([36mfalse[39m)[33m;[39m
+   [90m     |[39m   [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
+   [90m 106 |[39m }[33m;[39m
+   [90m 107 |[39m       fetchData()[33m;[39m
+   [90m 108 |[39m     }[0m
+
+ERROR in src/components/FinancialDataDialog.tsx:168:4
+TS2304: Cannot find name 'loadingData'.
+  [0m [90m 166 |[39m       [33m<[39m[33m/[39m[33mDialogTitle[39m[33m>[39m
+   [90m 167 |[39m       [33m<[39m[33mDialogContent[39m[33m>[39m
+  [31m[1m>[22m[39m[90m 168 |[39m   {loadingData [33m?[39m (
+   [90m     |[39m    [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
+   [90m 169 |[39m     [33m<[39m[33mBox[39m sx[33m=[39m{{ display[33m:[39m [32m'flex'[39m[33m,[39m justifyContent[33m:[39m [32m'center'[39m[33m,[39m alignItems[33m:[39m [32m'center'[39m[33m,[39m py[33m:[39m [35m8[39m }}[33m>[39m
+   [90m 170 |[39m       [33m<[39m[33mCircularProgress[39m [33m/[39m[33m>[39m
+   [90m 171 |[39m       [33m<[39m[33mTypography[39m sx[33m=[39m{{ ml[33m:[39m [35m2[39m }} color[33m=[39m[32m"text.secondary"[39m[33m>[39m[0m
+
+ERROR in src/components/FinancialDataDialog.tsx:170:8
+TS2304: Cannot find name 'CircularProgress'.
+  [0m [90m 168 |[39m   {loadingData [33m?[39m (
+   [90m 169 |[39m     [33m<[39m[33mBox[39m sx[33m=[39m{{ display[33m:[39m [32m'flex'[39m[33m,[39m justifyContent[33m:[39m [32m'center'[39m[33m,[39m alignItems[33m:[39m [32m'center'[39m[33m,[39m py[33m:[39m [35m8[39m }}[33m>[39m
+  [31m[1m>[22m[39m[90m 170 |[39m       [33m<[39m[33mCircularProgress[39m [33m/[39m[33m>[39m
+   [90m     |[39m        [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
+   [90m 171 |[39m       [33m<[39m[33mTypography[39m sx[33m=[39m{{ ml[33m:[39m [35m2[39m }} color[33m=[39m[32m"text.secondary"[39m[33m>[39m
+   [90m 172 |[39m         [33mŁadowanie[39m danych[33m...[39m
+   [90m 173 |[39m       [33m<[39m[33m/[39m[33mTypography[39m[33m>[39m[0m
+
+ERROR in src/components/FinancialDataDialog.tsx:64:3
+TS2304: Cannot find name 'setLoadingData'.
+  [0m [90m 62 |[39m     [36mif[39m (open [33m&&[39m company) {
+   [90m 63 |[39m      [36mconst[39m fetchData [33m=[39m [36masync[39m () [33m=>[39m {
+  [31m[1m>[22m[39m[90m 64 |[39m   setLoadingData([36mtrue[39m)[33m;[39m
+   [90m    |[39m   [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
+   [90m 65 |[39m   [36mconst[39m init[33m:[39m [33mRecord[39m[33m<[39m[33mstring[39m[33m,[39m [33mRecord[39m[33m<[39m[33mstring[39m[33m,[39m string[33m>>[39m [33m=[39m {}[33m;[39m
+   [90m 66 |[39m   [36mconst[39m allVars [33m=[39m [36mnew[39m [33mSet[39m[33m<[39m[33mstring[39m[33m>[39m([33mCOMMON_VARIABLES[39m)[33m;[39m
+   [90m 67 |[39m[0m
+
+ERROR in src/components/FinancialDataDialog.tsx:105:3
+TS2304: Cannot find name 'setLoadingData'.
+  [0m [90m 103 |[39m
+   [90m 104 |[39m   setFinancialData(init)[33m;[39m
+  [31m[1m>[22m[39m[90m 105 |[39m   setLoadingData([36mfalse[39m)[33m;[39m
+   [90m     |[39m   [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
+   [90m 106 |[39m }[33m;[39m
+   [90m 107 |[39m       fetchData()[33m;[39m
+   [90m 108 |[39m     }[0m
+
+ERROR in src/components/FinancialDataDialog.tsx:168:4
+TS2304: Cannot find name 'loadingData'.
+  [0m [90m 166 |[39m       [33m<[39m[33m/[39m[33mDialogTitle[39m[33m>[39m
+   [90m 167 |[39m       [33m<[39m[33mDialogContent[39m[33m>[39m
+  [31m[1m>[22m[39m[90m 168 |[39m   {loadingData [33m?[39m (
+   [90m     |[39m    [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
+   [90m 169 |[39m     [33m<[39m[33mBox[39m sx[33m=[39m{{ display[33m:[39m [32m'flex'[39m[33m,[39m justifyContent[33m:[39m [32m'center'[39m[33m,[39m alignItems[33m:[39m [32m'center'[39m[33m,[39m py[33m:[39m [35m8[39m }}[33m>[39m
+   [90m 170 |[39m       [33m<[39m[33mCircularProgress[39m [33m/[39m[33m>[39m
+   [90m 171 |[39m       [33m<[39m[33mTypography[39m sx[33m=[39m{{ ml[33m:[39m [35m2[39m }} color[33m=[39m[32m"text.secondary"[39m[33m>[39m[0m
+
+ERROR in src/components/FinancialDataDialog.tsx:170:8
+TS2304: Cannot find name 'CircularProgress'.
+  [0m [90m 168 |[39m   {loadingData [33m?[39m (
+   [90m 169 |[39m     [33m<[39m[33mBox[39m sx[33m=[39m{{ display[33m:[39m [32m'flex'[39m[33m,[39m justifyContent[33m:[39m [32m'center'[39m[33m,[39m alignItems[33m:[39m [32m'center'[39m[33m,[39m py[33m:[39m [35m8[39m }}[33m>[39m
+  [31m[1m>[22m[39m[90m 170 |[39m       [33m<[39m[33mCircularProgress[39m [33m/[39m[33m>[39m
+   [90m     |[39m        [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
+   [90m 171 |[39m       [33m<[39m[33mTypography[39m sx[33m=[39m{{ ml[33m:[39m [35m2[39m }} color[33m=[39m[32m"text.secondary"[39m[33m>[39m
+   [90m 172 |[39m         [33mŁadowanie[39m danych[33m...[39m
+   [90m 173 |[39m       [33m<[39m[33m/[39m[33mTypography[39m[33m>[39m[0m
+
+ERROR in src/components/FinancialDataDialog.tsx:170:8
+TS2304: Cannot find name 'CircularProgress'.
+  [0m [90m 168 |[39m   {loadingData [33m?[39m (
+   [90m 169 |[39m     [33m<[39m[33mBox[39m sx[33m=[39m{{ display[33m:[39m [32m'flex'[39m[33m,[39m justifyContent[33m:[39m [32m'center'[39m[33m,[39m alignItems[33m:[39m [32m'center'[39m[33m,[39m py[33m:[39m [35m8[39m }}[33m>[39m
+  [31m[1m>[22m[39m[90m 170 |[39m       [33m<[39m[33mCircularProgress[39m [33m/[39m[33m>[39m
+   [90m     |[39m        [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
+   [90m 171 |[39m       [33m<[39m[33mTypography[39m sx[33m=[39m{{ ml[33m:[39m [35m2[39m }} color[33m=[39m[32m"text.secondary"[39m[33m>[39m
+   [90m 172 |[39m         [33mŁadowanie[39m danych[33m...[39m
+   [90m 173 |[39m       [33m<[39m[33m/[39m[33mTypography[39m[33m>[39m[0m
+
+ERROR in src/components/FinancialDataDialog.tsx:3:3
+TS2300: Duplicate identifier 'Dialog'.
+  [0m [90m 1 |[39m [36mimport[39m { useEffect[33m,[39m useState } [36mfrom[39m [32m'react'[39m[33m;[39m
+   [90m 2 |[39m [36mimport[39m {
+  [31m[1m>[22m[39m[90m 3 |[39m   [33mDialog[39m[33m,[39m [33mDialogTitle[39m[33m,[39m [33mDialogContent[39m[33m,[39m [33mDialogActions[39m[33m,[39m [33mButton[39m[33m,[39m
+   [90m   |[39m   [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
+   [90m 4 |[39m   [33mTable[39m[33m,[39m [33mTableBody[39m[33m,[39m [33mTableCell[39m[33m,[39m [33mTableContainer[39m[33m,[39m [33mTableHead[39m[33m,[39m
+   [90m 5 |[39m   [33mTableRow[39m[33m,[39m [33mTextField[39m[33m,[39m [33mTabs[39m[33m,[39m [33mTab[39m[33m,[39m [33mBox[39m[33m,[39m [33mTypography[39m[33m,[39m [33mPaper[39m
+   [90m 6 |[39m } [36mfrom[39m [32m'@mui/material'[39m[33m;[39m[0m
+
+ERROR in src/components/FinancialDataDialog.tsx:3:11
+TS2300: Duplicate identifier 'DialogTitle'.
+  [0m [90m 1 |[39m [36mimport[39m { useEffect[33m,[39m useState } [36mfrom[39m [32m'react'[39m[33m;[39m
+   [90m 2 |[39m [36mimport[39m {
+  [31m[1m>[22m[39m[90m 3 |[39m   [33mDialog[39m[33m,[39m [33mDialogTitle[39m[33m,[39m [33mDialogContent[39m[33m,[39m [33mDialogActions[39m[33m,[39m [33mButton[39m[33m,[39m
+   [90m   |[39m           [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
+   [90m 4 |[39m   [33mTable[39m[33m,[39m [33mTableBody[39m[33m,[39m [33mTableCell[39m[33m,[39m [33mTableContainer[39m[33m,[39m [33mTableHead[39m[33m,[39m
+   [90m 5 |[39m   [33mTableRow[39m[33m,[39m [33mTextField[39m[33m,[39m [33mTabs[39m[33m,[39m [33mTab[39m[33m,[39m [33mBox[39m[33m,[39m [33mTypography[39m[33m,[39m [33mPaper[39m
+   [90m 6 |[39m } [36mfrom[39m [32m'@mui/material'[39m[33m;[39m[0m
+
+ERROR in src/components/FinancialDataDialog.tsx:3:24
+TS2300: Duplicate identifier 'DialogContent'.
+  [0m [90m 1 |[39m [36mimport[39m { useEffect[33m,[39m useState } [36mfrom[39m [32m'react'[39m[33m;[39m
+   [90m 2 |[39m [36mimport[39m {
+  [31m[1m>[22m[39m[90m 3 |[39m   [33mDialog[39m[33m,[39m [33mDialogTitle[39m[33m,[39m [33mDialogContent[39m[33m,[39m [33mDialogActions[39m[33m,[39m [33mButton[39m[33m,[39m
+   [90m   |[39m                        [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
+   [90m 4 |[39m   [33mTable[39m[33m,[39m [33mTableBody[39m[33m,[39m [33mTableCell[39m[33m,[39m [33mTableContainer[39m[33m,[39m [33mTableHead[39m[33m,[39m
+   [90m 5 |[39m   [33mTableRow[39m[33m,[39m [33mTextField[39m[33m,[39m [33mTabs[39m[33m,[39m [33mTab[39m[33m,[39m [33mBox[39m[33m,[39m [33mTypography[39m[33m,[39m [33mPaper[39m
+   [90m 6 |[39m } [36mfrom[39m [32m'@mui/material'[39m[33m;[39m[0m
+
+ERROR in src/components/FinancialDataDialog.tsx:3:39
+TS2300: Duplicate identifier 'DialogActions'.
+  [0m [90m 1 |[39m [36mimport[39m { useEffect[33m,[39m useState } [36mfrom[39m [32m'react'[39m[33m;[39m
+   [90m 2 |[39m [36mimport[39m {
+  [31m[1m>[22m[39m[90m 3 |[39m   [33mDialog[39m[33m,[39m [33mDialogTitle[39m[33m,[39m [33mDialogContent[39m[33m,[39m [33mDialogActions[39m[33m,[39m [33mButton[39m[33m,[39m
+   [90m   |[39m                                       [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
+   [90m 4 |[39m   [33mTable[39m[33m,[39m [33mTableBody[39m[33m,[39m [33mTableCell[39m[33m,[39m [33mTableContainer[39m[33m,[39m [33mTableHead[39m[33m,[39m
+   [90m 5 |[39m   [33mTableRow[39m[33m,[39m [33mTextField[39m[33m,[39m [33mTabs[39m[33m,[39m [33mTab[39m[33m,[39m [33mBox[39m[33m,[39m [33mTypography[39m[33m,[39m [33mPaper[39m
+   [90m 6 |[39m } [36mfrom[39m [32m'@mui/material'[39m[33m;[39m[0m
+
+ERROR in src/components/FinancialDataDialog.tsx:3:54
+TS2300: Duplicate identifier 'Button'.
+  [0m [90m 1 |[39m [36mimport[39m { useEffect[33m,[39m useState } [36mfrom[39m [32m'react'[39m[33m;[39m
+   [90m 2 |[39m [36mimport[39m {
+  [31m[1m>[22m[39m[90m 3 |[39m   [33mDialog[39m[33m,[39m [33mDialogTitle[39m[33m,[39m [33mDialogContent[39m[33m,[39m [33mDialogActions[39m[33m,[39m [33mButton[39m[33m,[39m
+   [90m   |[39m                                                      [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
+   [90m 4 |[39m   [33mTable[39m[33m,[39m [33mTableBody[39m[33m,[39m [33mTableCell[39m[33m,[39m [33mTableContainer[39m[33m,[39m [33mTableHead[39m[33m,[39m
+   [90m 5 |[39m   [33mTableRow[39m[33m,[39m [33mTextField[39m[33m,[39m [33mTabs[39m[33m,[39m [33mTab[39m[33m,[39m [33mBox[39m[33m,[39m [33mTypography[39m[33m,[39m [33mPaper[39m
+   [90m 6 |[39m } [36mfrom[39m [32m'@mui/material'[39m[33m;[39m[0m
+
+ERROR in src/components/FinancialDataDialog.tsx:4:3
+TS2300: Duplicate identifier 'Table'.
+  [0m [90m 2 |[39m [36mimport[39m {
+   [90m 3 |[39m   [33mDialog[39m[33m,[39m [33mDialogTitle[39m[33m,[39m [33mDialogContent[39m[33m,[39m [33mDialogActions[39m[33m,[39m [33mButton[39m[33m,[39m
+  [31m[1m>[22m[39m[90m 4 |[39m   [33mTable[39m[33m,[39m [33mTableBody[39m[33m,[39m [33mTableCell[39m[33m,[39m [33mTableContainer[39m[33m,[39m [33mTableHead[39m[33m,[39m
+   [90m   |[39m   [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
+   [90m 5 |[39m   [33mTableRow[39m[33m,[39m [33mTextField[39m[33m,[39m [33mTabs[39m[33m,[39m [33mTab[39m[33m,[39m [33mBox[39m[33m,[39m [33mTypography[39m[33m,[39m [33mPaper[39m
+   [90m 6 |[39m } [36mfrom[39m [32m'@mui/material'[39m[33m;[39m
+   [90m 7 |[39m [36mimport[39m [33mAddIcon[39m [36mfrom[39m [32m'@mui/icons-material/Add'[39m[33m;[39m[0m
+
+ERROR in src/components/FinancialDataDialog.tsx:4:10
+TS2300: Duplicate identifier 'TableBody'.
+  [0m [90m 2 |[39m [36mimport[39m {
+   [90m 3 |[39m   [33mDialog[39m[33m,[39m [33mDialogTitle[39m[33m,[39m [33mDialogContent[39m[33m,[39m [33mDialogActions[39m[33m,[39m [33mButton[39m[33m,[39m
+  [31m[1m>[22m[39m[90m 4 |[39m   [33mTable[39m[33m,[39m [33mTableBody[39m[33m,[39m [33mTableCell[39m[33m,[39m [33mTableContainer[39m[33m,[39m [33mTableHead[39m[33m,[39m
+   [90m   |[39m          [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
+   [90m 5 |[39m   [33mTableRow[39m[33m,[39m [33mTextField[39m[33m,[39m [33mTabs[39m[33m,[39m [33mTab[39m[33m,[39m [33mBox[39m[33m,[39m [33mTypography[39m[33m,[39m [33mPaper[39m
+   [90m 6 |[39m } [36mfrom[39m [32m'@mui/material'[39m[33m;[39m
+   [90m 7 |[39m [36mimport[39m [33mAddIcon[39m [36mfrom[39m [32m'@mui/icons-material/Add'[39m[33m;[39m[0m
+
+ERROR in src/components/FinancialDataDialog.tsx:4:21
+TS2300: Duplicate identifier 'TableCell'.
+  [0m [90m 2 |[39m [36mimport[39m {
+   [90m 3 |[39m   [33mDialog[39m[33m,[39m [33mDialogTitle[39m[33m,[39m [33mDialogContent[39m[33m,[39m [33mDialogActions[39m[33m,[39m [33mButton[39m[33m,[39m
+  [31m[1m>[22m[39m[90m 4 |[39m   [33mTable[39m[33m,[39m [33mTableBody[39m[33m,[39m [33mTableCell[39m[33m,[39m [33mTableContainer[39m[33m,[39m [33mTableHead[39m[33m,[39m
+   [90m   |[39m                     [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
+   [90m 5 |[39m   [33mTableRow[39m[33m,[39m [33mTextField[39m[33m,[39m [33mTabs[39m[33m,[39m [33mTab[39m[33m,[39m [33mBox[39m[33m,[39m [33mTypography[39m[33m,[39m [33mPaper[39m
+   [90m 6 |[39m } [36mfrom[39m [32m'@mui/material'[39m[33m;[39m
+   [90m 7 |[39m [36mimport[39m [33mAddIcon[39m [36mfrom[39m [32m'@mui/icons-material/Add'[39m[33m;[39m[0m
+
+ERROR in src/components/FinancialDataDialog.tsx:4:32
+TS2300: Duplicate identifier 'TableContainer'.
+  [0m [90m 2 |[39m [36mimport[39m {
+   [90m 3 |[39m   [33mDialog[39m[33m,[39m [33mDialogTitle[39m[33m,[39m [33mDialogContent[39m[33m,[39m [33mDialogActions[39m[33m,[39m [33mButton[39m[33m,[39m
+  [31m[1m>[22m[39m[90m 4 |[39m   [33mTable[39m[33m,[39m [33mTableBody[39m[33m,[39m [33mTableCell[39m[33m,[39m [33mTableContainer[39m[33m,[39m [33mTableHead[39m[33m,[39m
+   [90m   |[39m                                [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
+   [90m 5 |[39m   [33mTableRow[39m[33m,[39m [33mTextField[39m[33m,[39m [33mTabs[39m[33m,[39m [33mTab[39m[33m,[39m [33mBox[39m[33m,[39m [33mTypography[39m[33m,[39m [33mPaper[39m
+   [90m 6 |[39m } [36mfrom[39m [32m'@mui/material'[39m[33m;[39m
+   [90m 7 |[39m [36mimport[39m [33mAddIcon[39m [36mfrom[39m [32m'@mui/icons-material/Add'[39m[33m;[39m[0m
+
+ERROR in src/components/FinancialDataDialog.tsx:4:48
+TS2300: Duplicate identifier 'TableHead'.
+  [0m [90m 2 |[39m [36mimport[39m {
+   [90m 3 |[39m   [33mDialog[39m[33m,[39m [33mDialogTitle[39m[33m,[39m [33mDialogContent[39m[33m,[39m [33mDialogActions[39m[33m,[39m [33mButton[39m[33m,[39m
+  [31m[1m>[22m[39m[90m 4 |[39m   [33mTable[39m[33m,[39m [33mTableBody[39m[33m,[39m [33mTableCell[39m[33m,[39m [33mTableContainer[39m[33m,[39m [33mTableHead[39m[33m,[39m
+   [90m   |[39m                                                [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
+   [90m 5 |[39m   [33mTableRow[39m[33m,[39m [33mTextField[39m[33m,[39m [33mTabs[39m[33m,[39m [33mTab[39m[33m,[39m [33mBox[39m[33m,[39m [33mTypography[39m[33m,[39m [33mPaper[39m
+   [90m 6 |[39m } [36mfrom[39m [32m'@mui/material'[39m[33m;[39m
+   [90m 7 |[39m [36mimport[39m [33mAddIcon[39m [36mfrom[39m [32m'@mui/icons-material/Add'[39m[33m;[39m[0m
+
+ERROR in src/components/FinancialDataDialog.tsx:5:3
+TS2300: Duplicate identifier 'TableRow'.
+  [0m [90m 3 |[39m   [33mDialog[39m[33m,[39m [33mDialogTitle[39m[33m,[39m [33mDialogContent[39m[33m,[39m [33mDialogActions[39m[33m,[39m [33mButton[39m[33m,[39m
+   [90m 4 |[39m   [33mTable[39m[33m,[39m [33mTableBody[39m[33m,[39m [33mTableCell[39m[33m,[39m [33mTableContainer[39m[33m,[39m [33mTableHead[39m[33m,[39m
+  [31m[1m>[22m[39m[90m 5 |[39m   [33mTableRow[39m[33m,[39m [33mTextField[39m[33m,[39m [33mTabs[39m[33m,[39m [33mTab[39m[33m,[39m [33mBox[39m[33m,[39m [33mTypography[39m[33m,[39m [33mPaper[39m
+   [90m   |[39m   [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
+   [90m 6 |[39m } [36mfrom[39m [32m'@mui/material'[39m[33m;[39m
+   [90m 7 |[39m [36mimport[39m [33mAddIcon[39m [36mfrom[39m [32m'@mui/icons-material/Add'[39m[33m;[39m
+   [90m 8 |[39m [36mimport[39m { financialsApi } [36mfrom[39m [32m'../services/api'[39m[33m;[39m[0m
+
+ERROR in src/components/FinancialDataDialog.tsx:5:13
+TS2300: Duplicate identifier 'TextField'.
+  [0m [90m 3 |[39m   [33mDialog[39m[33m,[39m [33mDialogTitle[39m[33m,[39m [33mDialogContent[39m[33m,[39m [33mDialogActions[39m[33m,[39m [33mButton[39m[33m,[39m
+   [90m 4 |[39m   [33mTable[39m[33m,[39m [33mTableBody[39m[33m,[39m [33mTableCell[39m[33m,[39m [33mTableContainer[39m[33m,[39m [33mTableHead[39m[33m,[39m
+  [31m[1m>[22m[39m[90m 5 |[39m   [33mTableRow[39m[33m,[39m [33mTextField[39m[33m,[39m [33mTabs[39m[33m,[39m [33mTab[39m[33m,[39m [33mBox[39m[33m,[39m [33mTypography[39m[33m,[39m [33mPaper[39m
+   [90m   |[39m             [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
+   [90m 6 |[39m } [36mfrom[39m [32m'@mui/material'[39m[33m;[39m
+   [90m 7 |[39m [36mimport[39m [33mAddIcon[39m [36mfrom[39m [32m'@mui/icons-material/Add'[39m[33m;[39m
+   [90m 8 |[39m [36mimport[39m { financialsApi } [36mfrom[39m [32m'../services/api'[39m[33m;[39m[0m
+
+ERROR in src/components/FinancialDataDialog.tsx:5:24
+TS2300: Duplicate identifier 'Tabs'.
+  [0m [90m 3 |[39m   [33mDialog[39m[33m,[39m [33mDialogTitle[39m[33m,[39m [33mDialogContent[39m[33m,[39m [33mDialogActions[39m[33m,[39m [33mButton[39m[33m,[39m
+   [90m 4 |[39m   [33mTable[39m[33m,[39m [33mTableBody[39m[33m,[39m [33mTableCell[39m[33m,[39m [33mTableContainer[39m[33m,[39m [33mTableHead[39m[33m,[39m
+  [31m[1m>[22m[39m[90m 5 |[39m   [33mTableRow[39m[33m,[39m [33mTextField[39m[33m,[39m [33mTabs[39m[33m,[39m [33mTab[39m[33m,[39m [33mBox[39m[33m,[39m [33mTypography[39m[33m,[39m [33mPaper[39m
+   [90m   |[39m                        [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
+   [90m 6 |[39m } [36mfrom[39m [32m'@mui/material'[39m[33m;[39m
+   [90m 7 |[39m [36mimport[39m [33mAddIcon[39m [36mfrom[39m [32m'@mui/icons-material/Add'[39m[33m;[39m
+   [90m 8 |[39m [36mimport[39m { financialsApi } [36mfrom[39m [32m'../services/api'[39m[33m;[39m[0m
+
+ERROR in src/components/FinancialDataDialog.tsx:5:30
+TS2300: Duplicate identifier 'Tab'.
+  [0m [90m 3 |[39m   [33mDialog[39m[33m,[39m [33mDialogTitle[39m[33m,[39m [33mDialogContent[39m[33m,[39m [33mDialogActions[39m[33m,[39m [33mButton[39m[33m,[39m
+   [90m 4 |[39m   [33mTable[39m[33m,[39m [33mTableBody[39m[33m,[39m [33mTableCell[39m[33m,[39m [33mTableContainer[39m[33m,[39m [33mTableHead[39m[33m,[39m
+  [31m[1m>[22m[39m[90m 5 |[39m   [33mTableRow[39m[33m,[39m [33mTextField[39m[33m,[39m [33mTabs[39m[33m,[39m [33mTab[39m[33m,[39m [33mBox[39m[33m,[39m [33mTypography[39m[33m,[39m [33mPaper[39m
+   [90m   |[39m                              [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
+   [90m 6 |[39m } [36mfrom[39m [32m'@mui/material'[39m[33m;[39m
+   [90m 7 |[39m [36mimport[39m [33mAddIcon[39m [36mfrom[39m [32m'@mui/icons-material/Add'[39m[33m;[39m
+   [90m 8 |[39m [36mimport[39m { financialsApi } [36mfrom[39m [32m'../services/api'[39m[33m;[39m[0m
+
+ERROR in src/components/FinancialDataDialog.tsx:5:35
+TS2300: Duplicate identifier 'Box'.
+  [0m [90m 3 |[39m   [33mDialog[39m[33m,[39m [33mDialogTitle[39m[33m,[39m [33mDialogContent[39m[33m,[39m [33mDialogActions[39m[33m,[39m [33mButton[39m[33m,[39m
+   [90m 4 |[39m   [33mTable[39m[33m,[39m [33mTableBody[39m[33m,[39m [33mTableCell[39m[33m,[39m [33mTableContainer[39m[33m,[39m [33mTableHead[39m[33m,[39m
+  [31m[1m>[22m[39m[90m 5 |[39m   [33mTableRow[39m[33m,[39m [33mTextField[39m[33m,[39m [33mTabs[39m[33m,[39m [33mTab[39m[33m,[39m [33mBox[39m[33m,[39m [33mTypography[39m[33m,[39m [33mPaper[39m
+   [90m   |[39m                                   [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
+   [90m 6 |[39m } [36mfrom[39m [32m'@mui/material'[39m[33m;[39m
+   [90m 7 |[39m [36mimport[39m [33mAddIcon[39m [36mfrom[39m [32m'@mui/icons-material/Add'[39m[33m;[39m
+   [90m 8 |[39m [36mimport[39m { financialsApi } [36mfrom[39m [32m'../services/api'[39m[33m;[39m[0m
+
+ERROR in src/components/FinancialDataDialog.tsx:5:40
+TS2300: Duplicate identifier 'Typography'.
+  [0m [90m 3 |[39m   [33mDialog[39m[33m,[39m [33mDialogTitle[39m[33m,[39m [33mDialogContent[39m[33m,[39m [33mDialogActions[39m[33m,[39m [33mButton[39m[33m,[39m
+   [90m 4 |[39m   [33mTable[39m[33m,[39m [33mTableBody[39m[33m,[39m [33mTableCell[39m[33m,[39m [33mTableContainer[39m[33m,[39m [33mTableHead[39m[33m,[39m
+  [31m[1m>[22m[39m[90m 5 |[39m   [33mTableRow[39m[33m,[39m [33mTextField[39m[33m,[39m [33mTabs[39m[33m,[39m [33mTab[39m[33m,[39m [33mBox[39m[33m,[39m [33mTypography[39m[33m,[39m [33mPaper[39m
+   [90m   |[39m                                        [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
+   [90m 6 |[39m } [36mfrom[39m [32m'@mui/material'[39m[33m;[39m
+   [90m 7 |[39m [36mimport[39m [33mAddIcon[39m [36mfrom[39m [32m'@mui/icons-material/Add'[39m[33m;[39m
+   [90m 8 |[39m [36mimport[39m { financialsApi } [36mfrom[39m [32m'../services/api'[39m[33m;[39m[0m
+
+ERROR in src/components/FinancialDataDialog.tsx:5:52
+TS2300: Duplicate identifier 'Paper'.
+  [0m [90m 3 |[39m   [33mDialog[39m[33m,[39m [33mDialogTitle[39m[33m,[39m [33mDialogContent[39m[33m,[39m [33mDialogActions[39m[33m,[39m [33mButton[39m[33m,[39m
+   [90m 4 |[39m   [33mTable[39m[33m,[39m [33mTableBody[39m[33m,[39m [33mTableCell[39m[33m,[39m [33mTableContainer[39m[33m,[39m [33mTableHead[39m[33m,[39m
+  [31m[1m>[22m[39m[90m 5 |[39m   [33mTableRow[39m[33m,[39m [33mTextField[39m[33m,[39m [33mTabs[39m[33m,[39m [33mTab[39m[33m,[39m [33mBox[39m[33m,[39m [33mTypography[39m[33m,[39m [33mPaper[39m
+   [90m   |[39m                                                    [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
+   [90m 6 |[39m } [36mfrom[39m [32m'@mui/material'[39m[33m;[39m
+   [90m 7 |[39m [36mimport[39m [33mAddIcon[39m [36mfrom[39m [32m'@mui/icons-material/Add'[39m[33m;[39m
+   [90m 8 |[39m [36mimport[39m { financialsApi } [36mfrom[39m [32m'../services/api'[39m[33m;[39m[0m
+
+ERROR in src/components/FinancialDataDialog.tsx:10:3
+TS2300: Duplicate identifier 'Dialog'.
+  [0m [90m  8 |[39m [36mimport[39m { financialsApi } [36mfrom[39m [32m'../services/api'[39m[33m;[39m
+   [90m  9 |[39m [36mimport[39m {
+  [31m[1m>[22m[39m[90m 10 |[39m   [33mDialog[39m[33m,[39m [33mDialogTitle[39m[33m,[39m [33mDialogContent[39m[33m,[39m [33mDialogActions[39m[33m,[39m [33mButton[39m[33m,[39m
+   [90m    |[39m   [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
+   [90m 11 |[39m   [33mTable[39m[33m,[39m [33mTableBody[39m[33m,[39m [33mTableCell[39m[33m,[39m [33mTableContainer[39m[33m,[39m [33mTableHead[39m[33m,[39m
+   [90m 12 |[39m   [33mTableRow[39m[33m,[39m [33mTextField[39m[33m,[39m [33mTabs[39m[33m,[39m [33mTab[39m[33m,[39m [33mBox[39m[33m,[39m [33mTypography[39m[33m,[39m [33mPaper[39m[33m,[39m
+   [90m 13 |[39m   [33mCircularProgress[39m[0m
+
+ERROR in src/components/FinancialDataDialog.tsx:10:11
+TS2300: Duplicate identifier 'DialogTitle'.
+  [0m [90m  8 |[39m [36mimport[39m { financialsApi } [36mfrom[39m [32m'../services/api'[39m[33m;[39m
+   [90m  9 |[39m [36mimport[39m {
+  [31m[1m>[22m[39m[90m 10 |[39m   [33mDialog[39m[33m,[39m [33mDialogTitle[39m[33m,[39m [33mDialogContent[39m[33m,[39m [33mDialogActions[39m[33m,[39m [33mButton[39m[33m,[39m
+   [90m    |[39m           [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
+   [90m 11 |[39m   [33mTable[39m[33m,[39m [33mTableBody[39m[33m,[39m [33mTableCell[39m[33m,[39m [33mTableContainer[39m[33m,[39m [33mTableHead[39m[33m,[39m
+   [90m 12 |[39m   [33mTableRow[39m[33m,[39m [33mTextField[39m[33m,[39m [33mTabs[39m[33m,[39m [33mTab[39m[33m,[39m [33mBox[39m[33m,[39m [33mTypography[39m[33m,[39m [33mPaper[39m[33m,[39m
+   [90m 13 |[39m   [33mCircularProgress[39m[0m
+
+ERROR in src/components/FinancialDataDialog.tsx:10:24
+TS2300: Duplicate identifier 'DialogContent'.
+  [0m [90m  8 |[39m [36mimport[39m { financialsApi } [36mfrom[39m [32m'../services/api'[39m[33m;[39m
+   [90m  9 |[39m [36mimport[39m {
+  [31m[1m>[22m[39m[90m 10 |[39m   [33mDialog[39m[33m,[39m [33mDialogTitle[39m[33m,[39m [33mDialogContent[39m[33m,[39m [33mDialogActions[39m[33m,[39m [33mButton[39m[33m,[39m
+   [90m    |[39m                        [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
+   [90m 11 |[39m   [33mTable[39m[33m,[39m [33mTableBody[39m[33m,[39m [33mTableCell[39m[33m,[39m [33mTableContainer[39m[33m,[39m [33mTableHead[39m[33m,[39m
+   [90m 12 |[39m   [33mTableRow[39m[33m,[39m [33mTextField[39m[33m,[39m [33mTabs[39m[33m,[39m [33mTab[39m[33m,[39m [33mBox[39m[33m,[39m [33mTypography[39m[33m,[39m [33mPaper[39m[33m,[39m
+   [90m 13 |[39m   [33mCircularProgress[39m[0m
+
+ERROR in src/components/FinancialDataDialog.tsx:10:39
+TS2300: Duplicate identifier 'DialogActions'.
+  [0m [90m  8 |[39m [36mimport[39m { financialsApi } [36mfrom[39m [32m'../services/api'[39m[33m;[39m
+   [90m  9 |[39m [36mimport[39m {
+  [31m[1m>[22m[39m[90m 10 |[39m   [33mDialog[39m[33m,[39m [33mDialogTitle[39m[33m,[39m [33mDialogContent[39m[33m,[39m [33mDialogActions[39m[33m,[39m [33mButton[39m[33m,[39m
+   [90m    |[39m                                       [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
+   [90m 11 |[39m   [33mTable[39m[33m,[39m [33mTableBody[39m[33m,[39m [33mTableCell[39m[33m,[39m [33mTableContainer[39m[33m,[39m [33mTableHead[39m[33m,[39m
+   [90m 12 |[39m   [33mTableRow[39m[33m,[39m [33mTextField[39m[33m,[39m [33mTabs[39m[33m,[39m [33mTab[39m[33m,[39m [33mBox[39m[33m,[39m [33mTypography[39m[33m,[39m [33mPaper[39m[33m,[39m
+   [90m 13 |[39m   [33mCircularProgress[39m[0m
+
+ERROR in src/components/FinancialDataDialog.tsx:10:54
+TS2300: Duplicate identifier 'Button'.
+  [0m [90m  8 |[39m [36mimport[39m { financialsApi } [36mfrom[39m [32m'../services/api'[39m[33m;[39m
+   [90m  9 |[39m [36mimport[39m {
+  [31m[1m>[22m[39m[90m 10 |[39m   [33mDialog[39m[33m,[39m [33mDialogTitle[39m[33m,[39m [33mDialogContent[39m[33m,[39m [33mDialogActions[39m[33m,[39m [33mButton[39m[33m,[39m
+   [90m    |[39m                                                      [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
+   [90m 11 |[39m   [33mTable[39m[33m,[39m [33mTableBody[39m[33m,[39m [33mTableCell[39m[33m,[39m [33mTableContainer[39m[33m,[39m [33mTableHead[39m[33m,[39m
+   [90m 12 |[39m   [33mTableRow[39m[33m,[39m [33mTextField[39m[33m,[39m [33mTabs[39m[33m,[39m [33mTab[39m[33m,[39m [33mBox[39m[33m,[39m [33mTypography[39m[33m,[39m [33mPaper[39m[33m,[39m
+   [90m 13 |[39m   [33mCircularProgress[39m[0m
+
+ERROR in src/components/FinancialDataDialog.tsx:11:3
+TS2300: Duplicate identifier 'Table'.
+  [0m [90m  9 |[39m [36mimport[39m {
+   [90m 10 |[39m   [33mDialog[39m[33m,[39m [33mDialogTitle[39m[33m,[39m [33mDialogContent[39m[33m,[39m [33mDialogActions[39m[33m,[39m [33mButton[39m[33m,[39m
+  [31m[1m>[22m[39m[90m 11 |[39m   [33mTable[39m[33m,[39m [33mTableBody[39m[33m,[39m [33mTableCell[39m[33m,[39m [33mTableContainer[39m[33m,[39m [33mTableHead[39m[33m,[39m
+   [90m    |[39m   [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
+   [90m 12 |[39m   [33mTableRow[39m[33m,[39m [33mTextField[39m[33m,[39m [33mTabs[39m[33m,[39m [33mTab[39m[33m,[39m [33mBox[39m[33m,[39m [33mTypography[39m[33m,[39m [33mPaper[39m[33m,[39m
+   [90m 13 |[39m   [33mCircularProgress[39m
+   [90m 14 |[39m } [36mfrom[39m [32m'@mui/material'[39m[33m;[39m[0m
+
+ERROR in src/components/FinancialDataDialog.tsx:11:10
+TS2300: Duplicate identifier 'TableBody'.
+  [0m [90m  9 |[39m [36mimport[39m {
+   [90m 10 |[39m   [33mDialog[39m[33m,[39m [33mDialogTitle[39m[33m,[39m [33mDialogContent[39m[33m,[39m [33mDialogActions[39m[33m,[39m [33mButton[39m[33m,[39m
+  [31m[1m>[22m[39m[90m 11 |[39m   [33mTable[39m[33m,[39m [33mTableBody[39m[33m,[39m [33mTableCell[39m[33m,[39m [33mTableContainer[39m[33m,[39m [33mTableHead[39m[33m,[39m
+   [90m    |[39m          [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
+   [90m 12 |[39m   [33mTableRow[39m[33m,[39m [33mTextField[39m[33m,[39m [33mTabs[39m[33m,[39m [33mTab[39m[33m,[39m [33mBox[39m[33m,[39m [33mTypography[39m[33m,[39m [33mPaper[39m[33m,[39m
+   [90m 13 |[39m   [33mCircularProgress[39m
+   [90m 14 |[39m } [36mfrom[39m [32m'@mui/material'[39m[33m;[39m[0m
+
+ERROR in src/components/FinancialDataDialog.tsx:11:21
+TS2300: Duplicate identifier 'TableCell'.
+  [0m [90m  9 |[39m [36mimport[39m {
+   [90m 10 |[39m   [33mDialog[39m[33m,[39m [33mDialogTitle[39m[33m,[39m [33mDialogContent[39m[33m,[39m [33mDialogActions[39m[33m,[39m [33mButton[39m[33m,[39m
+  [31m[1m>[22m[39m[90m 11 |[39m   [33mTable[39m[33m,[39m [33mTableBody[39m[33m,[39m [33mTableCell[39m[33m,[39m [33mTableContainer[39m[33m,[39m [33mTableHead[39m[33m,[39m
+   [90m    |[39m                     [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
+   [90m 12 |[39m   [33mTableRow[39m[33m,[39m [33mTextField[39m[33m,[39m [33mTabs[39m[33m,[39m [33mTab[39m[33m,[39m [33mBox[39m[33m,[39m [33mTypography[39m[33m,[39m [33mPaper[39m[33m,[39m
+   [90m 13 |[39m   [33mCircularProgress[39m
+   [90m 14 |[39m } [36mfrom[39m [32m'@mui/material'[39m[33m;[39m[0m
+
+ERROR in src/components/FinancialDataDialog.tsx:11:32
+TS2300: Duplicate identifier 'TableContainer'.
+  [0m [90m  9 |[39m [36mimport[39m {
+   [90m 10 |[39m   [33mDialog[39m[33m,[39m [33mDialogTitle[39m[33m,[39m [33mDialogContent[39m[33m,[39m [33mDialogActions[39m[33m,[39m [33mButton[39m[33m,[39m
+  [31m[1m>[22m[39m[90m 11 |[39m   [33mTable[39m[33m,[39m [33mTableBody[39m[33m,[39m [33mTableCell[39m[33m,[39m [33mTableContainer[39m[33m,[39m [33mTableHead[39m[33m,[39m
+   [90m    |[39m                                [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
+   [90m 12 |[39m   [33mTableRow[39m[33m,[39m [33mTextField[39m[33m,[39m [33mTabs[39m[33m,[39m [33mTab[39m[33m,[39m [33mBox[39m[33m,[39m [33mTypography[39m[33m,[39m [33mPaper[39m[33m,[39m
+   [90m 13 |[39m   [33mCircularProgress[39m
+   [90m 14 |[39m } [36mfrom[39m [32m'@mui/material'[39m[33m;[39m[0m
+
+ERROR in src/components/FinancialDataDialog.tsx:11:48
+TS2300: Duplicate identifier 'TableHead'.
+  [0m [90m  9 |[39m [36mimport[39m {
+   [90m 10 |[39m   [33mDialog[39m[33m,[39m [33mDialogTitle[39m[33m,[39m [33mDialogContent[39m[33m,[39m [33mDialogActions[39m[33m,[39m [33mButton[39m[33m,[39m
+  [31m[1m>[22m[39m[90m 11 |[39m   [33mTable[39m[33m,[39m [33mTableBody[39m[33m,[39m [33mTableCell[39m[33m,[39m [33mTableContainer[39m[33m,[39m [33mTableHead[39m[33m,[39m
+   [90m    |[39m                                                [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
+   [90m 12 |[39m   [33mTableRow[39m[33m,[39m [33mTextField[39m[33m,[39m [33mTabs[39m[33m,[39m [33mTab[39m[33m,[39m [33mBox[39m[33m,[39m [33mTypography[39m[33m,[39m [33mPaper[39m[33m,[39m
+   [90m 13 |[39m   [33mCircularProgress[39m
+   [90m 14 |[39m } [36mfrom[39m [32m'@mui/material'[39m[33m;[39m[0m
+
+ERROR in src/components/FinancialDataDialog.tsx:12:3
+TS2300: Duplicate identifier 'TableRow'.
+  [0m [90m 10 |[39m   [33mDialog[39m[33m,[39m [33mDialogTitle[39m[33m,[39m [33mDialogContent[39m[33m,[39m [33mDialogActions[39m[33m,[39m [33mButton[39m[33m,[39m
+   [90m 11 |[39m   [33mTable[39m[33m,[39m [33mTableBody[39m[33m,[39m [33mTableCell[39m[33m,[39m [33mTableContainer[39m[33m,[39m [33mTableHead[39m[33m,[39m
+  [31m[1m>[22m[39m[90m 12 |[39m   [33mTableRow[39m[33m,[39m [33mTextField[39m[33m,[39m [33mTabs[39m[33m,[39m [33mTab[39m[33m,[39m [33mBox[39m[33m,[39m [33mTypography[39m[33m,[39m [33mPaper[39m[33m,[39m
+   [90m    |[39m   [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
+   [90m 13 |[39m   [33mCircularProgress[39m
+   [90m 14 |[39m } [36mfrom[39m [32m'@mui/material'[39m[33m;[39m
+   [90m 15 |[39m[0m
+
+ERROR in src/components/FinancialDataDialog.tsx:12:13
+TS2300: Duplicate identifier 'TextField'.
+  [0m [90m 10 |[39m   [33mDialog[39m[33m,[39m [33mDialogTitle[39m[33m,[39m [33mDialogContent[39m[33m,[39m [33mDialogActions[39m[33m,[39m [33mButton[39m[33m,[39m
+   [90m 11 |[39m   [33mTable[39m[33m,[39m [33mTableBody[39m[33m,[39m [33mTableCell[39m[33m,[39m [33mTableContainer[39m[33m,[39m [33mTableHead[39m[33m,[39m
+  [31m[1m>[22m[39m[90m 12 |[39m   [33mTableRow[39m[33m,[39m [33mTextField[39m[33m,[39m [33mTabs[39m[33m,[39m [33mTab[39m[33m,[39m [33mBox[39m[33m,[39m [33mTypography[39m[33m,[39m [33mPaper[39m[33m,[39m
+   [90m    |[39m             [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
+   [90m 13 |[39m   [33mCircularProgress[39m
+   [90m 14 |[39m } [36mfrom[39m [32m'@mui/material'[39m[33m;[39m
+   [90m 15 |[39m[0m
+
+ERROR in src/components/FinancialDataDialog.tsx:12:24
+TS2300: Duplicate identifier 'Tabs'.
+  [0m [90m 10 |[39m   [33mDialog[39m[33m,[39m [33mDialogTitle[39m[33m,[39m [33mDialogContent[39m[33m,[39m [33mDialogActions[39m[33m,[39m [33mButton[39m[33m,[39m
+   [90m 11 |[39m   [33mTable[39m[33m,[39m [33mTableBody[39m[33m,[39m [33mTableCell[39m[33m,[39m [33mTableContainer[39m[33m,[39m [33mTableHead[39m[33m,[39m
+  [31m[1m>[22m[39m[90m 12 |[39m   [33mTableRow[39m[33m,[39m [33mTextField[39m[33m,[39m [33mTabs[39m[33m,[39m [33mTab[39m[33m,[39m [33mBox[39m[33m,[39m [33mTypography[39m[33m,[39m [33mPaper[39m[33m,[39m
+   [90m    |[39m                        [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
+   [90m 13 |[39m   [33mCircularProgress[39m
+   [90m 14 |[39m } [36mfrom[39m [32m'@mui/material'[39m[33m;[39m
+   [90m 15 |[39m[0m
+
+ERROR in src/components/FinancialDataDialog.tsx:12:30
+TS2300: Duplicate identifier 'Tab'.
+  [0m [90m 10 |[39m   [33mDialog[39m[33m,[39m [33mDialogTitle[39m[33m,[39m [33mDialogContent[39m[33m,[39m [33mDialogActions[39m[33m,[39m [33mButton[39m[33m,[39m
+   [90m 11 |[39m   [33mTable[39m[33m,[39m [33mTableBody[39m[33m,[39m [33mTableCell[39m[33m,[39m [33mTableContainer[39m[33m,[39m [33mTableHead[39m[33m,[39m
+  [31m[1m>[22m[39m[90m 12 |[39m   [33mTableRow[39m[33m,[39m [33mTextField[39m[33m,[39m [33mTabs[39m[33m,[39m [33mTab[39m[33m,[39m [33mBox[39m[33m,[39m [33mTypography[39m[33m,[39m [33mPaper[39m[33m,[39m
+   [90m    |[39m                              [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
+   [90m 13 |[39m   [33mCircularProgress[39m
+   [90m 14 |[39m } [36mfrom[39m [32m'@mui/material'[39m[33m;[39m
+   [90m 15 |[39m[0m
+
+ERROR in src/components/FinancialDataDialog.tsx:12:35
+TS2300: Duplicate identifier 'Box'.
+  [0m [90m 10 |[39m   [33mDialog[39m[33m,[39m [33mDialogTitle[39m[33m,[39m [33mDialogContent[39m[33m,[39m [33mDialogActions[39m[33m,[39m [33mButton[39m[33m,[39m
+   [90m 11 |[39m   [33mTable[39m[33m,[39m [33mTableBody[39m[33m,[39m [33mTableCell[39m[33m,[39m [33mTableContainer[39m[33m,[39m [33mTableHead[39m[33m,[39m
+  [31m[1m>[22m[39m[90m 12 |[39m   [33mTableRow[39m[33m,[39m [33mTextField[39m[33m,[39m [33mTabs[39m[33m,[39m [33mTab[39m[33m,[39m [33mBox[39m[33m,[39m [33mTypography[39m[33m,[39m [33mPaper[39m[33m,[39m
+   [90m    |[39m                                   [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
+   [90m 13 |[39m   [33mCircularProgress[39m
+   [90m 14 |[39m } [36mfrom[39m [32m'@mui/material'[39m[33m;[39m
+   [90m 15 |[39m[0m
+
+ERROR in src/components/FinancialDataDialog.tsx:12:40
+TS2300: Duplicate identifier 'Typography'.
+  [0m [90m 10 |[39m   [33mDialog[39m[33m,[39m [33mDialogTitle[39m[33m,[39m [33mDialogContent[39m[33m,[39m [33mDialogActions[39m[33m,[39m [33mButton[39m[33m,[39m
+   [90m 11 |[39m   [33mTable[39m[33m,[39m [33mTableBody[39m[33m,[39m [33mTableCell[39m[33m,[39m [33mTableContainer[39m[33m,[39m [33mTableHead[39m[33m,[39m
+  [31m[1m>[22m[39m[90m 12 |[39m   [33mTableRow[39m[33m,[39m [33mTextField[39m[33m,[39m [33mTabs[39m[33m,[39m [33mTab[39m[33m,[39m [33mBox[39m[33m,[39m [33mTypography[39m[33m,[39m [33mPaper[39m[33m,[39m
+   [90m    |[39m                                        [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
+   [90m 13 |[39m   [33mCircularProgress[39m
+   [90m 14 |[39m } [36mfrom[39m [32m'@mui/material'[39m[33m;[39m
+   [90m 15 |[39m[0m
+
+ERROR in src/components/FinancialDataDialog.tsx:12:52
+TS2300: Duplicate identifier 'Paper'.
+  [0m [90m 10 |[39m   [33mDialog[39m[33m,[39m [33mDialogTitle[39m[33m,[39m [33mDialogContent[39m[33m,[39m [33mDialogActions[39m[33m,[39m [33mButton[39m[33m,[39m
+   [90m 11 |[39m   [33mTable[39m[33m,[39m [33mTableBody[39m[33m,[39m [33mTableCell[39m[33m,[39m [33mTableContainer[39m[33m,[39m [33mTableHead[39m[33m,[39m
+  [31m[1m>[22m[39m[90m 12 |[39m   [33mTableRow[39m[33m,[39m [33mTextField[39m[33m,[39m [33mTabs[39m[33m,[39m [33mTab[39m[33m,[39m [33mBox[39m[33m,[39m [33mTypography[39m[33m,[39m [33mPaper[39m[33m,[39m
+   [90m    |[39m                                                    [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
+   [90m 13 |[39m   [33mCircularProgress[39m
+   [90m 14 |[39m } [36mfrom[39m [32m'@mui/material'[39m[33m;[39m
+   [90m 15 |[39m[0m
+
+ERROR in src/components/FinancialDataDialog.tsx:173:8
+TS2304: Cannot find name 'CircularProgress'.
+  [0m [90m 171 |[39m   {loadingData [33m?[39m (
+   [90m 172 |[39m     [33m<[39m[33mBox[39m sx[33m=[39m{{ display[33m:[39m [32m'flex'[39m[33m,[39m justifyContent[33m:[39m [32m'center'[39m[33m,[39m alignItems[33m:[39m [32m'center'[39m[33m,[39m py[33m:[39m [35m8[39m }}[33m>[39m
+  [31m[1m>[22m[39m[90m 173 |[39m       [33m<[39m[33mCircularProgress[39m [33m/[39m[33m>[39m
+   [90m     |[39m        [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
+   [90m 174 |[39m       [33m<[39m[33mTypography[39m sx[33m=[39m{{ ml[33m:[39m [35m2[39m }} color[33m=[39m[32m"text.secondary"[39m[33m>[39m
+   [90m 175 |[39m         [33mŁadowanie[39m danych[33m...[39m
+   [90m 176 |[39m       [33m<[39m[33m/[39m[33mTypography[39m[33m>[39m[0m
+

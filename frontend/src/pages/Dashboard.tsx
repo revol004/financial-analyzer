@@ -22,7 +22,7 @@ interface Props { mode: 'annual' | 'quarterly'; }
 
 const savedExtraYears: number[] = JSON.parse(localStorage.getItem('dialogExtraYears') || '[]');
 const currentYear = new Date().getFullYear();
-const baseYears = Array.from({ length: 100 }, (_, i) => currentYear - i);
+const baseYears = Array.from({ length: 20 }, (_, i) => currentYear - i);
 const YEARS = [...baseYears, ...savedExtraYears]
   .filter((v, i, a) => a.indexOf(v) === i)
   .sort((a, b) => b - a);
@@ -36,7 +36,7 @@ const COMMON_VARIABLES = (() => {
 })();
 
 const QUARTERS = ['Q1', 'Q2', 'Q3', 'Q4'];
-const QUARTER_OPTIONS = Array.from({ length: 30 }, (_, i) => currentYear - i)
+const QUARTER_OPTIONS = Array.from({ length: 20 }, (_, i) => currentYear - i)
   .flatMap(year => QUARTERS.map(q => ({ label: `${q} ${year}`, year, quarter: parseInt(q[1]) })));
 
 export default function Dashboard({ mode }: Props) {

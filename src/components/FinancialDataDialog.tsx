@@ -47,47 +47,70 @@ export default function FinancialDataDialog({ open, onClose, company, years, mod
     }
   }, [company?.id]);
 
-  const allYears = [...years, ...extraYears]
-    .filter((v, i, a) => a.indexOf(v) === i)
-    .sort((a, b) => a - b);
+ const MAX_QUARTERLY_YEARS = 3;
+
+const allYears = [...years, ...extraYears]
+  .filter((v, i, a) => a.indexOf(v) === i)
+  .sort((a, b) => b - a);
+
+const displayYears = mode === 'quarterly'
+  ? allYears.slice(0, MAX_QUARTERLY_YEARS)
+  : allYears;
 
   // Generuj okresy – roczne lub kwartalne
   const periods: Period[] = mode === 'annual'
-    ? allYears.map(y => ({ label: y.toString(), year: y, quarter: null }))
-    : allYears.flatMap(y =>
+    ? displayYears.map(y => ({ label: y.toString(), year: y, quarter: null }))
+    : displayYears.flatMap(y =>
         QUARTERS.map((q, qi) => ({ label: `${q} ${y}`, year: y, quarter: qi + 1 }))
       );
 
   useEffect(() => {
-    if (open && company) {
-      const fetchData = async () => {
-        const init: Record<string, Record<string, string>> = {};
-        const allVars = new Set<string>(COMMON_VARIABLES);
+  if (open && company) {
+    const fetchData = async () => {
+      setLoadingData(true);
+      const init: Record<string, Record<string, string>> = {};
+      const allVars = new Set<string>(COMMON_VARIABLES);
 
-        for (const year of allYears) {
-          const res = await financialsApi.getByCompany(company.id, mode === 'quarterly' ? undefined : undefined);
-          Object.values(res.data).forEach((yearData: any) => {
-            Object.keys(yearData).forEach(v => allVars.add(v));
-          });
-        }
-
+      if (mode === 'annual') {
+        const res = await financialsApi.getByCompany(company.id);
+        Object.values(res.data).forEach((yearData: any) => {
+          Object.keys(yearData).forEach(v => allVars.add(v));
+        });
         setVariables(Array.from(allVars));
-
-        for (const period of periods) {
-          const res = await financialsApi.getByCompany(
-            company.id,
-            period.quarter !== null ? period.quarter : undefined
-          );
+        periods.forEach(period => {
           init[period.label] = {};
           allVars.forEach(v => {
             init[period.label][v] = res.data[period.year]?.[v]?.toString() || '';
           });
-        }
-        setFinancialData(init);
-      };
-      fetchData();
-    }
-  }, [open, company, mode]);
+        });
+      } else {
+        const quarterData: Record<number, any> = {};
+        await Promise.all(
+          [1, 2, 3, 4].map(async q => {
+            const res = await financialsApi.getByCompany(company.id, q);
+            quarterData[q] = res.data;
+            Object.values(res.data).forEach((yearData: any) => {
+              Object.keys(yearData).forEach(v => allVars.add(v));
+            });
+          })
+        );
+        setVariables(Array.from(allVars));
+        periods.forEach(period => {
+          init[period.label] = {};
+          allVars.forEach(v => {
+            init[period.label][v] = period.quarter !== null
+              ? quarterData[period.quarter]?.[period.year]?.[v]?.toString() || ''
+              : '';
+          });
+        });
+      }
+
+      setFinancialData(init);
+      setLoadingData(false);
+    };
+    fetchData();
+  }
+}, [open, company, mode]);
 
   const addVariable = () => {
     const v = newVariable.trim().toLowerCase().replace(/\s+/g, '_');
@@ -106,7 +129,7 @@ export default function FinancialDataDialog({ open, onClose, company, years, mod
 
   const handleAddYear = () => {
     const y = parseInt(newYear);
-    if (!isNaN(y) && y > 1900 && y < 2100 && !allYears.includes(y)) {
+    if (!isNaN(y) && y > 1900 && y < 2100 && !displayYears.includes(y)) {
       const updated = [...extraYears, y];
       setExtraYears(updated);
       if (company?.id) {

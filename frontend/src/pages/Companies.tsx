@@ -88,16 +88,31 @@ const [selectedYears] = useState<number[]>([2024, 2023, 2022, 2021, 2020]);
   };
 
   const handleExpand = async (companyId: number) => {
-    if (expandedRow === companyId) {
-      setExpandedRow(null);
-      return;
-    }
-    setExpandedRow(companyId);
-    if (!financialData[companyId]) {
-      const res = await financialsApi.getByCompany(companyId);
-      setFinancialData(prev => ({ ...prev, [companyId]: res.data }));
-    }
-  };
+  if (expandedRow === companyId) {
+    setExpandedRow(null);
+    return;
+  }
+  setExpandedRow(companyId);
+  if (mode === 'annual') {
+    const res = await financialsApi.getByCompany(companyId);
+    setFinancialData(prev => ({ ...prev, [companyId]: res.data }));
+  } else {
+    const quarterData: Record<string, any> = {};
+    await Promise.all(
+      [1, 2, 3, 4].map(async q => {
+        const res = await financialsApi.getByCompany(companyId, q);
+        Object.entries(res.data).forEach(([year, vars]: [string, any]) => {
+          Object.entries(vars).forEach(([variable, value]) => {
+            const key = `Q${q} ${year}`;
+            if (!quarterData[key]) quarterData[key] = {};
+            quarterData[key][variable] = value;
+          });
+        });
+      })
+    );
+    setFinancialData(prev => ({ ...prev, [companyId]: quarterData }));
+  }
+};
 
 const handleImportCompany = async (e: React.ChangeEvent<HTMLInputElement>) => {
   const file = e.target.files?.[0];
