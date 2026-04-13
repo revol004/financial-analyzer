@@ -27,4 +27,6 @@ export const indicatorsApi = {
   create: (data: any) => API.post('/indicators/', data),
   calculate: (data: any) => API.post('/indicators/calculate', data),
   delete: (id: number) => API.delete(`/indicators/${id}`),
+  update: (id: number, data: any) => API.put(`/indicators/${id}`, data),
+  createAggregate: (data: any) => API.post('/indicators/', data),
 };
