@@ -62,6 +62,11 @@ export default function Indicators() {
   category: '',
   is_percentage: 1,
 });
+const [editAggDialogOpen, setEditAggDialogOpen] = useState(false);
+const [editAggForm, setEditAggForm] = useState<any>(null);
+
+const [editChangeDialogOpen, setEditChangeDialogOpen] = useState(false);
+const [editChangeForm, setEditChangeForm] = useState<any>(null);
 const [changeDialogOpen, setChangeDialogOpen] = useState(false);
 const [changeForm, setChangeForm] = useState({
   display_name: '',
@@ -75,6 +80,7 @@ const [changeForm, setChangeForm] = useState({
 });
 
 const handleChangeSubmit = async () => {
+  
   const isRaw = changeForm.source_type === 'raw';
   const base = isRaw ? null : indicators.find(i => i.id === changeForm.base_indicator_id);
   if (!isRaw && !base) return;
@@ -104,6 +110,35 @@ const handleChangeSubmit = async () => {
   }
 };
 
+const handleChangeEditSubmit = async () => {
+  if (!editChangeForm) return;
+
+  try {
+    await indicatorsApi.update(editChangeForm.id, {
+      display_name: editChangeForm.display_name,
+      agg_type: editChangeForm.change_type,
+      agg_years: editChangeForm.change_years,
+      base_indicator_id: editChangeForm.base_indicator_id,
+      category: editChangeForm.category,
+      is_percentage: editChangeForm.is_percentage,
+      formula: editChangeForm.formula,
+    });
+
+    setSnackbar({ open: true, message: 'Zmiana % zaktualizowana!', severity: 'success' });
+    setEditChangeDialogOpen(false);
+    fetchIndicators();
+
+  } catch (err: any) {
+  console.log(err);
+  console.log(err?.response?.data);
+
+  setSnackbar({
+    open: true,
+    message: JSON.stringify(err?.response?.data) || 'Błąd edycji',
+    severity: 'error'
+  });
+}
+};
 
   const [categoryTab, setCategoryTab] = useState('all');
   const [categoryColors, setCategoryColors] = useState<Record<string, string>>(() => {
@@ -200,15 +235,73 @@ const handleAggSubmit = async () => {
   }
 };
 
+const handleAggEditSubmit = async () => {
+  if (!editAggForm) return;
+
+  try {
+    await indicatorsApi.update(editAggForm.id, {
+  display_name: editAggForm.display_name,
+  agg_type: editAggForm.agg_type,
+  agg_years: editAggForm.agg_years,
+  base_indicator_id: editAggForm.base_indicator_id,
+  category: editAggForm.category,
+  is_percentage: editAggForm.is_percentage,
+  formula: editAggForm.formula,
+});
+
+    setSnackbar({ open: true, message: 'Agregat zaktualizowany!', severity: 'success' });
+    setEditAggDialogOpen(false);
+    fetchIndicators();
+  } catch {
+    setSnackbar({ open: true, message: 'Błąd edycji agregatu', severity: 'error' });
+  }
+};
+
   const handleEditOpen = (indicator: Indicator) => {
-  if (indicator.agg_type) {
-    setSnackbar({
-      open: true,
-      message: `Wskaźniki agregowane i zmiany % nie mogą być edytowane – usuń i stwórz ponownie.`,
-      severity: 'error'
+  const handleEditOpen = (indicator: Indicator) => {
+  // 🔵 AGGREGATY
+  if (indicator.agg_type === 'median' || indicator.agg_type === 'mean') {
+    setEditAggForm({
+      id: indicator.id,
+      display_name: indicator.display_name,
+      agg_type: indicator.agg_type,
+      agg_years: indicator.agg_years || 5,
+      base_indicator_id: indicator.base_indicator_id || 0,
+      category: indicator.category || '',
+      is_percentage: indicator.is_percentage,
     });
+    setEditAggDialogOpen(true);
     return;
   }
+
+  // 🟢 ZMIANY %
+  if (indicator.agg_type === 'yoy' || indicator.agg_type === 'change_n') {
+    setEditChangeForm({
+      id: indicator.id,
+      display_name: indicator.display_name,
+      change_type: indicator.agg_type === 'yoy' ? 'yoy' : 'change_n',
+      change_years: indicator.agg_years || 5,
+      base_indicator_id: indicator.base_indicator_id || 0,
+      category: indicator.category || '',
+      is_percentage: indicator.is_percentage,
+    });
+    setEditChangeDialogOpen(true);
+    return;
+  }
+
+  // 🟡 NORMALNE (bez zmian)
+  setSelectedIndicator(indicator);
+  setEditForm({
+    name: indicator.name,
+    display_name: indicator.display_name,
+    formula: indicator.formula,
+    description: indicator.description || '',
+    category: indicator.category || '',
+    categoryColor: categoryColors[indicator.category || ''] || 'default',
+    is_percentage: indicator.is_percentage,
+  });
+  setEditDialogOpen(true);
+};
   setSelectedIndicator(indicator);
   setEditForm({
     name: indicator.name,
@@ -223,28 +316,25 @@ const handleAggSubmit = async () => {
 };
 
   const handleEditSubmit = async () => {
-    if (!selectedIndicator) return;
-    try {
-      await indicatorsApi.update(selectedIndicator.id, {
-        name: editForm.name,
-        display_name: editForm.display_name,
-        formula: editForm.formula,
-        description: editForm.description,
-        category: editForm.category,
-        is_percentage: editForm.is_percentage,
-      });
-      if (editForm.category) {
-        const updated = { ...categoryColors, [editForm.category]: editForm.categoryColor };
-        setCategoryColors(updated);
-        localStorage.setItem('categoryColors', JSON.stringify(updated));
-      }
-      setSnackbar({ open: true, message: 'Wskaźnik zaktualizowany!', severity: 'success' });
-      setEditDialogOpen(false);
-      fetchIndicators();
-    } catch {
-      setSnackbar({ open: true, message: 'Błąd aktualizacji.', severity: 'error' });
-    }
-  };
+  if (!selectedIndicator) return;
+
+  try {
+    await indicatorsApi.update(selectedIndicator.id, {
+      name: editForm.name,
+      display_name: editForm.display_name,
+      formula: editForm.formula,
+      description: editForm.description,
+      category: editForm.category,
+      is_percentage: editForm.is_percentage,
+    });
+
+    setSnackbar({ open: true, message: 'Wskaźnik zaktualizowany!', severity: 'success' });
+    setEditDialogOpen(false);
+    fetchIndicators();
+  } catch {
+    setSnackbar({ open: true, message: 'Błąd aktualizacji.', severity: 'error' });
+  }
+};
 
   const handleAddDefaults = async () => {
     let added = 0;
@@ -282,6 +372,9 @@ const handleAggSubmit = async () => {
     return categoryColors[category] || 'default';
   };
 
+
+
+  
   return (
     <Box sx={{ p: 4 }}>
       <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 3 }}>
@@ -441,17 +534,18 @@ const handleAggSubmit = async () => {
   onInputChange={(_, value) =>
     setForm({ ...form, category: value })
   }
+  sx={{ flex: 1 }}
   renderInput={(params) => (
     <TextField {...params} label="Kategoria" fullWidth />
   )}
 />
-            <FormControl sx={{ minWidth: 150 }}>
-              <InputLabel>Kolor kategorii</InputLabel>
-              <Select
-                value={form.categoryColor}
-                label="Kolor kategorii"
-                onChange={(e) => setForm({ ...form, categoryColor: e.target.value })}
-              >
+            <FormControl sx={{ flex: 1 }}>
+  <InputLabel>Kolor kategorii</InputLabel>
+  <Select
+    value={form.categoryColor}
+    label="Kolor kategorii"
+    onChange={(e) => setForm({ ...form, categoryColor: e.target.value })}
+  >
                 {COLOR_OPTIONS.map(opt => (
                   <MenuItem key={opt.value} value={opt.value}>
                     <Chip label={opt.label} size="small" color={opt.value as any} sx={{ cursor: 'pointer' }} />
@@ -512,17 +606,18 @@ const handleAggSubmit = async () => {
   onInputChange={(_, value) =>
     setEditForm({ ...editForm, category: value })
   }
+  sx={{ flex: 1 }}
   renderInput={(params) => (
     <TextField {...params} label="Kategoria" fullWidth />
   )}
 />
-            <FormControl sx={{ minWidth: 150 }}>
-              <InputLabel>Kolor kategorii</InputLabel>
-              <Select
-                value={editForm.categoryColor}
-                label="Kolor kategorii"
-                onChange={(e) => setEditForm({ ...editForm, categoryColor: e.target.value })}
-              >
+            <FormControl sx={{ flex: 1 }}>
+  <InputLabel>Kolor kategorii</InputLabel>
+  <Select
+    value={form.categoryColor}
+    label="Kolor kategorii"
+    onChange={(e) => setForm({ ...form, categoryColor: e.target.value })}
+  >
                 {COLOR_OPTIONS.map(opt => (
                   <MenuItem key={opt.value} value={opt.value}>
                     <Chip label={opt.label} size="small" color={opt.value as any} sx={{ cursor: 'pointer' }} />
@@ -673,6 +768,7 @@ const handleAggSubmit = async () => {
 </Button> 
   </DialogActions>
 </Dialog>
+
 
       {/* Dialog dodawania zmiennej */}
       <Dialog open={variableDialogOpen} onClose={() => setVariableDialogOpen(false)} maxWidth="xs" fullWidth>

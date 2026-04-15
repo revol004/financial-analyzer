@@ -21,6 +21,18 @@ class IndicatorCreate(BaseModel):
     base_indicator_id: Optional[int] = None
 
 
+class IndicatorUpdate(BaseModel):
+    name: Optional[str] = None
+    display_name: Optional[str] = None
+    formula: Optional[str] = None
+    description: Optional[str] = None
+    category: Optional[str] = None
+    is_percentage: Optional[int] = None
+    agg_type: Optional[str] = None
+    agg_years: Optional[int] = None
+    base_indicator_id: Optional[int] = None
+
+
 class IndicatorResponse(BaseModel):
     id: int
     name: str
@@ -79,9 +91,9 @@ def delete_indicator(indicator_id: int, db: Session = Depends(get_db)):
     return {"message": "Indicator deleted"}
 
 
-@router.put("/{indicator_id}", response_model=IndicatorResponse)
+@router.patch("/{indicator_id}")
 def update_indicator(
-    indicator_id: int, indicator: IndicatorCreate, db: Session = Depends(get_db)
+    indicator_id: int, indicator: IndicatorUpdate, db: Session = Depends(get_db)
 ):
     db_indicator = (
         db.query(IndicatorDefinition)
@@ -90,7 +102,7 @@ def update_indicator(
     )
     if not db_indicator:
         raise HTTPException(status_code=404, detail="Indicator not found")
-    for key, value in indicator.model_dump().items():
+    for key, value in indicator.model_dump(exclude_unset=True).items():
         setattr(db_indicator, key, value)
     db.commit()
     db.refresh(db_indicator)
