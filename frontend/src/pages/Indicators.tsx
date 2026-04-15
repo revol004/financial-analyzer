@@ -11,7 +11,7 @@ import AddIcon from '@mui/icons-material/Add';
 import EditIcon from '@mui/icons-material/Edit';
 import InfoIcon from '@mui/icons-material/Info';
 import { indicatorsApi } from '../services/api';
-
+import { Autocomplete } from '@mui/material';
 interface Indicator {
   id: number;
   name: string;
@@ -90,7 +90,7 @@ const handleChangeSubmit = async () => {
       formula: isRaw ? changeForm.raw_variable : base!.formula,
       description: `${typeLabel} change of ${sourceName}`,
       category: changeForm.category || (isRaw ? '' : base?.category),
-      is_percentage: 1,
+      is_percentage: changeForm.is_percentage,
       agg_type: changeForm.change_type === 'yoy' ? 'yoy' : 'change_n',
       agg_years: changeForm.change_type === 'yoy' ? 1 : changeForm.change_years,
       base_indicator_id: isRaw ? null : changeForm.base_indicator_id,
@@ -138,7 +138,15 @@ const handleChangeSubmit = async () => {
     ? indicators
     : indicators.filter(i => (i.category || 'Other') === categoryTab);
 
-  const handleSubmit = async () => {
+  const categoryOptions = Array.from(
+  new Set(
+    indicators
+      .map(i => i.category)
+      .filter((c): c is string => Boolean(c))
+  )
+);
+  
+    const handleSubmit = async () => {
     try {
       await indicatorsApi.create({
         name: form.name,
@@ -178,7 +186,7 @@ const handleAggSubmit = async () => {
       formula: isRaw ? aggForm.raw_variable : base!.formula,
       description: `${aggForm.agg_type === 'median' ? 'Median' : 'Mean'} of ${sourceName} over ${aggForm.agg_years} years`,
       category: aggForm.category || (isRaw ? '' : base!.category),
-      is_percentage: isRaw ? 0 : base!.is_percentage,
+      is_percentage: aggForm.is_percentage,
       agg_type: aggForm.agg_type,
       agg_years: aggForm.agg_years,
       base_indicator_id: isRaw ? null : aggForm.base_indicator_id,
@@ -423,12 +431,20 @@ const handleAggSubmit = async () => {
             helperText="Używaj nazw zmiennych finansowych i operatorów + - * / ( )"
           />
           <Box sx={{ display: 'flex', gap: 2 }}>
-            <TextField
-              label="Kategoria"
-              value={form.category}
-              onChange={(e) => setForm({ ...form, category: e.target.value })}
-              fullWidth
-            />
+           <Autocomplete
+  freeSolo
+  options={categoryOptions}
+  value={form.category}
+  onChange={(_, value) =>
+    setForm({ ...form, category: value || '' })
+  }
+  onInputChange={(_, value) =>
+    setForm({ ...form, category: value })
+  }
+  renderInput={(params) => (
+    <TextField {...params} label="Kategoria" fullWidth />
+  )}
+/>
             <FormControl sx={{ minWidth: 150 }}>
               <InputLabel>Kolor kategorii</InputLabel>
               <Select
@@ -486,12 +502,20 @@ const handleAggSubmit = async () => {
             helperText="Używaj nazw zmiennych finansowych i operatorów + - * / ( )"
           />
           <Box sx={{ display: 'flex', gap: 2 }}>
-            <TextField
-              label="Kategoria"
-              value={editForm.category}
-              onChange={(e) => setEditForm({ ...editForm, category: e.target.value })}
-              fullWidth
-            />
+            <Autocomplete
+  freeSolo
+  options={categoryOptions}
+  value={editForm.category}
+  onChange={(_, value) =>
+    setEditForm({ ...editForm, category: value || '' })
+  }
+  onInputChange={(_, value) =>
+    setEditForm({ ...editForm, category: value })
+  }
+  renderInput={(params) => (
+    <TextField {...params} label="Kategoria" fullWidth />
+  )}
+/>
             <FormControl sx={{ minWidth: 150 }}>
               <InputLabel>Kolor kategorii</InputLabel>
               <Select
@@ -562,16 +586,21 @@ const handleAggSubmit = async () => {
       label="Wskaźnik bazowy"
       onChange={(e) => setAggForm({ ...aggForm, base_indicator_id: e.target.value as number })}
     >
-      {Array.from(new Set(indicators.filter(i => !i.agg_type).map(i => i.category || 'Other'))).map(cat => [
-        <MenuItem key={`cat-${cat}`} disabled sx={{ fontWeight: 'bold', color: 'text.primary', opacity: '1 !important', backgroundColor: '#f5f5f5' }}>
-          {cat}
-        </MenuItem>,
-        ...indicators.filter(i => !i.agg_type && (i.category || 'Other') === cat).map(i => (
-          <MenuItem key={i.id} value={i.id} sx={{ pl: 3 }}>
-            {i.display_name}
-          </MenuItem>
-        ))
-      ])}
+      {Array.from(new Set(indicators.map(i => i.category || 'Other'))).map(cat => [
+  <MenuItem key={`cat-${cat}`} disabled sx={{ fontWeight: 'bold', backgroundColor: '#f5f5f5' }}>
+    {cat}
+  </MenuItem>,
+  ...indicators
+    .filter((i: Indicator) =>
+      (!i.agg_type || i.agg_type === 'yoy' || i.agg_type === 'change_n') &&
+      (i.category || 'Other') === cat
+    )
+    .map((i: Indicator) => (
+      <MenuItem key={i.id} value={i.id} sx={{ pl: 3 }}>
+        {i.display_name}
+      </MenuItem>
+    ))
+])}
     </Select>
   </FormControl>
 ) : (
@@ -606,23 +635,32 @@ const handleAggSubmit = async () => {
       helperText="Ile lat wstecz brać do obliczeń"
     />
 
-
-
-
     
-    <FormControl fullWidth>
-  <Select
-    value={aggForm.category}  
-    label="Kategoria (opcjonalnie)"
-    onChange={(e) => setAggForm({ ...aggForm, category: e.target.value })}
-    displayEmpty
-  >
-    <MenuItem value="">Użyj kategorii wskaźnika bazowego</MenuItem>
-    {Array.from(new Set(indicators.filter(i => i.category).map(i => i.category!))).map(cat => (
-      <MenuItem key={cat} value={cat}>{cat}</MenuItem>
-    ))}
-  </Select>
-</FormControl>
+   <Autocomplete
+  freeSolo
+  options={Array.from(new Set(indicators.map(i => i.category).filter(Boolean)))}
+  value={aggForm.category}
+  onChange={(_, value) =>
+    setAggForm({ ...aggForm, category: value || '' })
+  }
+  onInputChange={(_, value) =>
+    setAggForm({ ...aggForm, category: value })
+  }
+  renderInput={(params) => (
+    <TextField {...params} label="Kategoria (opcjonalnie)" />
+  )}
+/>
+
+<FormControlLabel
+  control={
+    <Switch
+      checked={aggForm.is_percentage === 1}
+      onChange={(e) => setAggForm({ ...aggForm, is_percentage: e.target.checked ? 1 : 0 })}
+    />
+  }
+  label="Wynik w procentach (wizualnie)"
+/>
+
   </DialogContent>
   <DialogActions sx={{ p: 2 }}>
     <Button onClick={() => setAggDialogOpen(false)}>Anuluj</Button>
@@ -718,7 +756,7 @@ const handleAggSubmit = async () => {
           label="Wskaźnik bazowy"
           onChange={(e) => setChangeForm({ ...changeForm, base_indicator_id: e.target.value as number })}
         >
-          {Array.from(new Set(indicators.filter(i => !i.agg_type).map(i => i.category || 'Other'))).map(cat => [
+          {Array.from(new Set(indicators.filter(i => !i.agg_type || i.agg_type === 'yoy' || i.agg_type === 'change_n').map(i => i.category || 'Other'))).map(cat => [
             <MenuItem key={`cat-${cat}`} disabled sx={{ fontWeight: 'bold', color: 'text.primary', opacity: '1 !important', backgroundColor: '#f5f5f5' }}>
               {cat}
             </MenuItem>,
@@ -740,20 +778,20 @@ const handleAggSubmit = async () => {
       />
     )}
 
-    <FormControl fullWidth>
-      <InputLabel>Kategoria (opcjonalnie)</InputLabel>
-      <Select
-        value={changeForm.category}
-        label="Kategoria (opcjonalnie)"
-        onChange={(e) => setChangeForm({ ...changeForm, category: e.target.value })}
-      >
-        <MenuItem value="">Użyj kategorii wskaźnika bazowego</MenuItem>
-        {Array.from(new Set(indicators.filter(i => i.category).map(i => i.category!))).map(cat => (
-          <MenuItem key={cat} value={cat}>{cat}</MenuItem>
-        ))}
-      </Select>
-    </FormControl>
-  </DialogContent>
+    <Autocomplete
+  freeSolo
+  options={Array.from(new Set(indicators.map(i => i.category).filter(Boolean)))}
+  value={changeForm.category}
+  onChange={(_, value) =>
+    setChangeForm({ ...changeForm, category: value || '' })
+  }
+  onInputChange={(_, value) =>
+    setChangeForm({ ...changeForm, category: value })
+  }
+  renderInput={(params) => (
+    <TextField {...params} label="Kategoria (opcjonalnie)" />
+  )}
+/>
 
 <FormControlLabel
   control={
@@ -764,6 +802,10 @@ const handleAggSubmit = async () => {
   }
   label="Wynik w procentach (wizualnie)"
 />
+
+  </DialogContent>
+
+
 
 
   <DialogActions sx={{ p: 2 }}>
