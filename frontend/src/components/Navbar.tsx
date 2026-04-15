@@ -8,7 +8,7 @@ interface Props {
 }
 
 export default function Navbar({ mode, onModeChange }: Props) {
-  const navigate = useNavigate();
+  
 
   return (
     <AppBar position="static" color="primary">

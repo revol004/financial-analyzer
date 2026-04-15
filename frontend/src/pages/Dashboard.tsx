@@ -230,7 +230,7 @@ export default function Dashboard({ mode }: Props) {
     }
   };
 
-  const periodLabels = mode === 'annual' ? sortedYears : selectedQuarters;
+ 
 
   return (
     <Box sx={{ p: 4 }}>
