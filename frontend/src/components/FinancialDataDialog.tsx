@@ -110,7 +110,7 @@ const [loadingData, setLoadingData] = useState(false);
 };
       fetchData();
     }
-  }, [open, company, mode]);
+  }, [open, company, mode, periods]);
 
   const addVariable = () => {
     const v = newVariable.trim().toLowerCase().replace(/\s+/g, '_');
