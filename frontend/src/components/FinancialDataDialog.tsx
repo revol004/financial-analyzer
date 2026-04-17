@@ -1,3 +1,15 @@
+/**
+ * FinancialDataDialog.tsx
+ * 
+ * Dialog do wprowadzania i edycji danych finansowych spółki:
+ * - obsługuje dane roczne i kwartalne
+ * - dynamiczne zmienne finansowe (np. revenue, net_income)
+ * - możliwość dodawania nowych lat i zmiennych
+ * - zapis danych do backendu (upsert)
+ */
+
+
+
 import { useEffect, useState } from 'react';
 import {
   Dialog, DialogTitle, DialogContent, DialogActions, Button,
@@ -7,9 +19,8 @@ import {
 } from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
 import { financialsApi } from '../services/api';
-
-
-
+import { useMemo } from 'react';
+// ==================================================================== PROPS ===================================================
 
 interface Props {
   open: boolean;
@@ -19,6 +30,9 @@ interface Props {
   mode?: 'annual' | 'quarterly';
 }
 
+// ================================================================= STAŁE ====================================================
+
+// Domyślne zmienne finansowe (z localStorage lub fallback)
 const COMMON_VARIABLES = (() => {
   const saved = localStorage.getItem('defaultVariables');
   return saved ? JSON.parse(saved) : [
@@ -27,8 +41,12 @@ const COMMON_VARIABLES = (() => {
   ];
 })();
 
+// Nazwy kwartałów
 const QUARTERS = ['Q1', 'Q2', 'Q3', 'Q4'];
 
+// ======================================================================== TYPY ==================================================
+
+// Reprezentuje jeden okres (rok lub kwartał)
 interface Period {
   label: string;
   year: number;
@@ -36,14 +54,27 @@ interface Period {
 }
 
 export default function FinancialDataDialog({ open, onClose, company, years, mode = 'annual' }: Props) {
+
+   // ========================================================== STATE ========================================================
+
   const [tab, setTab] = useState(0);
+
+   // lista zmiennych finansowych (kolumny)
   const [variables, setVariables] = useState<string[]>(COMMON_VARIABLES);
+   // dane: { "2023": { revenue: "123", net_income: "456" } }
   const [financialData, setFinancialData] = useState<Record<string, Record<string, string>>>({});
   const [newVariable, setNewVariable] = useState('');
   const [newYear, setNewYear] = useState('');
+
+  // dodatkowe lata dodane ręcznie (localStorage per company)
   const [extraYears, setExtraYears] = useState<number[]>([]);
+
   const [saving, setSaving] = useState(false);
-const [loadingData, setLoadingData] = useState(false);
+  const [loadingData, setLoadingData] = useState(false);
+  
+  // ================================================================ EFFECTS ===============================================
+
+  // Ładuje dodatkowe lata z localStorage dla danej spółki
   useEffect(() => {
     if (company?.id) {
       const saved = localStorage.getItem(`extraYears_${company.id}`);
@@ -51,31 +82,43 @@ const [loadingData, setLoadingData] = useState(false);
     }
   }, [company?.id]);
 
+// ============================================================== WYLICZANE DANE =================================================
+
+  // Wszystkie lata (z backendu + ręcznie dodane)
   const allYears = [...years, ...extraYears]
     .filter((v, i, a) => a.indexOf(v) === i)
     .sort((a, b) => a - b);
 
   // Generuj okresy – roczne lub kwartalne
-  const periods: Period[] = mode === 'annual'
+  const periods: Period[] = useMemo(() => {
+  return mode === 'annual'
     ? allYears.map(y => ({ label: y.toString(), year: y, quarter: null }))
     : allYears.flatMap(y =>
         QUARTERS.map((q, qi) => ({ label: `${q} ${y}`, year: y, quarter: qi + 1 }))
       );
+}, [mode, allYears]);
 
+ // =============================================================== FETCH DANYCH ===================================================
+
+  // Pobiera dane finansowe i mapuje je do struktury UI
   useEffect(() => {
     if (open && company) {
-     const fetchData = async () => {
+    const fetchData = async () => {
   setLoadingData(true);
+  console.time('fetch-total');
   const init: Record<string, Record<string, string>> = {};
   const allVars = new Set<string>(COMMON_VARIABLES);
 
   if (mode === 'annual') {
+
     // Jedno zapytanie dla wszystkich danych rocznych
     const res = await financialsApi.getByCompany(company.id);
+     // zbieramy wszystkie zmienne jakie istnieją w danych
     Object.values(res.data).forEach((yearData: any) => {
       Object.keys(yearData).forEach(v => allVars.add(v));
     });
     setVariables(Array.from(allVars));
+    // mapowanie danych do UI
     periods.forEach(period => {
       init[period.label] = {};
       allVars.forEach(v => {
@@ -83,8 +126,9 @@ const [loadingData, setLoadingData] = useState(false);
       });
     });
   } else {
-    // Cztery zapytania dla Q1-Q4 zamiast osobnego dla każdego okresu
+    // Dane kwartalne – równoległe zapytania dla Q1–Q4
     const quarterData: Record<number, any> = {};
+   console.time('fetch-requests');
     await Promise.all(
       [1, 2, 3, 4].map(async q => {
         const res = await financialsApi.getByCompany(company.id, q);
@@ -94,7 +138,10 @@ const [loadingData, setLoadingData] = useState(false);
         });
       })
     );
+    console.timeEnd('fetch-requests');
+    console.time('mapping');
     setVariables(Array.from(allVars));
+    // mapowanie danych kwartalnych
     periods.forEach(period => {
       init[period.label] = {};
       allVars.forEach(v => {
@@ -105,17 +152,23 @@ const [loadingData, setLoadingData] = useState(false);
     });
   }
 
+  console.timeEnd('fetch-total');
+  console.timeEnd('mapping');
   setFinancialData(init);
   setLoadingData(false);
 };
       fetchData();
     }
-  }, [open, company, mode, periods]);
+  }, [open, company, mode]);
 
+ // ================================================================= HANDLERY ====================================================
+
+  // Dodaje nową zmienną finansową (np. EBITDA)
   const addVariable = () => {
     const v = newVariable.trim().toLowerCase().replace(/\s+/g, '_');
     if (v && !variables.includes(v)) {
       setVariables(prev => [...prev, v]);
+  // dodajemy zmienną do wszystkich okresów
       setFinancialData(prev => {
         const updated = { ...prev };
         periods.forEach(p => {
@@ -126,7 +179,7 @@ const [loadingData, setLoadingData] = useState(false);
       setNewVariable('');
     }
   };
-
+  // Dodaje nowy rok (zapisywany w localStorage)
   const handleAddYear = () => {
     const y = parseInt(newYear);
     if (!isNaN(y) && y > 1900 && y < 2100 && !allYears.includes(y)) {
@@ -138,28 +191,29 @@ const [loadingData, setLoadingData] = useState(false);
       setNewYear('');
     }
   };
-
+  // Zapis danych do backendu (upsert per pole)
   const handleSave = async () => {
-    if (!company) return;
-    setSaving(true);
-    for (const period of periods) {
-      for (const variable of variables) {
+  if (!company) return;
+  setSaving(true);
+  const requests = periods.flatMap(period =>
+    variables
+      .filter(variable => {
         const val = financialData[period.label]?.[variable];
-        if (val !== '' && val !== undefined && !isNaN(Number(val))) {
-          await financialsApi.upsert({
-            company_id: company.id,
-            year: period.year,
-            quarter: period.quarter,
-            variable_name: variable,
-            value: parseFloat(val)
-          });
-        }
-      }
-    }
-    setSaving(false);
-    onClose();
-  };
-
+        return val !== '' && val !== undefined && !isNaN(Number(val));
+      })
+      .map(variable => financialsApi.upsert({
+        company_id: company.id,
+        year: period.year,
+        quarter: period.quarter,
+        variable_name: variable,
+        value: parseFloat(financialData[period.label][variable])
+      }))
+  );
+  await Promise.all(requests); // wszystkie równolegle ✅
+  setSaving(false);
+  onClose();
+};
+ // ================================================================== UI ======================================================
   return (
     <Dialog open={open} onClose={onClose} maxWidth="lg" fullWidth>
       <DialogTitle>
@@ -188,8 +242,10 @@ const [loadingData, setLoadingData] = useState(false);
         {periods.map((p, i) => <Tab key={p.label} label={p.label} value={i} />)}
       </Tabs>
       {periods.map((period, i) => (
-          <Box key={period.label} hidden={tab !== i}>
-            <TableContainer component={Paper} variant="outlined">
+         <Box key={period.label} hidden={tab !== i} sx={{ display: tab !== i ? 'none' : 'block' }}>
+  {tab === i && (
+    <>
+      <TableContainer component={Paper} variant="outlined">
               <Table size="small">
                 <TableHead>
                   <TableRow sx={{ backgroundColor: '#f5f5f5' }}>
@@ -220,7 +276,7 @@ const [loadingData, setLoadingData] = useState(false);
               </Table>
             </TableContainer>
 
-            <Box sx={{ display: 'flex', gap: 2, mt: 2, alignItems: 'center', flexWrap: 'wrap' }}>
+           <Box sx={{ display: 'flex', gap: 2, mt: 2, alignItems: 'center', flexWrap: 'wrap' }}>
               <Box sx={{ display: 'flex', gap: 1, alignItems: 'center' }}>
                 <TextField
                   size="small"
@@ -250,6 +306,8 @@ const [loadingData, setLoadingData] = useState(false);
                 </Button>
               </Box>
             </Box>
+         </>
+         )}
           </Box>
           ))}
     </>

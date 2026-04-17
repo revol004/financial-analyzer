@@ -14,6 +14,8 @@ import { companiesApi, financialsApi } from '../services/api';
 import TableChartIcon from '@mui/icons-material/TableChart';
 import FinancialDataDialog from '../components/FinancialDataDialog';
 import UploadIcon from '@mui/icons-material/Upload';
+
+// Reprezentuje spółkę giełdową z danymi podstawowymi i opcjonalnym opisem
 interface Company {
   id: number;
   name: string;
@@ -21,9 +23,10 @@ interface Company {
   market: string;
   description?: string;
 }
-
+// Pusty formularz używany przy dodawaniu nowej spółki i resetowaniu stanu
 const emptyForm = { name: '', ticker: '', market: 'GPW', description: '' };
 
+// Tryb działania komponentu: roczny lub kwartalny
 interface Props { mode: 'annual' | 'quarterly'; }
 export default function Companies({ mode }: Props) {
   const [companies, setCompanies] = useState<Company[]>([]);

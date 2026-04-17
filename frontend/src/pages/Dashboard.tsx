@@ -16,17 +16,30 @@ import { saveAs } from 'file-saver';
 import { companiesApi, financialsApi, indicatorsApi } from '../services/api';
 import IndicatorChart from '../components/IndicatorChart';
 
+// Reprezentuje spółkę giełdową z jej identyfikatorem, nazwą i tickerem
 interface Company { id: number; name: string; ticker: string; }
+
+// Reprezentuje wskaźnik finansowy z opcjonalną kategorią i flagą procentową
 interface Indicator { id: number; display_name: string; category?: string; is_percentage?: number; }
+
+// Tryb działania dashboardu: roczny lub kwartalny
 interface Props { mode: 'annual' | 'quarterly'; }
 
+// Wczytuje dodatkowe lata zapisane przez użytkownika w localStorage
 const savedExtraYears: number[] = JSON.parse(localStorage.getItem('dialogExtraYears') || '[]');
+
+// Aktualny rok kalendarzowy
 const currentYear = new Date().getFullYear();
+
+// Bazowa lista 20 lat wstecz od bieżącego roku
 const baseYears = Array.from({ length: 20 }, (_, i) => currentYear - i);
+
+// Scalona, odfiltrowana i posortowana lista dostępnych lat (bazowe + dodane przez użytkownika)
 const YEARS = [...baseYears, ...savedExtraYears]
   .filter((v, i, a) => a.indexOf(v) === i)
   .sort((a, b) => b - a);
 
+// Domyślne zmienne finansowe – wczytywane z localStorage lub ustawiane na standardowy zestaw
 const COMMON_VARIABLES = (() => {
   const saved = localStorage.getItem('defaultVariables');
   return saved ? JSON.parse(saved) : [
@@ -35,40 +48,49 @@ const COMMON_VARIABLES = (() => {
   ];
 })();
 
+// Etykiety kwartałów
 const QUARTERS = ['Q1', 'Q2', 'Q3', 'Q4'];
-const QUARTER_OPTIONS = Array.from({ length: 20 }, (_, i) => currentYear - i)
-  .flatMap(year => QUARTERS.map(q => ({ label: `${q} ${year}`, year, quarter: parseInt(q[1]) })));
+
 
 export default function Dashboard({ mode }: Props) {
-  const [companies, setCompanies] = useState<Company[]>([]);
-  const [indicators, setIndicators] = useState<Indicator[]>([]);
-  const [selectedCompanies, setSelectedCompanies] = useState<number[]>([]);
-  const [selectedYears, setSelectedYears] = useState<number[]>([2024, 2023, 2022]);
-  const [selectedQuarters, setSelectedQuarters] = useState<string[]>([]);
-  const [selectedIndicators, setSelectedIndicators] = useState<number[]>([]);
-  const [indicatorTab, setIndicatorTab] = useState<string>('all');
-  const [results, setResults] = useState<Record<number, any>>({});
-  const [loading, setLoading] = useState(false);
-  const [tab, setTab] = useState(0);
-  const [dataDialogOpen, setDataDialogOpen] = useState(false);
-  const [activeCompany, setActiveCompany] = useState<Company | null>(null);
-  const [financialData, setFinancialData] = useState<Record<number, Record<string, string>>>({});
-  const [existingData, setExistingData] = useState<Record<number, any>>({});
-  const [variables, setVariables] = useState<string[]>(COMMON_VARIABLES);
-  const [newVariable, setNewVariable] = useState('');
-  const [dialogExtraYears, setDialogExtraYears] = useState<number[]>(() => {
-    const saved = localStorage.getItem('dialogExtraYears');
+  const [companies, setCompanies] = useState<Company[]>([]); // Lista wszystkich spółek z API
+  const [indicators, setIndicators] = useState<Indicator[]>([]);  // Lista wszystkich wskaźników z API
+  const [selectedCompanies, setSelectedCompanies] = useState<number[]>([]); // ID wybranych przez użytkownika spółek
+  const [selectedYears, setSelectedYears] = useState<number[]>([2024, 2023, 2022]); // Wybrane lata analizy
+  const [selectedQuarters, setSelectedQuarters] = useState<string[]>([]); // Wybrane kwartały w trybie kwartalnym
+  const [selectedIndicators, setSelectedIndicators] = useState<number[]>([]); // ID wybranych wskaźników
+  const [indicatorTab, setIndicatorTab] = useState<string>('all');  // Aktywna zakładka kategorii wskaźników
+  const [results, setResults] = useState<Record<number, any>>({});  // Obliczone wyniki wskaźników per spółka
+  const [loading, setLoading] = useState(false);  // Flaga ładowania podczas obliczeń
+  const [tab, setTab] = useState(0);  // Aktywna zakładka roku w dialogu danych
+  const [dataDialogOpen, setDataDialogOpen] = useState(false);   // Czy dialog danych finansowych jest otwarty
+  const [activeCompany, setActiveCompany] = useState<Company | null>(null); // Spółka aktualnie edytowana w dialogu
+  const [financialData, setFinancialData] = useState<Record<number, Record<string, string>>>({}); // Dane finansowe wprowadzane w dialogu (rok → zmienna → wartość)
+  const [existingData, setExistingData] = useState<Record<number, any>>({}); // Dane finansowe pobrane z API per spółka
+  const [variables, setVariables] = useState<string[]>(COMMON_VARIABLES);  // Aktualny zestaw zmiennych finansowych w dialogu
+  const [newVariable, setNewVariable] = useState('');  // Wartość pola tekstowego dla nowej zmiennej
+  const [availableQuartersByCompany, setAvailableQuartersByCompany] = useState<
+  Record<number, { year: number; quarter: number }[]>  // Kwartały dostępne w backendzie per spółka
+>({});
+  const [dialogExtraYears, setDialogExtraYears] = useState<number[]>(() => { // Dodatkowe lata w dialogu (persystowane w localStorage)
+    const saved = localStorage.getItem('dialogExtraYears'); 
     return saved ? JSON.parse(saved) : [];
   });
-  const [dialogNewYear, setDialogNewYear] = useState('');
-  const [snackbar, setSnackbar] = useState({ open: false, message: '', severity: 'success' as 'success' | 'error' });
+  const [dialogNewYear, setDialogNewYear] = useState('');  // Wartość pola do dodania nowego roku w dialogu
+  const [snackbar, setSnackbar] = useState({ open: false, message: '', severity: 'success' as 'success' | 'error' }); // Stan powiadomienia (snackbar)
 
+  // Lata dialogu: unikalne, posortowane rosnąco połączenie wybranych lat i dodatkowych
   const dialogYears = [...selectedYears, ...dialogExtraYears]
     .filter((v, i, a) => a.indexOf(v) === i)
     .sort((a, b) => a - b);
 
+    // Wybrane lata posortowane rosnąco (do tabeli wyników)
   const sortedYears = [...selectedYears].sort((a, b) => a - b);
+
+  // Pełne obiekty wybranych wskaźników (do tabeli i wykresu)
   const selectedIndicatorObjects = indicators.filter(i => selectedIndicators.includes(i.id));
+
+  // Pełne obiekty wybranych spółek (do tabeli i wykresu)
   const selectedCompanyObjects = companies.filter(c => selectedCompanies.includes(c.id));
 
   useEffect(() => {
@@ -76,21 +98,58 @@ export default function Dashboard({ mode }: Props) {
     indicatorsApi.getAll().then(r => setIndicators(r.data));
   }, []);
 
+
+
+  // Spłaszczona lista dostępnych kwartałów: 5 ostatnich lat × 4 kwartały + kwartały z backendu
+// Deduplikowana po etykiecie (np. "Q1 2024")
+const backendQuarters = Object.values(availableQuartersByCompany).flat();
+
+const QUARTER_OPTIONS = [
+  ...Array.from({ length: 5 }, (_, i) => currentYear - i)
+    .flatMap(year => QUARTERS.map(q => ({
+      label: `${q} ${year}`,
+      year,
+      quarter: parseInt(q[1])
+    }))),
+
+  ...backendQuarters.map(q => ({
+    label: `Q${q.quarter} ${q.year}`,
+    year: q.year,
+    quarter: q.quarter
+  }))
+].filter((v, i, a) =>
+  a.findIndex(x => x.label === v.label) === i
+);
+
+// Pobiera dane finansowe dla nowo wybranych spółek (jeśli nie są jeszcze w cache)
   const handleCompanyChange = async (companyIds: number[]) => {
-    setSelectedCompanies(companyIds);
-    setResults({});
-    const newExisting: Record<number, any> = {};
-    for (const id of companyIds) {
-      if (!existingData[id]) {
-        const res = await financialsApi.getByCompany(id);
-        newExisting[id] = res.data;
-      } else {
-        newExisting[id] = existingData[id];
-      }
+  setSelectedCompanies(companyIds);
+  setResults({});
+  const newExisting: Record<number, any> = {};
+  for (const id of companyIds) {
+    if (mode === 'annual') {
+      const res = await financialsApi.getByCompany(id);
+      newExisting[id] = res.data;
+    } else {
+      // Dla kwartałów pobierz dane ze wszystkich 4 kwartałów
+      const quarterData: Record<string, any> = {};
+      await Promise.all(
+        [1, 2, 3, 4].map(async q => {
+          const res = await financialsApi.getByCompany(id, q);
+          Object.entries(res.data).forEach(([year, vars]) => {
+            const key = `Q${q} ${year}`;
+            quarterData[key] = vars;
+          });
+        })
+      );
+      newExisting[id] = quarterData;
     }
-    setExistingData(newExisting);
+  }
+  setExistingData(newExisting);
   };
 
+  // Otwiera dialog ręcznego wprowadzania danych dla danej spółki,
+// scalając istniejące dane z API ze zmiennymi domyślnymi
   const openDataDialog = async (company: Company) => {
     setActiveCompany(company);
     const res = await financialsApi.getByCompany(company.id);
@@ -111,6 +170,8 @@ export default function Dashboard({ mode }: Props) {
     setDataDialogOpen(true);
   };
 
+// Zapisuje dane finansowe z dialogu do backendu (upsert per rok i zmienna),
+// a następnie odświeża lokalny cache
   const handleSaveData = async () => {
     if (!activeCompany) return;
     try {
@@ -136,6 +197,7 @@ export default function Dashboard({ mode }: Props) {
     }
   };
 
+  // Importuje dane finansowe z pliku CSV/XLSX i odświeża cache spółki
   const handleImport = async (e: React.ChangeEvent<HTMLInputElement>, companyId: number) => {
     const file = e.target.files?.[0];
     if (!file) return;
@@ -149,6 +211,7 @@ export default function Dashboard({ mode }: Props) {
     }
   };
 
+  // Oblicza wskaźniki dla wybranych spółek, lat lub kwartałów i zapisuje wyniki w stanie
   const handleCalculate = async () => {
     const hasYears = mode === 'annual' ? selectedYears.length > 0 : selectedQuarters.length > 0;
     if (selectedCompanies.length === 0 || !hasYears || selectedIndicators.length === 0) return;
@@ -174,7 +237,8 @@ export default function Dashboard({ mode }: Props) {
               years: [opt.year],
               quarter: opt.quarter
             });
-            quarterResults[q] = res.data[opt.year];
+            const key = `${opt.year}-Q${opt.quarter}`;
+quarterResults[key] = res.data[opt.year];
           }
           newResults[companyId] = quarterResults;
         }
@@ -186,6 +250,8 @@ export default function Dashboard({ mode }: Props) {
     setLoading(false);
   };
 
+
+  // Eksportuje wyniki do pliku Excel (.xlsx) z nazwą opartą na tickerach spółek
   const handleExportExcel = () => {
     if (Object.keys(results).length === 0) return;
     const rows: any[] = [];
@@ -212,6 +278,7 @@ export default function Dashboard({ mode }: Props) {
     saveAs(blob, `${tickers}_wskazniki.xlsx`);
   };
 
+// Dodaje nową zmienną finansową do listy (normalizuje nazwę do snake_case)
   const addVariable = () => {
     const v = newVariable.trim().toLowerCase().replace(/\s+/g, '_');
     if (v && !variables.includes(v)) {
@@ -220,6 +287,7 @@ export default function Dashboard({ mode }: Props) {
     }
   };
 
+// Dodaje nowy rok do dialogu i persystuje go w localStorage
   const handleAddDialogYear = () => {
     const y = parseInt(dialogNewYear);
     if (!isNaN(y) && y > 1900 && y < 2100 && !dialogYears.includes(y)) {
@@ -229,6 +297,23 @@ export default function Dashboard({ mode }: Props) {
       setDialogNewYear('');
     }
   };
+
+// Tablica okresów do nagłówków tabeli: lata (roczne) lub kwartały (kwartalne)
+const periods =
+  mode === 'annual'
+    ? selectedYears.map(y => ({
+        label: String(y),
+        key: y
+      }))
+    : selectedQuarters.map(q => {
+        const opt = QUARTER_OPTIONS.find(o => o.label === q);
+        return opt
+          ? {
+              label: q,
+              key: `${opt.year}-Q${opt.quarter}`
+            }
+          : { label: q, key: q };
+      });
 
  
 
@@ -286,11 +371,11 @@ export default function Dashboard({ mode }: Props) {
             {selectedCompanyObjects.map(company => (
               <Box key={company.id} sx={{ display: 'flex', gap: 1, alignItems: 'center' }}>
                 <Typography variant="body2" fontWeight="bold">{company.ticker}:</Typography>
-                <Tooltip title="Wprowadź dane ręcznie">
+                {/* <Tooltip title="Wprowadź dane ręcznie">
                   <Button variant="outlined" size="small" startIcon={<EditIcon />} onClick={() => openDataDialog(company)}>
                     Dane
                   </Button>
-                </Tooltip>
+                </Tooltip> */}
                 <Tooltip title="Importuj z CSV/Excel">
                   <Button variant="outlined" size="small" startIcon={<UploadIcon />} component="label">
                     Import
@@ -358,7 +443,10 @@ export default function Dashboard({ mode }: Props) {
             <Select
               multiple
               value={selectedQuarters}
-              onChange={(e) => setSelectedQuarters(e.target.value as string[])}
+              onChange={(e) => {
+  const val = e.target.value as string[];
+  setSelectedQuarters(val);
+}}
               input={<OutlinedInput label="Kwartały" />}
               renderValue={(selected) => (
                 <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
@@ -378,6 +466,9 @@ export default function Dashboard({ mode }: Props) {
                 </Box>
               )}
             >
+              <div style={{ color: 'red' }}>
+  {JSON.stringify(selectedQuarters)}
+</div>
               {QUARTER_OPTIONS.map(q => (
                 <MenuItem key={q.label} value={q.label} sx={{
                   backgroundColor: selectedQuarters.includes(q.label) ? '#1976d2 !important' : 'inherit',
@@ -484,10 +575,10 @@ export default function Dashboard({ mode }: Props) {
               <TableHead sx={{ backgroundColor: '#1565c0' }}>
                 <TableRow>
                   <TableCell sx={{ color: 'white', fontWeight: 'bold' }}>Wskaźnik</TableCell>
-                  {(mode === 'annual' ? sortedYears : selectedQuarters).map(period =>
+                  {periods.map(period =>
                     selectedCompanyObjects.map(company => (
                       <TableCell key={`${company.id}-${period}`} sx={{ color: 'white', fontWeight: 'bold' }} align="right">
-                        {company.ticker} {period}
+                        {company.ticker} {period.label}
                       </TableCell>
                     ))
                   )}
@@ -497,13 +588,11 @@ export default function Dashboard({ mode }: Props) {
                 {selectedIndicatorObjects.map(ind => (
                   <TableRow key={ind.id} hover>
                     <TableCell><strong>{ind.display_name}</strong></TableCell>
-                    {(mode === 'annual' ? sortedYears : selectedQuarters).map(period =>
+                    {periods.map(period =>
                       selectedCompanyObjects.map(company => {
-                        const val = mode === 'annual'
-                          ? results[company.id]?.[period]?.[ind.display_name]
-                          : results[company.id]?.[period]?.[ind.display_name];
+                        const val = results[company.id]?.[period.key]?.[ind.display_name];
                         return (
-                          <TableCell key={`${company.id}-${period}`} align="right">
+                          <TableCell key={`${company.id}-${period.key}`} align="right">
                             {val === null || val === undefined ? (
                               <Chip label="brak" size="small" color="warning" />
                             ) : ind.is_percentage ? (
