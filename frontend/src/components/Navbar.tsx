@@ -26,7 +26,11 @@ export default function Navbar({ mode, onModeChange }: Props) {
         <ToggleButtonGroup
   value={mode}
   exclusive
-  onChange={(_, val) => val && onModeChange(val)}
+  onChange={(_, val) => {
+  if (val) {
+    onModeChange(val);
+  }
+}}
   size="small"
   sx={{ mr: 2, backgroundColor: 'rgba(255,255,255,0.15)', borderRadius: 1 }}
 >

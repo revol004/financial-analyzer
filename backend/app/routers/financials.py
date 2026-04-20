@@ -29,6 +29,17 @@ class FinancialDataResponse(BaseModel):
         from_attributes = True
 
 
+@router.delete("/variable/{variable_name}")
+def delete_variable(variable_name: str, db: Session = Depends(get_db)):
+    deleted = (
+        db.query(FinancialData)
+        .filter(FinancialData.variable_name == variable_name)
+        .delete()
+    )
+    db.commit()
+    return {"message": f"Deleted {deleted} records for variable '{variable_name}'"}
+
+
 @router.get("/{company_id}")
 def get_financials(
     company_id: int, quarter: Optional[int] = None, db: Session = Depends(get_db)
@@ -37,7 +48,7 @@ def get_financials(
     if quarter is not None:
         query = query.filter(FinancialData.quarter == quarter)
     else:
-       query = query.filter(FinancialData.quarter.is_(None))
+        query = query.filter(FinancialData.quarter.is_(None))
     data = query.all()
     result = {}
     for row in data:

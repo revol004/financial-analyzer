@@ -169,9 +169,10 @@ const handleChangeEditSubmit = async () => {
   useEffect(() => { fetchIndicators(); }, []);
 
   const categories = ['all', ...Array.from(new Set(indicators.map(i => i.category || 'Other')))];
-  const filteredIndicators = categoryTab === 'all'
-    ? indicators
-    : indicators.filter(i => (i.category || 'Other') === categoryTab);
+  const filteredIndicators = (categoryTab === 'all'
+  ? indicators
+  : indicators.filter(i => (i.category || 'Other') === categoryTab))
+  .sort((a, b) => a.display_name.localeCompare(b.display_name));
 
   const categoryOptions = Array.from(
   new Set(

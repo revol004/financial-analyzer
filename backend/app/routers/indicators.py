@@ -108,6 +108,14 @@ def update_indicator(
     db.refresh(db_indicator)
     return db_indicator
 
+@router.delete("/variable/{variable_name}")
+def delete_variable(variable_name: str, db: Session = Depends(get_db)):
+    deleted = db.query(FinancialData).filter(
+        FinancialData.variable_name == variable_name
+    ).delete()
+    db.commit()
+    return {"message": f"Deleted {deleted} records for variable '{variable_name}'"}
+
 
 @router.post("/calculate")
 def calculate(request: CalculateRequest, db: Session = Depends(get_db)):
@@ -264,5 +272,6 @@ def calculate(request: CalculateRequest, db: Session = Depends(get_db)):
                 results[year][indicator.display_name] = calculate_indicator(
                     indicator.formula, variables
                 )
+
 
     return results

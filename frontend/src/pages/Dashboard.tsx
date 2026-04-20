@@ -56,7 +56,7 @@ export default function Dashboard({ mode }: Props) {
   const [companies, setCompanies] = useState<Company[]>([]); // Lista wszystkich spółek z API
   const [indicators, setIndicators] = useState<Indicator[]>([]);  // Lista wszystkich wskaźników z API
   const [selectedCompanies, setSelectedCompanies] = useState<number[]>([]); // ID wybranych przez użytkownika spółek
-  const [selectedYears, setSelectedYears] = useState<number[]>([2024, 2023, 2022]); // Wybrane lata analizy
+  const [selectedYears, setSelectedYears] = useState<number[]>([]); // Wybrane lata analizy
   const [selectedQuarters, setSelectedQuarters] = useState<string[]>([]); // Wybrane kwartały w trybie kwartalnym
   const [selectedIndicators, setSelectedIndicators] = useState<number[]>([]); // ID wybranych wskaźników
   const [indicatorTab, setIndicatorTab] = useState<string>('all');  // Aktywna zakładka kategorii wskaźników
@@ -69,6 +69,8 @@ export default function Dashboard({ mode }: Props) {
   const [existingData, setExistingData] = useState<Record<number, any>>({}); // Dane finansowe pobrane z API per spółka
   const [variables, setVariables] = useState<string[]>(COMMON_VARIABLES);  // Aktualny zestaw zmiennych finansowych w dialogu
   const [newVariable, setNewVariable] = useState('');  // Wartość pola tekstowego dla nowej zmiennej
+  const [saveAsVarDialogOpen, setSaveAsVarDialogOpen] = useState(false);
+const [varNames, setVarNames] = useState<Record<string, string>>({});
   const [availableQuartersByCompany, setAvailableQuartersByCompany] = useState<
   Record<number, { year: number; quarter: number }[]>  // Kwartały dostępne w backendzie per spółka
 >({});
@@ -98,6 +100,14 @@ export default function Dashboard({ mode }: Props) {
     indicatorsApi.getAll().then(r => setIndicators(r.data));
   }, []);
 
+useEffect(() => {
+  setSelectedCompanies([]);
+  setSelectedYears([]);
+  setSelectedQuarters([]);
+  setResults({});
+  setExistingData({});
+}, [mode]);
+
 
 
   // Spłaszczona lista dostępnych kwartałów: 5 ostatnich lat × 4 kwartały + kwartały z backendu
@@ -105,7 +115,7 @@ export default function Dashboard({ mode }: Props) {
 const backendQuarters = Object.values(availableQuartersByCompany).flat();
 
 const QUARTER_OPTIONS = [
-  ...Array.from({ length: 5 }, (_, i) => currentYear - i)
+  ...Array.from({ length: 10 }, (_, i) => currentYear - i)
     .flatMap(year => QUARTERS.map(q => ({
       label: `${q} ${year}`,
       year,
@@ -297,7 +307,27 @@ quarterResults[key] = res.data[opt.year];
       setDialogNewYear('');
     }
   };
-
+const handleSaveIndicatorsToData = async (companyId: number, customNames: Record<string, string>) => {
+  try {
+    for (const year of selectedYears) {
+      for (const ind of selectedIndicatorObjects) {
+        const val = results[companyId]?.[year]?.[ind.display_name];
+        if (val !== null && val !== undefined) {
+          await financialsApi.upsert({
+            company_id: companyId,
+            year,
+            variable_name: customNames[ind.display_name] || ind.display_name.toLowerCase().replace(/\s+/g, '_'),
+            value: val
+          });
+        }
+      }
+    }
+    setSnackbar({ open: true, message: 'Wskaźniki zapisane do danych!', severity: 'success' });
+    setSaveAsVarDialogOpen(false);
+  } catch {
+    setSnackbar({ open: true, message: 'Błąd zapisu wskaźników.', severity: 'error' });
+  }
+};
 // Tablica okresów do nagłówków tabeli: lata (roczne) lub kwartały (kwartalne)
 const periods =
   mode === 'annual'
@@ -371,11 +401,6 @@ const periods =
             {selectedCompanyObjects.map(company => (
               <Box key={company.id} sx={{ display: 'flex', gap: 1, alignItems: 'center' }}>
                 <Typography variant="body2" fontWeight="bold">{company.ticker}:</Typography>
-                {/* <Tooltip title="Wprowadź dane ręcznie">
-                  <Button variant="outlined" size="small" startIcon={<EditIcon />} onClick={() => openDataDialog(company)}>
-                    Dane
-                  </Button>
-                </Tooltip> */}
                 <Tooltip title="Importuj z CSV/Excel">
                   <Button variant="outlined" size="small" startIcon={<UploadIcon />} component="label">
                     Import
@@ -501,8 +526,9 @@ const periods =
         </Tabs>
         <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1, mb: 2 }}>
           {indicators
-            .filter(i => indicatorTab === 'all' || (i.category || 'Other') === indicatorTab)
-            .map(i => (
+  .filter(i => indicatorTab === 'all' || (i.category || 'Other') === indicatorTab)
+  .sort((a, b) => a.display_name.localeCompare(b.display_name))
+  .map(i => (
               <Chip
                 key={i.id}
                 label={i.display_name}
@@ -563,7 +589,29 @@ const periods =
             Eksportuj do Excel
           </Button>
         )}
+
+        {Object.keys(results).length > 0 && selectedCompanies.length === 1 && (
+  <Button
+    variant="contained"
+    color="success"
+    size="large"
+    startIcon={<UploadIcon />}
+    onClick={() => {
+      const init: Record<string, string> = {};
+      selectedIndicatorObjects.forEach(ind => {
+        init[ind.display_name] = ind.display_name.toLowerCase().replace(/\s+/g, '_');
+      });
+      setVarNames(init);
+      setSaveAsVarDialogOpen(true);
+    }}
+    sx={{ px: 4, py: 1.5 }}
+  >
+    Zapisz jako dane
+  </Button>
+)}
       </Box>
+
+ 
 
       {/* Tabela wyników */}
       {Object.keys(results).length > 0 && (
@@ -611,6 +659,9 @@ const periods =
           </TableContainer>
         </Paper>
       )}
+     
+
+
 
       {/* Wykres */}
       {Object.keys(results).length > 0 && mode === 'annual' && (
@@ -718,6 +769,52 @@ const periods =
       >
         <Alert severity={snackbar.severity}>{snackbar.message}</Alert>
       </Snackbar>
+
+<Dialog open={saveAsVarDialogOpen} onClose={() => setSaveAsVarDialogOpen(false)} maxWidth="sm" fullWidth>
+  <DialogTitle>Zapisz wskaźniki jako zmienne</DialogTitle>
+  <DialogContent sx={{ pt: '16px !important' }}>
+    <Typography variant="body2" color="text.secondary" sx={{ mb: 2 }}>
+      Możesz zmienić nazwy zmiennych pod którymi zostaną zapisane wskaźniki.
+    </Typography>
+    <Table size="small">
+      <TableHead>
+        <TableRow sx={{ backgroundColor: '#f5f5f5' }}>
+          <TableCell><strong>Wskaźnik</strong></TableCell>
+          <TableCell><strong>Nazwa zmiennej</strong></TableCell>
+        </TableRow>
+      </TableHead>
+      <TableBody>
+        {selectedIndicatorObjects.map(ind => (
+          <TableRow key={ind.id}>
+            <TableCell>{ind.display_name}</TableCell>
+            <TableCell>
+              <TextField
+                size="small"
+                value={varNames[ind.display_name] || ''}
+                onChange={(e) => setVarNames(prev => ({
+                  ...prev,
+                  [ind.display_name]: e.target.value.toLowerCase().replace(/\s+/g, '_')
+                }))}
+                sx={{ width: 200 }}
+              />
+            </TableCell>
+          </TableRow>
+        ))}
+      </TableBody>
+    </Table>
+  </DialogContent>
+  <DialogActions sx={{ p: 2 }}>
+    <Button onClick={() => setSaveAsVarDialogOpen(false)}>Anuluj</Button>
+    <Button
+      variant="contained"
+      color="success"
+      onClick={() => handleSaveIndicatorsToData(selectedCompanyObjects[0].id, varNames)}
+    >
+      Zapisz
+    </Button>
+  </DialogActions>
+</Dialog>
+      
     </Box>
   );
 }

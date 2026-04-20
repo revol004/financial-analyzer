@@ -20,6 +20,7 @@ upsert: (data: any) => API.post('/financials/', data),
     formData.append('file', file);
     return API.post(`/financials/import/${companyId}`, formData);
   },
+  deleteVariable: (variableName: string) => API.delete(`/financials/variable/${variableName}`),
 };
 
 export const indicatorsApi = {

@@ -234,8 +234,8 @@ const handleImportCompany = async (e: React.ChangeEvent<HTMLInputElement>) => {
                               </TableHead>
                               <TableBody>
                                 {Array.from(new Set(
-                                  Object.values(financialData[c.id]).flatMap((y: any) => Object.keys(y))
-                                )).map(variable => (
+  Object.values(financialData[c.id]).flatMap((y: any) => Object.keys(y))
+)).sort().map(variable => (
                                   <TableRow key={variable} hover>
                                     <TableCell sx={{ fontFamily: 'monospace' }}>{variable}</TableCell>
                                     {Object.keys(financialData[c.id]).sort().map(year => (
