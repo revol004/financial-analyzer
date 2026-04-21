@@ -5,9 +5,11 @@ from app.routers import companies, financials, indicators
 
 Base.metadata.create_all(bind=engine)
 
+print("🔄 Uruchamianie seed...")
 from seed import seed
 
 seed()
+print("✅ Seed zakończony!")
 
 app = FastAPI(title="Financial Analyzer API")
 
