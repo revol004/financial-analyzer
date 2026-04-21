@@ -1,5 +1,5 @@
 import { AppBar, Toolbar, Typography, Button, Box, ToggleButton, ToggleButtonGroup } from '@mui/material';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import BarChartIcon from '@mui/icons-material/BarChart';
 
 interface Props {

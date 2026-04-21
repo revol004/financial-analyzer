@@ -1,9 +1,14 @@
 from app.database import SessionLocal, engine, Base
 from app.models.models import Company, FinancialData, IndicatorDefinition
 
-def seed():
+def seed(force=False):
     Base.metadata.create_all(bind=engine)
     db = SessionLocal()
+
+    if not force and db.query(Company).count() > 0:
+        print("ℹ️ Dane już istnieją, pomijam seed.")
+        db.close()
+        return
 
     # Wyczyść stare dane
     db.query(FinancialData).delete()
@@ -12,6 +17,8 @@ def seed():
     db.commit()
 
     # reszta kodu bez zmian...
+
+   
 
     # Sprawdź czy dane już istnieją
     if db.query(Company).count() > 0:
