@@ -5,6 +5,14 @@ def seed():
     Base.metadata.create_all(bind=engine)
     db = SessionLocal()
 
+    # Wyczyść stare dane
+    db.query(FinancialData).delete()
+    db.query(IndicatorDefinition).delete()
+    db.query(Company).delete()
+    db.commit()
+
+    # reszta kodu bez zmian...
+
     # Sprawdź czy dane już istnieją
     if db.query(Company).count() > 0:
         db.close()
