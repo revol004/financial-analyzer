@@ -40,7 +40,10 @@ export default function Companies({ mode }: Props) {
   const [snackbar, setSnackbar] = useState({ open: false, message: '', severity: 'success' as 'success' | 'error' });
 const [financialDialogOpen, setFinancialDialogOpen] = useState(false);
 const [financialCompany, setFinancialCompany] = useState<Company | null>(null);
-const [selectedYears] = useState<number[]>([2024, 2023, 2022, 2021, 2020]);
+const [selectedYears] = useState<number[]>(() => {
+  const currentYear = new Date().getFullYear();
+  return Array.from({ length: 6 }, (_, i) => currentYear - i);
+});
 
   const fetchCompanies = async () => {
     const res = await companiesApi.getAll();
@@ -87,6 +90,8 @@ const [selectedYears] = useState<number[]>([2024, 2023, 2022, 2021, 2020]);
   const handleDelete = async (id: number) => {
     if (!window.confirm('Usunąć tę spółkę wraz z wszystkimi jej danymi?')) return;
     await companiesApi.delete(id);
+    // Wyczyść dodane lata dla tej spółki z localStorage
+    localStorage.removeItem(`extraYears_${id}`);
     fetchCompanies();
   };
 
@@ -117,11 +122,11 @@ const [selectedYears] = useState<number[]>([2024, 2023, 2022, 2021, 2020]);
   }
 };
 
-const handleImportCompany = async (e: React.ChangeEvent<HTMLInputElement>) => {
+const handleImportCompany = async (e: React.ChangeEvent<HTMLInputElement>, companyId: number) => {
   const file = e.target.files?.[0];
   if (!file) return;
   try {
-    await financialsApi.import(0, file);
+    await financialsApi.import(companyId, file);
     setSnackbar({ open: true, message: 'Import zakończony!', severity: 'success' });
     fetchCompanies();
   } catch {
@@ -134,20 +139,7 @@ const handleImportCompany = async (e: React.ChangeEvent<HTMLInputElement>) => {
     <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 3 }}>
       <Typography variant="h4" fontWeight="bold">Spółki</Typography>
       <Box sx={{ display: 'flex', gap: 1 }}>
-        <Button
-          variant="outlined"
-          startIcon={<UploadIcon />}
-          component="label"
-          sx={{ whiteSpace: 'nowrap' }}
-        >
-          Importuj z CSV
-          <input
-            type="file"
-            hidden
-            accept=".csv,.xlsx"
-            onChange={handleImportCompany}
-          />
-        </Button>
+        
         <Button variant="contained" startIcon={<AddIcon />} onClick={() => setDialogOpen(true)}>
           Dodaj spółkę
         </Button>
@@ -158,12 +150,12 @@ const handleImportCompany = async (e: React.ChangeEvent<HTMLInputElement>) => {
         <Table>
           <TableHead sx={{ backgroundColor: '#1565c0' }}>
             <TableRow>
-              <TableCell sx={{ color: 'white', fontWeight: 'bold' }}>Nazwa</TableCell>
-              <TableCell sx={{ color: 'white', fontWeight: 'bold' }}>Ticker</TableCell>
-              <TableCell sx={{ color: 'white', fontWeight: 'bold' }}>Rynek</TableCell>
-              <TableCell sx={{ color: 'white', fontWeight: 'bold' }}>Opis</TableCell>
-              <TableCell sx={{ color: 'white', fontWeight: 'bold' }}>Dane</TableCell>
-              <TableCell sx={{ color: 'white', fontWeight: 'bold' }}>Akcje</TableCell>
+              <TableCell sx={{ color: 'white', fontWeight: 'bold',textAlign:'center' }}>Nazwa</TableCell>
+              <TableCell sx={{ color: 'white', fontWeight: 'bold',textAlign:'center' }}>Ticker</TableCell>
+              <TableCell sx={{ color: 'white', fontWeight: 'bold',textAlign:'center' }}>Rynek</TableCell>
+              <TableCell sx={{ color: 'white', fontWeight: 'bold',textAlign:'center' }}>Opis</TableCell>
+              <TableCell sx={{ color: 'white', fontWeight: 'bold',textAlign:'center' }}>Dane</TableCell>
+              <TableCell sx={{ color: 'white', fontWeight: 'bold',textAlign:'center'}}>Akcje</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
@@ -177,18 +169,18 @@ const handleImportCompany = async (e: React.ChangeEvent<HTMLInputElement>) => {
               companies.map((c) => (
                 <>
                   <TableRow key={c.id} hover>
-                    <TableCell><strong>{c.name}</strong></TableCell>
-                    <TableCell><Chip label={c.ticker} size="small" color="primary" /></TableCell>
-                    <TableCell>{c.market}</TableCell>
-                    <TableCell sx={{ color: 'text.secondary' }}>{c.description || '—'}</TableCell>
-                    <TableCell>
+                    <TableCell sx={{ textAlign: 'center' }}><strong>{c.name}</strong></TableCell>
+                    <TableCell sx={{ textAlign: 'center' }}><Chip label={c.ticker} size="small" color="primary" /></TableCell>
+                    <TableCell sx={{ textAlign: 'center' }}>{c.market}</TableCell>
+                    <TableCell sx={{ color: 'text.secondary', textAlign: 'center' }}>{c.description || '—'}</TableCell>
+                    <TableCell sx={{ textAlign: 'center' }}>
                       <Tooltip title="Pokaż dane finansowe">
                         <IconButton size="small" onClick={() => handleExpand(c.id)}>
                           {expandedRow === c.id ? <ExpandLessIcon /> : <ExpandMoreIcon />}
                         </IconButton>
                       </Tooltip>
                     </TableCell>
-                    <TableCell>
+                    <TableCell sx={{ display: 'flex', justifyContent: 'flex-end', gap: 1 }}>
   <Tooltip title="Edytuj spółkę">
     <IconButton color="primary" size="small" onClick={() => handleEdit(c)}>
       <EditIcon />
@@ -206,6 +198,25 @@ const handleImportCompany = async (e: React.ChangeEvent<HTMLInputElement>) => {
       <TableChartIcon />
     </IconButton>
   </Tooltip>
+
+<Tooltip title="Importuj dane z pliku">
+  <IconButton
+    component="label"
+    color="secondary"
+    size="small"
+  >
+    <UploadIcon />
+    <input
+      type="file"
+      hidden
+      accept=".csv,.xlsx"
+      onChange={(e) => handleImportCompany(e, c.id)} // ✅ tutaj działa
+    />
+  </IconButton>
+</Tooltip>
+
+
+
   <Tooltip title="Usuń spółkę">
     <IconButton color="error" size="small" onClick={() => handleDelete(c.id)}>
       <DeleteIcon />

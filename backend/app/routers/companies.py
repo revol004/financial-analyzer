@@ -4,7 +4,7 @@ from app.database import get_db
 from app.models.models import Company
 from pydantic import BaseModel
 from typing import Optional
-
+from app.models.models import Company, FinancialData
 router = APIRouter()
 
 
@@ -48,6 +48,7 @@ def delete_company(company_id: int, db: Session = Depends(get_db)):
     company = db.query(Company).filter(Company.id == company_id).first()
     if not company:
         raise HTTPException(status_code=404, detail="Company not found")
+    db.query(FinancialData).filter(FinancialData.company_id == company_id).delete()
     db.delete(company)
     db.commit()
     return {"message": "Company deleted"}

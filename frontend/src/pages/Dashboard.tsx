@@ -4,7 +4,7 @@ import {
   MenuItem, Chip, OutlinedInput, Table, TableBody, TableCell,
   TableContainer, TableHead, TableRow, Alert, CircularProgress,
   Divider, TextField, Dialog, DialogTitle, DialogContent,
-  DialogActions, Snackbar, Tabs, Tab, Tooltip
+  DialogActions, Snackbar, Tabs, Tab, Tooltip, Autocomplete
 } from '@mui/material';
 import CalculateIcon from '@mui/icons-material/Calculate';
 import AddIcon from '@mui/icons-material/Add';
@@ -69,7 +69,8 @@ export default function Dashboard({ mode }: Props) {
   const [variables, setVariables] = useState<string[]>(COMMON_VARIABLES);  // Aktualny zestaw zmiennych finansowych w dialogu
   const [newVariable, setNewVariable] = useState('');  // Wartość pola tekstowego dla nowej zmiennej
   const [saveAsVarDialogOpen, setSaveAsVarDialogOpen] = useState(false);
-const [varNames, setVarNames] = useState<Record<string, string>>({});
+  const [varNames, setVarNames] = useState<Record<string, string>>({});
+  const [varCategories, setVarCategories] = useState<Record<string, string>>({});;
   const [availableQuartersByCompany, setAvailableQuartersByCompany] = useState<
   Record<number, { year: number; quarter: number }[]>  // Kwartały dostępne w backendzie per spółka
 >({});
@@ -306,18 +307,23 @@ quarterResults[key] = res.data[opt.year];
       setDialogNewYear('');
     }
   };
-const handleSaveIndicatorsToData = async (companyId: number, customNames: Record<string, string>) => {
+const handleSaveIndicatorsToData = async (companyId: number, customNames: Record<string, string>, customCategories?: Record<string, string>) => {
   try {
     for (const year of selectedYears) {
       for (const ind of selectedIndicatorObjects) {
         const val = results[companyId]?.[year]?.[ind.display_name];
         if (val !== null && val !== undefined) {
-          await financialsApi.upsert({
+          const payload: any = {
             company_id: companyId,
             year,
             variable_name: customNames[ind.display_name] || ind.display_name.toLowerCase().replace(/\s+/g, '_'),
             value: val
-          });
+          };
+          // Dodaj kategorię jeśli została podana
+          if (customCategories?.[ind.display_name]) {
+            payload.category = customCategories[ind.display_name];
+          }
+          await financialsApi.upsert(payload);
         }
       }
     }
@@ -601,6 +607,7 @@ const periods =
         init[ind.display_name] = ind.display_name.toLowerCase().replace(/\s+/g, '_');
       });
       setVarNames(init);
+      setVarCategories({});
       setSaveAsVarDialogOpen(true);
     }}
     sx={{ px: 4, py: 1.5 }}
@@ -773,13 +780,14 @@ const periods =
   <DialogTitle>Zapisz wskaźniki jako zmienne</DialogTitle>
   <DialogContent sx={{ pt: '16px !important' }}>
     <Typography variant="body2" color="text.secondary" sx={{ mb: 2 }}>
-      Możesz zmienić nazwy zmiennych pod którymi zostaną zapisane wskaźniki.
+      Możesz zmienić nazwy zmiennych pod którymi zostaną zapisane wskaźniki i przypisać je do kategorii.
     </Typography>
     <Table size="small">
       <TableHead>
         <TableRow sx={{ backgroundColor: '#f5f5f5' }}>
           <TableCell><strong>Wskaźnik</strong></TableCell>
           <TableCell><strong>Nazwa zmiennej</strong></TableCell>
+          <TableCell><strong>Kategoria (opcj.)</strong></TableCell>
         </TableRow>
       </TableHead>
       <TableBody>
@@ -794,7 +802,27 @@ const periods =
                   ...prev,
                   [ind.display_name]: e.target.value.toLowerCase().replace(/\s+/g, '_')
                 }))}
-                sx={{ width: 200 }}
+                sx={{ width: 150 }}
+              />
+            </TableCell>
+            <TableCell>
+              <Autocomplete
+                freeSolo
+                size="small"
+                options={Array.from(new Set(indicators.map(i => i.category).filter(Boolean)))}
+                value={varCategories[ind.display_name] || ''}
+                onChange={(_, value) => setVarCategories(prev => ({
+                  ...prev,
+                  [ind.display_name]: value || ''
+                }))}
+                onInputChange={(_, value) => setVarCategories(prev => ({
+                  ...prev,
+                  [ind.display_name]: value
+                }))}
+                renderInput={(params) => (
+                  <TextField {...params} placeholder="Np. Profitability" />
+                )}
+                sx={{ width: 150 }}
               />
             </TableCell>
           </TableRow>
@@ -807,7 +835,7 @@ const periods =
     <Button
       variant="contained"
       color="success"
-      onClick={() => handleSaveIndicatorsToData(selectedCompanyObjects[0].id, varNames)}
+      onClick={() => handleSaveIndicatorsToData(selectedCompanyObjects[0].id, varNames, varCategories)}
     >
       Zapisz
     </Button>

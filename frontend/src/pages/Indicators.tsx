@@ -44,6 +44,15 @@ const DEFAULT_INDICATORS = [
   { name: 'debt_ratio', display_name: 'Debt Ratio', formula: 'total_liabilities / total_assets', description: 'Total Debt Ratio', category: 'Leverage' },
 ];
 
+const getVariableCategories = (): Record<string, string> => {
+  const saved = localStorage.getItem('variableCategories');
+  return saved ? JSON.parse(saved) : {};
+};
+
+const saveVariableCategories = (cats: Record<string, string>) => {
+  localStorage.setItem('variableCategories', JSON.stringify(cats));
+};
+
 export default function Indicators() {
   const [indicators, setIndicators] = useState<Indicator[]>([]);
   const [dialogOpen, setDialogOpen] = useState(false);
@@ -61,6 +70,7 @@ export default function Indicators() {
   raw_variable: '',
   category: '',
   is_percentage: 1,
+   condition: '',
 });
 const [editAggDialogOpen, setEditAggDialogOpen] = useState(false);
 const [editAggForm, setEditAggForm] = useState<any>(null);
@@ -86,7 +96,7 @@ const handleChangeSubmit = async () => {
   if (!isRaw && !base) return;
   if (isRaw && !changeForm.raw_variable) return;
 
-  const typeLabel = changeForm.change_type === 'yoy' ? 'YoY' : `${changeForm.change_years}Y Change`;
+  const typeLabel = changeForm.change_type === 'yoy' ? 'YoY % Change' : `${changeForm.change_years}Y Change`;
   const sourceName = isRaw ? changeForm.raw_variable : base!.display_name;
 
   try {
@@ -159,6 +169,7 @@ const handleChangeEditSubmit = async () => {
   });
   const [variableDialogOpen, setVariableDialogOpen] = useState(false);
   const [newVariableName, setNewVariableName] = useState('');
+  const [newVariableCategory, setNewVariableCategory] = useState('');
   const [snackbar, setSnackbar] = useState({ open: false, message: '', severity: 'success' as 'success' | 'error' });
 
   const fetchIndicators = async () => {
@@ -219,7 +230,9 @@ const handleAggSubmit = async () => {
       name: `${aggForm.agg_type}_${aggForm.agg_years}y_${isRaw ? aggForm.raw_variable : base!.name}`,
       display_name: aggForm.display_name ||
         `${sourceName} ${aggForm.agg_years}Y ${aggForm.agg_type === 'median' ? 'Median' : 'Mean'}`,
-      formula: isRaw ? aggForm.raw_variable : base!.formula,
+      formula: aggForm.agg_type === 'count_if'
+  ? (isRaw ? `${aggForm.raw_variable} ${aggForm.condition}` : aggForm.condition)
+  : (isRaw ? aggForm.raw_variable : base!.formula),
       description: `${aggForm.agg_type === 'median' ? 'Median' : 'Mean'} of ${sourceName} over ${aggForm.agg_years} years`,
       category: aggForm.category || (isRaw ? '' : base!.category),
       is_percentage: aggForm.is_percentage,
@@ -229,7 +242,7 @@ const handleAggSubmit = async () => {
     });
     setSnackbar({ open: true, message: 'Wskaźnik agregowany dodany!', severity: 'success' });
     setAggDialogOpen(false);
-    setAggForm({ display_name: '', agg_type: 'median', agg_years: 5, base_indicator_id: 0, source_type: 'indicator', raw_variable: '', category: '', is_percentage: 1 });
+    setAggForm({ display_name: '', agg_type: 'median', agg_years: 5, base_indicator_id: 0, source_type: 'indicator', raw_variable: '', category: '', is_percentage: 1, condition: '' });
     fetchIndicators();
   } catch {
     setSnackbar({ open: true, message: 'Błąd – wskaźnik już istnieje.', severity: 'error' });
@@ -270,6 +283,7 @@ const handleAggEditSubmit = async () => {
       base_indicator_id: indicator.base_indicator_id || 0,
       category: indicator.category || '',
       is_percentage: indicator.is_percentage,
+      formula: indicator.formula,
     });
     setEditAggDialogOpen(true);
     return;
@@ -285,6 +299,7 @@ const handleAggEditSubmit = async () => {
       base_indicator_id: indicator.base_indicator_id || 0,
       category: indicator.category || '',
       is_percentage: indicator.is_percentage,
+      formula: indicator.formula,
     });
     setEditChangeDialogOpen(true);
     return;
@@ -355,9 +370,18 @@ const handleAggEditSubmit = async () => {
       const updated = [...defaultVariables, v];
       setDefaultVariables(updated);
       localStorage.setItem('defaultVariables', JSON.stringify(updated));
+      
+      // Zapisz kategorię zmiennej jeśli została podana
+      if (newVariableCategory.trim()) {
+        const categories = getVariableCategories();
+        const updated_cats = { ...categories, [v]: newVariableCategory };
+        saveVariableCategories(updated_cats);
+      }
+      
       setSnackbar({ open: true, message: `Zmienna "${v}" dodana!`, severity: 'success' });
     }
     setNewVariableName('');
+    setNewVariableCategory('');
     setVariableDialogOpen(false);
   };
 
@@ -712,16 +736,27 @@ const handleAggEditSubmit = async () => {
 
 
     <FormControl fullWidth>
-      <InputLabel>Typ agregacji</InputLabel>
-      <Select
-        value={aggForm.agg_type}
-        label="Typ agregacji"
-        onChange={(e) => setAggForm({ ...aggForm, agg_type: e.target.value })}
-      >
-        <MenuItem value="median">Mediana</MenuItem>
-        <MenuItem value="mean">Średnia</MenuItem>
-      </Select>
-    </FormControl>
+  <InputLabel>Typ agregacji</InputLabel>
+  <Select
+    value={aggForm.agg_type}
+    label="Typ agregacji"
+    onChange={(e) => setAggForm({ ...aggForm, agg_type: e.target.value })}
+  >
+    <MenuItem value="median">Mediana</MenuItem>
+    <MenuItem value="mean">Średnia</MenuItem>
+    <MenuItem value="count_if">Licznik warunkowy (ile lat spełnia warunek)</MenuItem>
+  </Select>
+</FormControl>
+
+{aggForm.agg_type === 'count_if' && (
+  <TextField
+    label="Warunek (np. > 0 lub < 0.1 lub >= 0.05)"
+    value={aggForm.condition || ''}
+    onChange={(e) => setAggForm({ ...aggForm, condition: e.target.value })}
+    fullWidth
+    helperText="Wpisz operator i wartość np. '> 0' oznacza 'wartość większa niż 0'"
+  />
+)}
     <TextField
       label="Liczba lat"
       type="number"
@@ -774,7 +809,7 @@ const handleAggEditSubmit = async () => {
       {/* Dialog dodawania zmiennej */}
       <Dialog open={variableDialogOpen} onClose={() => setVariableDialogOpen(false)} maxWidth="xs" fullWidth>
         <DialogTitle>Dodaj domyślną zmienną</DialogTitle>
-        <DialogContent sx={{ pt: '16px !important' }}>
+        <DialogContent sx={{ display: 'flex', flexDirection: 'column', gap: 2, pt: '16px !important' }}>
           <TextField
             label="Nazwa zmiennej (np. ebitda)"
             value={newVariableName}
@@ -782,10 +817,25 @@ const handleAggEditSubmit = async () => {
             fullWidth
             helperText="Używaj małych liter i podkreśleń zamiast spacji"
             onKeyDown={(e) => e.key === 'Enter' && handleAddVariable()}
+            autoFocus
+          />
+          <Autocomplete
+            freeSolo
+            options={Array.from(new Set(indicators.map(i => i.category).filter(Boolean)))}
+            value={newVariableCategory}
+            onChange={(_, value) => setNewVariableCategory(value || '')}
+            onInputChange={(_, value) => setNewVariableCategory(value)}
+            renderInput={(params) => (
+              <TextField {...params} label="Kategoria (opcjonalnie)" helperText="Np. Income Statement, Raw Data" />
+            )}
           />
         </DialogContent>
         <DialogActions sx={{ p: 2 }}>
-          <Button onClick={() => setVariableDialogOpen(false)}>Anuluj</Button>
+          <Button onClick={() => {
+            setVariableDialogOpen(false);
+            setNewVariableName('');
+            setNewVariableCategory('');
+          }}>Anuluj</Button>
           <Button variant="contained" onClick={handleAddVariable} disabled={!newVariableName}>
             Dodaj
           </Button>
@@ -917,6 +967,127 @@ const handleAggEditSubmit = async () => {
   </DialogActions>
 </Dialog>
 
+      {/* Dialog edycji agregatu */}
+      <Dialog open={editAggDialogOpen} onClose={() => setEditAggDialogOpen(false)} maxWidth="sm" fullWidth>
+        <DialogTitle>Edytuj wskaźnik agregowany – {editAggForm?.display_name}</DialogTitle>
+        <DialogContent sx={{ display: 'flex', flexDirection: 'column', gap: 2, pt: '16px !important' }}>
+          <TextField
+            label="Nazwa wyświetlana"
+            value={editAggForm?.display_name || ''}
+            onChange={(e) => setEditAggForm({ ...editAggForm, display_name: e.target.value })}
+            fullWidth
+          />
+          <FormControl fullWidth>
+            <InputLabel>Typ agregacji</InputLabel>
+            <Select
+              value={editAggForm?.agg_type || 'median'}
+              label="Typ agregacji"
+              onChange={(e) => setEditAggForm({ ...editAggForm, agg_type: e.target.value })}
+            >
+              <MenuItem value="median">Mediana</MenuItem>
+              <MenuItem value="mean">Średnia</MenuItem>
+            </Select>
+          </FormControl>
+          <TextField
+            label="Liczba lat"
+            type="number"
+            value={editAggForm?.agg_years || 5}
+            onChange={(e) => setEditAggForm({ ...editAggForm, agg_years: parseInt(e.target.value) })}
+            fullWidth
+          />
+          <Autocomplete
+            freeSolo
+            options={Array.from(new Set(indicators.map(i => i.category).filter(Boolean)))}
+            value={editAggForm?.category || ''}
+            onChange={(_, value) =>
+              setEditAggForm({ ...editAggForm, category: value || '' })
+            }
+            onInputChange={(_, value) =>
+              setEditAggForm({ ...editAggForm, category: value })
+            }
+            renderInput={(params) => (
+              <TextField {...params} label="Kategoria (opcjonalnie)" />
+            )}
+          />
+          <FormControlLabel
+            control={
+              <Switch
+                checked={(editAggForm?.is_percentage || 0) === 1}
+                onChange={(e) => setEditAggForm({ ...editAggForm, is_percentage: e.target.checked ? 1 : 0 })}
+              />
+            }
+            label="Wynik w procentach (wizualnie)"
+          />
+        </DialogContent>
+        <DialogActions sx={{ p: 2 }}>
+          <Button onClick={() => setEditAggDialogOpen(false)}>Anuluj</Button>
+          <Button variant="contained" onClick={handleAggEditSubmit}>
+            Zapisz zmiany
+          </Button>
+        </DialogActions>
+      </Dialog>
+
+      {/* Dialog edycji zmiany % */}
+      <Dialog open={editChangeDialogOpen} onClose={() => setEditChangeDialogOpen(false)} maxWidth="sm" fullWidth>
+        <DialogTitle>Edytuj wskaźnik zmiany % – {editChangeForm?.display_name}</DialogTitle>
+        <DialogContent sx={{ display: 'flex', flexDirection: 'column', gap: 2, pt: '16px !important' }}>
+          <TextField
+            label="Nazwa wyświetlana"
+            value={editChangeForm?.display_name || ''}
+            onChange={(e) => setEditChangeForm({ ...editChangeForm, display_name: e.target.value })}
+            fullWidth
+          />
+          <FormControl fullWidth>
+            <InputLabel>Typ zmiany</InputLabel>
+            <Select
+              value={editChangeForm?.change_type || 'yoy'}
+              label="Typ zmiany"
+              onChange={(e) => setEditChangeForm({ ...editChangeForm, change_type: e.target.value })}
+            >
+              <MenuItem value="yoy">Rok do roku (YoY)</MenuItem>
+              <MenuItem value="change_n">Zmiana na przestrzeni N lat</MenuItem>
+            </Select>
+          </FormControl>
+          {editChangeForm?.change_type === 'change_n' && (
+            <TextField
+              label="Liczba lat"
+              type="number"
+              value={editChangeForm?.change_years || 5}
+              onChange={(e) => setEditChangeForm({ ...editChangeForm, change_years: parseInt(e.target.value) })}
+              fullWidth
+            />
+          )}
+          <Autocomplete
+            freeSolo
+            options={Array.from(new Set(indicators.map(i => i.category).filter(Boolean)))}
+            value={editChangeForm?.category || ''}
+            onChange={(_, value) =>
+              setEditChangeForm({ ...editChangeForm, category: value || '' })
+            }
+            onInputChange={(_, value) =>
+              setEditChangeForm({ ...editChangeForm, category: value })
+            }
+            renderInput={(params) => (
+              <TextField {...params} label="Kategoria (opcjonalnie)" />
+            )}
+          />
+          <FormControlLabel
+            control={
+              <Switch
+                checked={(editChangeForm?.is_percentage || 0) === 1}
+                onChange={(e) => setEditChangeForm({ ...editChangeForm, is_percentage: e.target.checked ? 1 : 0 })}
+              />
+            }
+            label="Wynik w procentach (wizualnie)"
+          />
+        </DialogContent>
+        <DialogActions sx={{ p: 2 }}>
+          <Button onClick={() => setEditChangeDialogOpen(false)}>Anuluj</Button>
+          <Button variant="contained" onClick={handleChangeEditSubmit}>
+            Zapisz zmiany
+          </Button>
+        </DialogActions>
+      </Dialog>
 
     </Box>
   );
