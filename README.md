@@ -6,7 +6,7 @@
 
 # 
 
-# \*\*Live Demo:\*\* \[financial-analyzer-eight.vercel.app](https://financial-analyzer-eight.vercel.app)
+
 
 # 
 
