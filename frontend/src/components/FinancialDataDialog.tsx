@@ -3,12 +3,12 @@ import {
   Dialog, DialogTitle, DialogContent, DialogActions, Button,
   Table, TableBody, TableCell, TableContainer, TableHead,
   TableRow, TextField, Tabs, Tab, Box, Typography, Paper,
-  CircularProgress, Chip, IconButton, Tooltip, Autocomplete
+  CircularProgress, Chip, IconButton, Tooltip
 } from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
-import DeleteIcon from '@mui/icons-material/Delete';
 import { financialsApi } from '../services/api';
 import CleaningServicesIcon from '@mui/icons-material/CleaningServices';
+
 interface Props {
   open: boolean;
   onClose: () => void;
@@ -61,30 +61,26 @@ export default function FinancialDataDialog({ open, onClose, company, years, mod
   const [tab, setTab] = useState(0);
   const [variables, setVariables] = useState<string[]>(COMMON_VARIABLES);
   const [financialData, setFinancialData] = useState<Record<string, Record<string, string>>>({});
-  const [newVariable, setNewVariable] = useState('');
   const [newYear, setNewYear] = useState('');
   const [extraYears, setExtraYears] = useState<number[]>([]);
   const [saving, setSaving] = useState(false);
   const [loadingData, setLoadingData] = useState(false);
-  const [variableCategories, setVariableCategories] = useState<Record<string, string>>(getVariableCategories);
   const [categoryFilter, setCategoryFilter] = useState<string>('all');
   const [editCategoryVar, setEditCategoryVar] = useState<string | null>(null);
   const [newCategoryName, setNewCategoryName] = useState('');
   const [categoryDialogOpen, setCategoryDialogOpen] = useState(false);
   const [newCategoryForAdd, setNewCategoryForAdd] = useState('');
   const [customCategories, setCustomCategories] = useState<string[]>(getCustomCategories);
-  const [variableMappingDialogOpen, setVariableMappingDialogOpen] = useState(false);
-  const [localVariableCategories, setLocalVariableCategories] = useState<Record<string, string>>({});
 
   useEffect(() => {
-  if (company?.id) {
-    const saved = localStorage.getItem(`extraYears_${company.id}`);
-    const globalYears = JSON.parse(localStorage.getItem('globalExtraYears') || '[]');
-    const companyYears = saved ? JSON.parse(saved) : [];
-    const merged = [...companyYears, ...globalYears].filter((v, i, a) => a.indexOf(v) === i);
-    setExtraYears(merged);
-  }
-}, [company?.id]);
+    if (company?.id) {
+      const saved = localStorage.getItem(`extraYears_${company.id}`);
+      const globalYears = JSON.parse(localStorage.getItem('globalExtraYears') || '[]');
+      const companyYears = saved ? JSON.parse(saved) : [];
+      const merged = [...companyYears, ...globalYears].filter((v, i, a) => a.indexOf(v) === i);
+      setExtraYears(merged);
+    }
+  }, [company?.id]);
 
   const allYears = [...years, ...extraYears]
     .filter((v, i, a) => a.indexOf(v) === i)
@@ -112,22 +108,22 @@ export default function FinancialDataDialog({ open, onClose, company, years, mod
           Object.values(res.data).forEach((yearData: any) => {
             Object.keys(yearData).forEach((v: string) => allVars.add(v));
           });
-          // Dodaj lata z bazy do extraYears jeśli ich nie ma
-const yearsFromDB = Object.keys(res.data).map(Number);
-const missingYears = yearsFromDB.filter(y => !allYears.includes(y));
-if (missingYears.length > 0 && company?.id) {
-  const updatedExtra = [...extraYears, ...missingYears].filter((v, i, a) => a.indexOf(v) === i);
-  setExtraYears(updatedExtra);
-  localStorage.setItem(`extraYears_${company.id}`, JSON.stringify(updatedExtra));
-}
+          
+          const yearsFromDB = Object.keys(res.data).map(Number);
+          const missingYears = yearsFromDB.filter(y => !allYears.includes(y));
+          if (missingYears.length > 0 && company?.id) {
+            const updatedExtra = [...extraYears, ...missingYears].filter((v, i, a) => a.indexOf(v) === i);
+            setExtraYears(updatedExtra);
+            localStorage.setItem(`extraYears_${company.id}`, JSON.stringify(updatedExtra));
+          }
 
-setVariables(Array.from(allVars));
-periods.forEach(period => {
-  init[period.label] = {};
-  allVars.forEach(v => {
-    init[period.label][v] = res.data[period.year]?.[v]?.toString() || '';
-  });
-});
+          setVariables(Array.from(allVars));
+          periods.forEach(period => {
+            init[period.label] = {};
+            allVars.forEach(v => {
+              init[period.label][v] = res.data[period.year]?.[v]?.toString() || '';
+            });
+          });
         } else {
           const quarterData: Record<number, any> = {};
           await Promise.all(
@@ -158,6 +154,7 @@ periods.forEach(period => {
   }, [open, company, mode]);
 
   const getCategoryForVariable = (variable: string): string => {
+    const variableCategories = getVariableCategories();
     if (variableCategories[variable]) return variableCategories[variable];
     for (const [cat, vars] of Object.entries(DEFAULT_CATEGORIES)) {
       if (vars.includes(variable)) return cat;
@@ -171,57 +168,22 @@ periods.forEach(period => {
     ? [...variables].sort()
     : [...variables].filter((v: string) => getCategoryForVariable(v) === categoryFilter).sort();
 
-  const addVariable = () => {
-    const v = newVariable.trim().toLowerCase().replace(/\s+/g, '_');
-    if (v && !variables.includes(v)) {
-      setVariables((prev: string[]) => [...prev, v]);
-      setFinancialData((prev: Record<string, Record<string, string>>) => {
-        const updated = { ...prev };
-        periods.forEach(p => {
-          updated[p.label] = { ...updated[p.label], [v]: '' };
-        });
-        return updated;
-      });
-      setNewVariable('');
-    }
-  };
-
   const handleAddYear = () => {
-  const y = parseInt(newYear);
-  if (!isNaN(y) && y > 1900 && y < 2100 && !allYears.includes(y)) {
-    const updated = [...extraYears, y];
-    setExtraYears(updated);
-    // Zapisz dla wszystkich spółek w localStorage
-    const globalYears = JSON.parse(localStorage.getItem('globalExtraYears') || '[]');
-    const updatedGlobal = [...globalYears, y].filter((v, i, a) => a.indexOf(v) === i);
-    localStorage.setItem('globalExtraYears', JSON.stringify(updatedGlobal));
-    // Zapisz też dla tej spółki
-    if (company?.id) {
-      localStorage.setItem(`extraYears_${company.id}`, JSON.stringify(updated));
-    }
-    setNewYear('');
-  }
-};
-
-  const handleDeleteVariable = async (variable: string) => {
-  if (!window.confirm(`Usunąć zmienną "${variable}" ze wszystkich spółek i lat? Tej operacji nie można cofnąć.`)) return;
-  try {
-    console.log('Deleting variable:', JSON.stringify(variable));
-    await financialsApi.deleteVariable(encodeURIComponent(variable));
-      setVariables((prev: string[]) => prev.filter((v: string) => v !== variable));
-      const updated = { ...variableCategories };
-      delete updated[variable];
-      setVariableCategories(updated);
-      saveVariableCategories(updated);
-      const updatedDefVars = JSON.parse(localStorage.getItem('defaultVariables') || '[]').filter((v: string) => v !== variable);
-      localStorage.setItem('defaultVariables', JSON.stringify(updatedDefVars));
-    } catch {
-      console.error('Błąd usuwania zmiennej');
+    const y = parseInt(newYear);
+    if (!isNaN(y) && y > 1900 && y < 2100 && !allYears.includes(y)) {
+      const updated = [...extraYears, y];
+      setExtraYears(updated);
+      const globalYears = JSON.parse(localStorage.getItem('globalExtraYears') || '[]');
+      const updatedGlobal = [...globalYears, y].filter((v, i, a) => a.indexOf(v) === i);
+      localStorage.setItem('globalExtraYears', JSON.stringify(updatedGlobal));
+      if (company?.id) {
+        localStorage.setItem(`extraYears_${company.id}`, JSON.stringify(updated));
+      }
+      setNewYear('');
     }
   };
 
-
-const handleClearVariableValues = (variable: string) => {
+ const handleClearVariableValues = (variable: string) => {
   if (!window.confirm(`Wyczyścić wartości zmiennej "${variable}" we wszystkich okresach?`)) return;
 
   setFinancialData((prev: Record<string, Record<string, string>>) => {
@@ -229,7 +191,11 @@ const handleClearVariableValues = (variable: string) => {
 
     Object.keys(updated).forEach((period) => {
       if (updated[period]?.[variable] !== undefined) {
-        updated[period][variable] = '';
+        // Ustawiamy od razu 0, skoro baza tego oczekuje
+        updated[period] = {
+          ...updated[period],
+          [variable]: '0'
+        };
       }
     });
 
@@ -237,10 +203,8 @@ const handleClearVariableValues = (variable: string) => {
   });
 };
 
-
   const handleSetCategory = (variable: string, category: string) => {
-    const updated = { ...variableCategories, [variable]: category };
-    setVariableCategories(updated);
+    const updated = { ...getVariableCategories(), [variable]: category };
     saveVariableCategories(updated);
     setEditCategoryVar(null);
   };
@@ -253,7 +217,6 @@ const handleClearVariableValues = (variable: string) => {
       alert('Kategoria już istnieje!');
       return;
     }
-    // Dodaj nową kategorię do custom kategorii
     const updated = [...customCategories, categoryName].filter((v, i, a) => a.indexOf(v) === i);
     setCustomCategories(updated);
     saveCustomCategories(updated);
@@ -261,45 +224,39 @@ const handleClearVariableValues = (variable: string) => {
     setNewCategoryForAdd('');
   };
 
-  const handleOpenVariableMappingDialog = () => {
-    setLocalVariableCategories({ ...variableCategories });
-    setVariableMappingDialogOpen(true);
-  };
-
-  const handleSaveVariableMapping = () => {
-    setVariableCategories(localVariableCategories);
-    saveVariableCategories(localVariableCategories);
-    setVariableMappingDialogOpen(false);
-  };
-
-  const handleUpdateVariableCategory = (variable: string, category: string) => {
-    setLocalVariableCategories({
-      ...localVariableCategories,
-      [variable]: category
-    });
-  };
-
   const handleSave = async () => {
-    if (!company) return;
-    setSaving(true);
-    const requests = periods.flatMap(period =>
-      variables
-        .filter((variable: string) => {
-          const val = financialData[period.label]?.[variable];
-          return val !== '' && val !== undefined && !isNaN(Number(val));
-        })
-        .map((variable: string) => financialsApi.upsert({
-          company_id: company.id,
-          year: period.year,
-          quarter: period.quarter,
-          variable_name: variable,
-          value: parseFloat(financialData[period.label][variable])
-        }))
-    );
+  if (!company) return;
+  setSaving(true);
+  
+  const requests = periods.flatMap(period =>
+    variables.map((variable: string) => {
+      const val = financialData[period.label]?.[variable];
+      
+      // Zamiast null, puste pola zamieniamy na 0
+      const finalValue = (val === '' || val === undefined || isNaN(Number(val))) 
+        ? 0 
+        : parseFloat(val);
+
+      return financialsApi.upsert({
+        company_id: company.id,
+        year: period.year,
+        quarter: period.quarter,
+        variable_name: variable,
+        value: finalValue
+      });
+    })
+  );
+  
+  try {
     await Promise.all(requests);
     setSaving(false);
     onClose();
-  };
+  } catch (error) {
+    console.error("Błąd podczas zapisu z wartością 0:", error);
+    alert("Wersja z zerem (0) również została odrzucona przez serwer.");
+    setSaving(false);
+  }
+};
 
   return (
     <Dialog open={open} onClose={onClose} maxWidth="lg" fullWidth>
@@ -333,7 +290,6 @@ const handleClearVariableValues = (variable: string) => {
               <Box key={period.label} hidden={tab !== i}>
                 {tab === i && (
                   <>
-                    {/* Filtry kategorii */}
                     <Tabs
                       value={categoryFilter}
                       onChange={(_, v) => setCategoryFilter(v as string)}
@@ -401,28 +357,16 @@ const handleClearVariableValues = (variable: string) => {
                                 />
                               </TableCell>
                               <TableCell>
-  {/* 🧹 CLEAR VALUES */}
-  <Tooltip title="Wyczyść wartości zmiennej">
-    <IconButton
-      size="small"
-      color="warning"
-      onClick={() => handleClearVariableValues(variable)}
-    >
-      <CleaningServicesIcon fontSize="small" />
-    </IconButton>
-  </Tooltip>
-
-  {/* ❌ DELETE VARIABLE */}
-  <Tooltip title="Usuń zmienną ze wszystkich spółek">
-    <IconButton
-      size="small"
-      color="error"
-      onClick={() => handleDeleteVariable(variable)}
-    >
-      <DeleteIcon fontSize="small" />
-    </IconButton>
-  </Tooltip>
-</TableCell>
+                                <Tooltip title="Wyczyść wartości zmiennej">
+                                  <IconButton
+                                    size="small"
+                                    color="warning"
+                                    onClick={() => handleClearVariableValues(variable)}
+                                  >
+                                    <CleaningServicesIcon fontSize="small" />
+                                  </IconButton>
+                                </Tooltip>
+                              </TableCell>
                             </TableRow>
                           ))}
                         </TableBody>
@@ -430,19 +374,6 @@ const handleClearVariableValues = (variable: string) => {
                     </TableContainer>
 
                     <Box sx={{ display: 'flex', gap: 2, mt: 2, alignItems: 'center', flexWrap: 'wrap' }}>
-                      <Box sx={{ display: 'flex', gap: 1, alignItems: 'center' }}>
-                        <TextField
-                          size="small"
-                          label="Dodaj nową zmienną"
-                          value={newVariable}
-                          onChange={(e) => setNewVariable(e.target.value)}
-                          placeholder="np. ebitda"
-                          onKeyDown={(e) => e.key === 'Enter' && addVariable()}
-                        />
-                        <Button startIcon={<AddIcon />} onClick={addVariable} variant="outlined">
-                          Dodaj
-                        </Button>
-                      </Box>
                       <Box sx={{ display: 'flex', gap: 1, alignItems: 'center' }}>
                         <TextField
                           size="small"
@@ -462,9 +393,6 @@ const handleClearVariableValues = (variable: string) => {
                         <Button startIcon={<AddIcon />} onClick={() => setCategoryDialogOpen(true)} variant="outlined">
                           Dodaj kategorię
                         </Button>
-                        <Button startIcon={<AddIcon />} onClick={handleOpenVariableMappingDialog} variant="outlined">
-                          Zmapuj zmienne
-                        </Button>
                       </Box>
                     </Box>
                   </>
@@ -481,7 +409,6 @@ const handleClearVariableValues = (variable: string) => {
         </Button>
       </DialogActions>
 
-      {/* Dialog dodawania kategorii */}
       <Dialog open={categoryDialogOpen} onClose={() => setCategoryDialogOpen(false)} maxWidth="xs" fullWidth>
         <DialogTitle>Dodaj nową kategorię</DialogTitle>
         <DialogContent sx={{ pt: '16px !important' }}>
@@ -499,50 +426,6 @@ const handleClearVariableValues = (variable: string) => {
           <Button onClick={() => setCategoryDialogOpen(false)}>Anuluj</Button>
           <Button variant="contained" onClick={handleAddCategory} disabled={!newCategoryForAdd.trim()}>
             Dodaj
-          </Button>
-        </DialogActions>
-      </Dialog>
-
-      {/* Dialog mapowania zmiennych na kategorie */}
-      <Dialog open={variableMappingDialogOpen} onClose={() => setVariableMappingDialogOpen(false)} maxWidth="sm" fullWidth>
-        <DialogTitle>Zmapuj zmienne na kategorie</DialogTitle>
-        <DialogContent sx={{ pt: '16px !important' }}>
-          <TableContainer component={Paper} variant="outlined" sx={{ mt: 2 }}>
-            <Table size="small">
-              <TableHead>
-                <TableRow sx={{ backgroundColor: '#f5f5f5' }}>
-                  <TableCell><strong>Zmienna</strong></TableCell>
-                  <TableCell><strong>Kategoria</strong></TableCell>
-                </TableRow>
-              </TableHead>
-              <TableBody>
-                {variables.sort().map((variable: string) => (
-                  <TableRow key={variable} hover>
-                    <TableCell sx={{ fontFamily: 'monospace', fontSize: '0.85rem' }}>{variable}</TableCell>
-                    <TableCell sx={{ maxWidth: 200 }}>
-                      <Autocomplete
-                        freeSolo
-                        size="small"
-                        options={allCategories.filter(c => c !== 'all')}
-                        value={localVariableCategories[variable] || getCategoryForVariable(variable)}
-                        onChange={(_, value) => handleUpdateVariableCategory(variable, value || '')}
-                        onInputChange={(_, value) => handleUpdateVariableCategory(variable, value)}
-                        renderInput={(params) => (
-                          <TextField {...params} placeholder="Wybierz kategorię" />
-                        )}
-                        sx={{ width: '100%' }}
-                      />
-                    </TableCell>
-                  </TableRow>
-                ))}
-              </TableBody>
-            </Table>
-          </TableContainer>
-        </DialogContent>
-        <DialogActions sx={{ p: 2 }}>
-          <Button onClick={() => setVariableMappingDialogOpen(false)}>Anuluj</Button>
-          <Button variant="contained" onClick={handleSaveVariableMapping}>
-            Zapisz mapowanie
           </Button>
         </DialogActions>
       </Dialog>

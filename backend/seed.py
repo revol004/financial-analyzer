@@ -16,10 +16,7 @@ def seed(force=False):
     db.query(Company).delete()
     db.commit()
 
-    # reszta kodu bez zmian...
-
    
-
     # Sprawdź czy dane już istnieją
     if db.query(Company).count() > 0:
         db.close()

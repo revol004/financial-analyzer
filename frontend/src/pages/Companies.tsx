@@ -101,9 +101,31 @@ const [selectedYears] = useState<number[]>(() => {
     return;
   }
   setExpandedRow(companyId);
+  
+  // Załaduj zmienne domyślne z localStorage
+  const savedVars = localStorage.getItem('defaultVariables');
+  const defaultVariables = savedVars ? JSON.parse(savedVars) : [];
+  
   if (mode === 'annual') {
     const res = await financialsApi.getByCompany(companyId);
-    setFinancialData(prev => ({ ...prev, [companyId]: res.data }));
+    const backendData = res.data;
+    
+    // Połącz zmienne domyślne + zmienne z backendu
+    const allVars = new Set<string>(defaultVariables);
+    Object.values(backendData).forEach((yearData: any) => {
+      Object.keys(yearData).forEach(v => allVars.add(v));
+    });
+    
+    // Utwórz tabelę ze wszystkimi zmiennymi
+    const enrichedData: Record<string, any> = {};
+    Object.entries(backendData).forEach(([year, vars]: [string, any]) => {
+      enrichedData[year] = {};
+      allVars.forEach(v => {
+        enrichedData[year][v] = vars[v] || null;
+      });
+    });
+    
+    setFinancialData(prev => ({ ...prev, [companyId]: enrichedData }));
   } else {
     const quarterData: Record<string, any> = {};
     await Promise.all(
@@ -118,6 +140,21 @@ const [selectedYears] = useState<number[]>(() => {
         });
       })
     );
+    
+    // Też dodaj zmienne domyślne do kwartałów
+    const allVars = new Set<string>(defaultVariables);
+    Object.values(quarterData).forEach((qData: any) => {
+      Object.keys(qData).forEach(v => allVars.add(v));
+    });
+    
+    Object.keys(quarterData).forEach(key => {
+      const enriched: Record<string, any> = {};
+      allVars.forEach(v => {
+        enriched[v] = quarterData[key][v] || null;
+      });
+      quarterData[key] = enriched;
+    });
+    
     setFinancialData(prev => ({ ...prev, [companyId]: quarterData }));
   }
 };
@@ -129,8 +166,10 @@ const handleImportCompany = async (e: React.ChangeEvent<HTMLInputElement>, compa
     await financialsApi.import(companyId, file);
     setSnackbar({ open: true, message: 'Import zakończony!', severity: 'success' });
     fetchCompanies();
-  } catch {
-    setSnackbar({ open: true, message: 'Błąd importu.', severity: 'error' });
+  } catch (error: any) {
+    const errorMessage = error.response?.data?.detail || 'Błąd importu.';
+    console.error('Import error:', error);
+    setSnackbar({ open: true, message: `Błąd importu: ${errorMessage}`, severity: 'error' });
   }
 };
 
@@ -377,3 +416,4 @@ const handleImportCompany = async (e: React.ChangeEvent<HTMLInputElement>, compa
     </Box>
   );
 }
+

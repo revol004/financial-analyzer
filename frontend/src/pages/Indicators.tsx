@@ -4,14 +4,16 @@ import {
   DialogContent, DialogActions, Table, TableBody, TableCell,
   TableContainer, TableHead, TableRow, IconButton, Chip, Alert,
   Snackbar, Tooltip, Select, MenuItem, FormControl, InputLabel,
-  Switch, FormControlLabel, Tabs, Tab
+  Switch, FormControlLabel, Tabs, Tab, Checkbox, FormGroup
 } from '@mui/material';
 import DeleteIcon from '@mui/icons-material/Delete';
 import AddIcon from '@mui/icons-material/Add';
 import EditIcon from '@mui/icons-material/Edit';
 import InfoIcon from '@mui/icons-material/Info';
+import BuildIcon from '@mui/icons-material/Build';
 import { indicatorsApi } from '../services/api';
 import { Autocomplete } from '@mui/material';
+import ManageVariablesDialog from '../components/ManageVariablesDialog';
 interface Indicator {
   id: number;
   name: string;
@@ -44,17 +46,13 @@ const DEFAULT_INDICATORS = [
   { name: 'debt_ratio', display_name: 'Debt Ratio', formula: 'total_liabilities / total_assets', description: 'Total Debt Ratio', category: 'Leverage' },
 ];
 
-const getVariableCategories = (): Record<string, string> => {
-  const saved = localStorage.getItem('variableCategories');
-  return saved ? JSON.parse(saved) : {};
-};
-
-const saveVariableCategories = (cats: Record<string, string>) => {
-  localStorage.setItem('variableCategories', JSON.stringify(cats));
-};
-
 export default function Indicators() {
   const [indicators, setIndicators] = useState<Indicator[]>([]);
+  const [groups, setGroups] = useState<any[]>([]);
+  const [groupsDialogOpen, setGroupsDialogOpen] = useState(false);
+  const [groupFormDialogOpen, setGroupFormDialogOpen] = useState(false);
+  const [selectedGroupToEdit, setSelectedGroupToEdit] = useState<any>(null);
+  const [groupForm, setGroupForm] = useState({ name: '', description: '', indicator_ids: [] as number[] });
   const [dialogOpen, setDialogOpen] = useState(false);
   const [editDialogOpen, setEditDialogOpen] = useState(false);
   const [aggDialogOpen, setAggDialogOpen] = useState(false);
@@ -160,16 +158,7 @@ const handleChangeEditSubmit = async () => {
       'Value': 'warning',
     };
   });
-  const [defaultVariables, setDefaultVariables] = useState<string[]>(() => {
-    const saved = localStorage.getItem('defaultVariables');
-    return saved ? JSON.parse(saved) : [
-      'revenue', 'net_income', 'operating_income', 'equity',
-      'total_assets', 'current_assets', 'total_liabilities', 'current_liabilities'
-    ];
-  });
-  const [variableDialogOpen, setVariableDialogOpen] = useState(false);
-  const [newVariableName, setNewVariableName] = useState('');
-  const [newVariableCategory, setNewVariableCategory] = useState('');
+  const [manageVariablesDialogOpen, setManageVariablesDialogOpen] = useState(false);
   const [snackbar, setSnackbar] = useState({ open: false, message: '', severity: 'success' as 'success' | 'error' });
 
   const fetchIndicators = async () => {
@@ -177,7 +166,19 @@ const handleChangeEditSubmit = async () => {
     setIndicators(res.data);
   };
 
-  useEffect(() => { fetchIndicators(); }, []);
+  const fetchGroups = async () => {
+    try {
+      const res = await indicatorsApi.getGroups();
+      setGroups(res.data);
+    } catch {
+      // Grupy mogą nie być jeszcze dostępne
+    }
+  };
+
+  useEffect(() => { 
+    fetchIndicators(); 
+    fetchGroups();
+  }, []);
 
   const categories = ['all', ...Array.from(new Set(indicators.map(i => i.category || 'Other')))];
   const filteredIndicators = (categoryTab === 'all'
@@ -364,32 +365,62 @@ const handleAggEditSubmit = async () => {
     fetchIndicators();
   };
 
-  const handleAddVariable = () => {
-    const v = newVariableName.trim().toLowerCase().replace(/\s+/g, '_');
-    if (v && !defaultVariables.includes(v)) {
-      const updated = [...defaultVariables, v];
-      setDefaultVariables(updated);
-      localStorage.setItem('defaultVariables', JSON.stringify(updated));
-      
-      // Zapisz kategorię zmiennej jeśli została podana
-      if (newVariableCategory.trim()) {
-        const categories = getVariableCategories();
-        const updated_cats = { ...categories, [v]: newVariableCategory };
-        saveVariableCategories(updated_cats);
-      }
-      
-      setSnackbar({ open: true, message: `Zmienna "${v}" dodana!`, severity: 'success' });
+  const handleGroupSubmit = async () => {
+    if (!groupForm.name || groupForm.indicator_ids.length === 0) {
+      setSnackbar({ open: true, message: 'Wpisz nazwę grupy i wybierz przynajmniej jeden wskaźnik!', severity: 'error' });
+      return;
     }
-    setNewVariableName('');
-    setNewVariableCategory('');
-    setVariableDialogOpen(false);
+
+    try {
+      if (selectedGroupToEdit) {
+        await indicatorsApi.updateGroup(selectedGroupToEdit.id, groupForm);
+        setSnackbar({ open: true, message: 'Grupa zaktualizowana!', severity: 'success' });
+      } else {
+        await indicatorsApi.createGroup(groupForm);
+        setSnackbar({ open: true, message: 'Grupa dodana!', severity: 'success' });
+      }
+      setGroupFormDialogOpen(false);
+      setGroupForm({ name: '', description: '', indicator_ids: [] });
+      setSelectedGroupToEdit(null);
+      fetchGroups();
+    } catch {
+      setSnackbar({ open: true, message: 'Błąd – nazwa grupy już istnieje.', severity: 'error' });
+    }
   };
 
-  const handleDeleteVariable = (variable: string) => {
-    if (!window.confirm(`Usunąć zmienną "${variable}" z domyślnych?`)) return;
-    const updated = defaultVariables.filter(v => v !== variable);
-    setDefaultVariables(updated);
-    localStorage.setItem('defaultVariables', JSON.stringify(updated));
+  const handleGroupEdit = (group: any) => {
+    setSelectedGroupToEdit(group);
+    setGroupForm({
+      name: group.name,
+      description: group.description || '',
+      indicator_ids: group.indicator_ids || []
+    });
+    setGroupFormDialogOpen(true);
+  };
+
+  const handleGroupDelete = async (groupId: number) => {
+    if (!window.confirm('Usunąć tę grupę?')) return;
+    try {
+      await indicatorsApi.deleteGroup(groupId);
+      setSnackbar({ open: true, message: 'Grupa usunięta!', severity: 'success' });
+      fetchGroups();
+    } catch {
+      setSnackbar({ open: true, message: 'Błąd usuwania grupy.', severity: 'error' });
+    }
+  };
+
+  const handleGroupIndicatorToggle = (indicatorId: number) => {
+    const newIds = groupForm.indicator_ids.includes(indicatorId)
+      ? groupForm.indicator_ids.filter(id => id !== indicatorId)
+      : [...groupForm.indicator_ids, indicatorId];
+    setGroupForm({ ...groupForm, indicator_ids: newIds });
+  };
+
+  const getGroupIndicatorNames = (indicatorIds: number[]) => {
+    return indicatorIds
+      .map(id => indicators.find(i => i.id === id)?.display_name)
+      .filter(Boolean)
+      .join(', ');
   };
 
   const getChipColor = (category?: string): any => {
@@ -397,9 +428,6 @@ const handleAggEditSubmit = async () => {
     return categoryColors[category] || 'default';
   };
 
-
-
-  
   return (
     <Box sx={{ p: 4 }}>
       <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 3 }}>
@@ -410,13 +438,18 @@ const handleAggEditSubmit = async () => {
               Dodaj domyślne wskaźniki
             </Button>
           )}
+          <Button variant="outlined" startIcon={<AddIcon />} onClick={() => setGroupsDialogOpen(true)}>
+            Grupy wskaźników
+          </Button>
           <Button variant="outlined" startIcon={<AddIcon />} onClick={() => setAggDialogOpen(true)}>
             Dodaj agregat
           </Button>
 <Button variant="outlined" startIcon={<AddIcon />} onClick={() => setChangeDialogOpen(true)}>
   Dodaj zmianę %
 </Button>
-
+          <Button variant="outlined" startIcon={<BuildIcon />} onClick={() => setManageVariablesDialogOpen(true)}>
+            Zarządzaj zmiennymi
+          </Button>
           <Button variant="contained" startIcon={<AddIcon />} onClick={() => setDialogOpen(true)}>
             Dodaj wskaźnik
           </Button>
@@ -508,28 +541,6 @@ const handleAggEditSubmit = async () => {
           </TableBody>
         </Table>
       </TableContainer>
-
-      <Paper sx={{ p: 3, mt: 4 }}>
-        <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 2 }}>
-          <Typography variant="h6" fontWeight="bold">Domyślne zmienne finansowe</Typography>
-          <Button variant="outlined" startIcon={<AddIcon />} onClick={() => setVariableDialogOpen(true)}>
-            Dodaj zmienną
-          </Button>
-        </Box>
-        <Typography variant="body2" color="text.secondary" sx={{ mb: 2 }}>
-          Te zmienne pojawiają się domyślnie przy wprowadzaniu danych finansowych.
-        </Typography>
-        <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1 }}>
-          {defaultVariables.map(variable => (
-            <Chip
-              key={variable}
-              label={variable}
-              onDelete={() => handleDeleteVariable(variable)}
-              sx={{ fontFamily: 'monospace' }}
-            />
-          ))}
-        </Box>
-      </Paper>
 
       {/* Dialog dodawania wskaźnika */}
       <Dialog open={dialogOpen} onClose={() => setDialogOpen(false)} maxWidth="sm" fullWidth>
@@ -806,51 +817,8 @@ const handleAggEditSubmit = async () => {
 </Dialog>
 
 
-      {/* Dialog dodawania zmiennej */}
-      <Dialog open={variableDialogOpen} onClose={() => setVariableDialogOpen(false)} maxWidth="xs" fullWidth>
-        <DialogTitle>Dodaj domyślną zmienną</DialogTitle>
-        <DialogContent sx={{ display: 'flex', flexDirection: 'column', gap: 2, pt: '16px !important' }}>
-          <TextField
-            label="Nazwa zmiennej (np. ebitda)"
-            value={newVariableName}
-            onChange={(e) => setNewVariableName(e.target.value)}
-            fullWidth
-            helperText="Używaj małych liter i podkreśleń zamiast spacji"
-            onKeyDown={(e) => e.key === 'Enter' && handleAddVariable()}
-            autoFocus
-          />
-          <Autocomplete
-            freeSolo
-            options={Array.from(new Set(indicators.map(i => i.category).filter(Boolean)))}
-            value={newVariableCategory}
-            onChange={(_, value) => setNewVariableCategory(value || '')}
-            onInputChange={(_, value) => setNewVariableCategory(value)}
-            renderInput={(params) => (
-              <TextField {...params} label="Kategoria (opcjonalnie)" helperText="Np. Income Statement, Raw Data" />
-            )}
-          />
-        </DialogContent>
-        <DialogActions sx={{ p: 2 }}>
-          <Button onClick={() => {
-            setVariableDialogOpen(false);
-            setNewVariableName('');
-            setNewVariableCategory('');
-          }}>Anuluj</Button>
-          <Button variant="contained" onClick={handleAddVariable} disabled={!newVariableName}>
-            Dodaj
-          </Button>
-        </DialogActions>
-      </Dialog>
-
-      <Snackbar
-        open={snackbar.open}
-        autoHideDuration={3000}
-        onClose={() => setSnackbar({ ...snackbar, open: false })}
-      >
-        <Alert severity={snackbar.severity}>{snackbar.message}</Alert>
-      </Snackbar>
-
-<Dialog open={changeDialogOpen} onClose={() => setChangeDialogOpen(false)} maxWidth="sm" fullWidth>
+      {/* Dialog dodawania zmiennej zmiany % */}
+      <Dialog open={changeDialogOpen} onClose={() => setChangeDialogOpen(false)} maxWidth="sm" fullWidth>
   <DialogTitle>Dodaj wskaźnik zmiany %</DialogTitle>
   <DialogContent sx={{ display: 'flex', flexDirection: 'column', gap: 2, pt: '16px !important' }}>
     <TextField
@@ -1089,6 +1057,152 @@ const handleAggEditSubmit = async () => {
         </DialogActions>
       </Dialog>
 
+      <Snackbar
+        open={snackbar.open}
+        autoHideDuration={3000}
+        onClose={() => setSnackbar({ ...snackbar, open: false })}
+      >
+        <Alert severity={snackbar.severity}>{snackbar.message}</Alert>
+      </Snackbar>
+
+      {/* Dialog zarządzania zmiennymi */}
+      <ManageVariablesDialog
+        open={manageVariablesDialogOpen}
+        onClose={() => setManageVariablesDialogOpen(false)}
+      />
+
+      {/* Dialog zarządzania grupami wskaźników */}
+      <Dialog open={groupsDialogOpen} onClose={() => setGroupsDialogOpen(false)} maxWidth="sm" fullWidth>
+        <DialogTitle>Grupy wskaźników</DialogTitle>
+        <DialogContent sx={{ pt: 2 }}>
+          <Button 
+            variant="contained" 
+            startIcon={<AddIcon />} 
+            fullWidth 
+            sx={{ mb: 2 }}
+            onClick={() => {
+              setSelectedGroupToEdit(null);
+              setGroupForm({ name: '', description: '', indicator_ids: [] });
+              setGroupFormDialogOpen(true);
+            }}
+          >
+            Dodaj nową grupę
+          </Button>
+
+          {groups.length === 0 ? (
+            <Typography color="text.secondary" align="center" sx={{ py: 3 }}>
+              Brak grup. Utwórz pierwszą grupę.
+            </Typography>
+          ) : (
+            <TableContainer component={Paper} sx={{ mt: 2 }}>
+              <Table size="small">
+                <TableHead sx={{ backgroundColor: '#f5f5f5' }}>
+                  <TableRow>
+                    <TableCell sx={{ fontWeight: 'bold' }}>Nazwa</TableCell>
+                    <TableCell sx={{ fontWeight: 'bold' }}>Wskaźniki</TableCell>
+                    <TableCell sx={{ fontWeight: 'bold' }} align="right">Akcje</TableCell>
+                  </TableRow>
+                </TableHead>
+                <TableBody>
+                  {groups.map((group) => (
+                    <TableRow key={group.id} hover>
+                      <TableCell><strong>{group.name}</strong></TableCell>
+                      <TableCell sx={{ fontSize: '0.85rem' }}>
+                        {getGroupIndicatorNames(group.indicator_ids)}
+                      </TableCell>
+                      <TableCell align="right">
+                        <Tooltip title="Edytuj grupę">
+                          <IconButton 
+                            color="primary" 
+                            size="small" 
+                            onClick={() => handleGroupEdit(group)}
+                          >
+                            <EditIcon />
+                          </IconButton>
+                        </Tooltip>
+                        <Tooltip title="Usuń grupę">
+                          <IconButton
+                            color="error"
+                            size="small"
+                            onClick={() => handleGroupDelete(group.id)}
+                          >
+                            <DeleteIcon />
+                          </IconButton>
+                        </Tooltip>
+                      </TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            </TableContainer>
+          )}
+        </DialogContent>
+        <DialogActions sx={{ p: 2 }}>
+          <Button onClick={() => setGroupsDialogOpen(false)}>Zamknij</Button>
+        </DialogActions>
+      </Dialog>
+
+      {/* Dialog tworzenia/edycji grupy */}
+      <Dialog open={groupFormDialogOpen} onClose={() => setGroupFormDialogOpen(false)} maxWidth="sm" fullWidth>
+        <DialogTitle>
+          {selectedGroupToEdit ? `Edytuj grupę – ${selectedGroupToEdit.name}` : 'Dodaj nową grupę wskaźników'}
+        </DialogTitle>
+        <DialogContent sx={{ display: 'flex', flexDirection: 'column', gap: 2, pt: '16px !important' }}>
+          <TextField
+            label="Nazwa grupy"
+            value={groupForm.name}
+            onChange={(e) => setGroupForm({ ...groupForm, name: e.target.value })}
+            fullWidth
+            required
+          />
+          <TextField
+            label="Opis (opcjonalnie)"
+            value={groupForm.description}
+            onChange={(e) => setGroupForm({ ...groupForm, description: e.target.value })}
+            fullWidth
+            multiline
+            rows={2}
+          />
+          
+          <Box>
+            <Typography variant="subtitle2" fontWeight="bold" sx={{ mb: 1 }}>
+              Wybierz wskaźniki do grupy:
+            </Typography>
+            <FormGroup sx={{ maxHeight: 300, overflow: 'auto', border: '1px solid #e0e0e0', p: 1 }}>
+              {indicators.map((indicator) => (
+                <FormControlLabel
+                  key={indicator.id}
+                  control={
+                    <Checkbox
+                      checked={groupForm.indicator_ids.includes(indicator.id)}
+                      onChange={() => handleGroupIndicatorToggle(indicator.id)}
+                    />
+                  }
+                  label={`${indicator.display_name} (${indicator.category || 'Inne'})`}
+                />
+              ))}
+            </FormGroup>
+            <Typography variant="caption" color="text.secondary" sx={{ mt: 1, display: 'block' }}>
+              Wybrano: {groupForm.indicator_ids.length} wskaźnik(ów)
+            </Typography>
+          </Box>
+        </DialogContent>
+        <DialogActions sx={{ p: 2 }}>
+          <Button onClick={() => {
+            setGroupFormDialogOpen(false);
+            setSelectedGroupToEdit(null);
+          }}>
+            Anuluj
+          </Button>
+          <Button 
+            variant="contained" 
+            onClick={handleGroupSubmit}
+            disabled={!groupForm.name || groupForm.indicator_ids.length === 0}
+          >
+            {selectedGroupToEdit ? 'Zapisz zmiany' : 'Dodaj grupę'}
+          </Button>
+        </DialogActions>
+      </Dialog>
     </Box>
   );
 }

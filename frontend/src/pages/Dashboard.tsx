@@ -4,7 +4,8 @@ import {
   MenuItem, Chip, OutlinedInput, Table, TableBody, TableCell,
   TableContainer, TableHead, TableRow, Alert, CircularProgress,
   Divider, TextField, Dialog, DialogTitle, DialogContent,
-  DialogActions, Snackbar, Tabs, Tab, Tooltip, Autocomplete
+  DialogActions, Snackbar, Tabs, Tab, Tooltip, Autocomplete,
+  Checkbox, FormControlLabel
 } from '@mui/material';
 import CalculateIcon from '@mui/icons-material/Calculate';
 import AddIcon from '@mui/icons-material/Add';
@@ -54,11 +55,16 @@ const QUARTERS = ['Q1', 'Q2', 'Q3', 'Q4'];
 export default function Dashboard({ mode }: Props) {
   const [companies, setCompanies] = useState<Company[]>([]); // Lista wszystkich spółek z API
   const [indicators, setIndicators] = useState<Indicator[]>([]);  // Lista wszystkich wskaźników z API
+  const [groups, setGroups] = useState<any[]>([]);  // Lista wszystkich grup wskaźników
   const [selectedCompanies, setSelectedCompanies] = useState<number[]>([]); // ID wybranych przez użytkownika spółek
   const [selectedYears, setSelectedYears] = useState<number[]>([]); // Wybrane lata analizy
+  const [selectedQuarterYears, setSelectedQuarterYears] = useState<number[]>([]); // Lata dla filtrowania kwartałów
   const [selectedQuarters, setSelectedQuarters] = useState<string[]>([]); // Wybrane kwartały w trybie kwartalnym
   const [selectedIndicators, setSelectedIndicators] = useState<number[]>([]); // ID wybranych wskaźników
+  const [selectedGroup, setSelectedGroup] = useState<number | ''>(''); // Wybrana grupa wskaźników
   const [indicatorTab, setIndicatorTab] = useState<string>('all');  // Aktywna zakładka kategorii wskaźników
+  const [lastClickedYear, setLastClickedYear] = useState<number | null>(null); // Ostatnio kliknięty rok (dla Shift+Click)
+  const [lastClickedQuarter, setLastClickedQuarter] = useState<string | null>(null); // Ostatnio kliknięty kwartał (dla Shift+Click)
   const [results, setResults] = useState<Record<number, any>>({});  // Obliczone wyniki wskaźników per spółka
   const [loading, setLoading] = useState(false);  // Flaga ładowania podczas obliczeń
   const [tab, setTab] = useState(0);  // Aktywna zakładka roku w dialogu danych
@@ -71,6 +77,8 @@ export default function Dashboard({ mode }: Props) {
   const [saveAsVarDialogOpen, setSaveAsVarDialogOpen] = useState(false);
   const [varNames, setVarNames] = useState<Record<string, string>>({});
   const [varCategories, setVarCategories] = useState<Record<string, string>>({});;
+  const [useExistingVar, setUseExistingVar] = useState<Record<string, boolean>>({}); // Czy użyć istniejącej zmiennej
+  const [selectedExistingVar, setSelectedExistingVar] = useState<Record<string, string>>({}); // Która istniejąca zmienna
   const [availableQuartersByCompany, setAvailableQuartersByCompany] = useState<
   Record<number, { year: number; quarter: number }[]>  // Kwartały dostępne w backendzie per spółka
 >({});
@@ -98,14 +106,19 @@ export default function Dashboard({ mode }: Props) {
   useEffect(() => {
     companiesApi.getAll().then(r => setCompanies(r.data));
     indicatorsApi.getAll().then(r => setIndicators(r.data));
+    indicatorsApi.getGroups().then(r => setGroups(r.data)).catch(() => setGroups([]));
   }, []);
 
 useEffect(() => {
   setSelectedCompanies([]);
   setSelectedYears([]);
+  setSelectedQuarterYears([]);
   setSelectedQuarters([]);
+  setSelectedGroup('');
   setResults({});
   setExistingData({});
+  setLastClickedYear(null);
+  setLastClickedQuarter(null);
 }, [mode]);
 
 
@@ -158,29 +171,16 @@ const QUARTER_OPTIONS = [
   setExistingData(newExisting);
   };
 
-  // Otwiera dialog ręcznego wprowadzania danych dla danej spółki,
-// scalając istniejące dane z API ze zmiennymi domyślnymi
-  const openDataDialog = async (company: Company) => {
-    setActiveCompany(company);
-    const res = await financialsApi.getByCompany(company.id);
-    const existing = res.data;
-    const allVars = new Set<string>(COMMON_VARIABLES);
-    Object.values(existing).forEach((yearData: any) => {
-      Object.keys(yearData).forEach(v => allVars.add(v));
-    });
-    setVariables(Array.from(allVars));
-    const init: Record<number, Record<string, string>> = {};
-    for (const year of selectedYears) {
-      init[year] = {};
-      allVars.forEach(v => {
-        init[year][v] = existing[year]?.[v]?.toString() || '';
-      });
+  // Obsługuje zmianę wybranej grupy wskaźników
+  const handleGroupChange = (groupId: number | '') => {
+    setSelectedGroup(groupId);
+    if (groupId !== '') {
+      const group = groups.find(g => g.id === groupId);
+      if (group) {
+        setSelectedIndicators(group.indicator_ids);
+      }
     }
-    setFinancialData(init);
-    setDataDialogOpen(true);
   };
-
-// Zapisuje dane finansowe z dialogu do backendu (upsert per rok i zmienna),
 // a następnie odświeża lokalny cache
   const handleSaveData = async () => {
     if (!activeCompany) return;
@@ -292,9 +292,71 @@ quarterResults[key] = res.data[opt.year];
   const addVariable = () => {
     const v = newVariable.trim().toLowerCase().replace(/\s+/g, '_');
     if (v && !variables.includes(v)) {
-      setVariables([...variables, v]);
+      const updated = [...variables, v];
+      setVariables(updated);
+      // Zapisz w localStorage
+      localStorage.setItem('defaultVariables', JSON.stringify(updated));
       setNewVariable('');
     }
+  };
+
+  // Obsługuje klik na rok z obsługą Shift+Click do zaznaczania zakresu
+  const handleYearClick = (year: number, shiftKey: boolean) => {
+    if (shiftKey && lastClickedYear !== null) {
+      // Shift+Click: zaznacz zakres od lastClickedYear do year
+      const start = Math.min(lastClickedYear, year);
+      const end = Math.max(lastClickedYear, year);
+      const yearsInRange = YEARS.filter(y => y >= start && y <= end);
+      const newSelected = Array.from(new Set([...selectedYears, ...yearsInRange]));
+      setSelectedYears(newSelected);
+    } else {
+      // Normal toggle
+      setSelectedYears(prev => 
+        prev.includes(year) 
+          ? prev.filter(y => y !== year)
+          : [...prev, year]
+      );
+    }
+    setLastClickedYear(year);
+  };
+
+  const handleQuarterClick = (quarterLabel: string, shiftKey: boolean) => {
+    if (shiftKey && lastClickedQuarter !== null) {
+      // Shift+Click: zaznacz zakres od lastClickedQuarter do quarterLabel
+      const filteredQuarters = QUARTER_OPTIONS
+        .filter(q => selectedQuarterYears.includes(q.year))
+        .sort((a, b) => b.year - a.year || a.quarter - b.quarter)
+        .map(q => q.label);
+      
+      const startIndex = filteredQuarters.indexOf(lastClickedQuarter);
+      const endIndex = filteredQuarters.indexOf(quarterLabel);
+      
+      if (startIndex !== -1 && endIndex !== -1) {
+        const min = Math.min(startIndex, endIndex);
+        const max = Math.max(startIndex, endIndex);
+        const quartersInRange = filteredQuarters.slice(min, max + 1);
+        const newSelected = Array.from(new Set([...selectedQuarters, ...quartersInRange]));
+        setSelectedQuarters(newSelected);
+      }
+    } else {
+      // Normal toggle
+      setSelectedQuarters(prev => 
+        prev.includes(quarterLabel) 
+          ? prev.filter(q => q !== quarterLabel)
+          : [...prev, quarterLabel]
+      );
+    }
+    setLastClickedQuarter(quarterLabel);
+  };
+
+  // Zaznacza wszystkie dostępne lata
+  const handleSelectAllYears = () => {
+    setSelectedYears([...YEARS]);
+  };
+
+  // Odznacza wszystkie lata
+  const handleDeselectAllYears = () => {
+    setSelectedYears([]);
   };
 
 // Dodaje nowy rok do dialogu i persystuje go w localStorage
@@ -307,16 +369,28 @@ quarterResults[key] = res.data[opt.year];
       setDialogNewYear('');
     }
   };
-const handleSaveIndicatorsToData = async (companyId: number, customNames: Record<string, string>, customCategories?: Record<string, string>) => {
+const handleSaveIndicatorsToData = async (
+  companyId: number, 
+  customNames: Record<string, string>, 
+  customCategories?: Record<string, string>,
+  useExisting?: Record<string, boolean>,
+  selectedExisting?: Record<string, string>
+) => {
   try {
     for (const year of selectedYears) {
       for (const ind of selectedIndicatorObjects) {
         const val = results[companyId]?.[year]?.[ind.display_name];
         if (val !== null && val !== undefined) {
+          // Określ nazwę zmiennej: użyj istniejącej lub nowej
+          let finalVarName = customNames[ind.display_name] || ind.display_name.toLowerCase().replace(/\s+/g, '_');
+          if (useExisting?.[ind.display_name] && selectedExisting?.[ind.display_name]) {
+            finalVarName = selectedExisting[ind.display_name];
+          }
+          
           const payload: any = {
             company_id: companyId,
             year,
-            variable_name: customNames[ind.display_name] || ind.display_name.toLowerCase().replace(/\s+/g, '_'),
+            variable_name: finalVarName,
             value: val
           };
           // Dodaj kategorię jeśli została podana
@@ -429,94 +503,253 @@ const periods =
           2. Wybierz {mode === 'annual' ? 'lata' : 'kwartały'}
         </Typography>
         {mode === 'annual' ? (
-          <FormControl fullWidth>
-            <InputLabel>Lata</InputLabel>
-            <Select
-              multiple
-              value={selectedYears}
-              onChange={(e) => setSelectedYears(e.target.value as number[])}
-              input={<OutlinedInput label="Lata" />}
-              renderValue={(selected) => (
-                <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
-                  {(selected as number[]).sort().map(y => (
-                    <Chip
-                      key={y}
-                      label={y}
-                      size="small"
-                      color="primary"
-                      onDelete={(e) => {
-                        e.stopPropagation();
-                        setSelectedYears(selectedYears.filter(year => year !== y));
-                      }}
-                      onMouseDown={(e) => e.stopPropagation()}
-                    />
-                  ))}
-                </Box>
-              )}
-            >
-              {YEARS.map(y => (
-                <MenuItem key={y} value={y} sx={{
-                  backgroundColor: selectedYears.includes(y) ? '#1976d2 !important' : 'inherit',
-                  color: selectedYears.includes(y) ? 'white !important' : 'inherit',
-                  fontWeight: selectedYears.includes(y) ? 'bold' : 'normal',
-                  '&.Mui-selected': { backgroundColor: '#1976d2 !important', color: 'white !important' },
-                  '&.Mui-selected:hover': { backgroundColor: '#1565c0 !important' },
-                }}>
-                  {y}
-                </MenuItem>
+          <Box>
+            {/* Przyciski szybkiego wyboru */}
+            <Box sx={{ display: 'flex', gap: 1, mb: 2 }}>
+              <Button 
+                variant="outlined" 
+                size="small" 
+                onClick={handleSelectAllYears}
+              >
+                Zaznacz wszystko
+              </Button>
+              <Button 
+                variant="outlined" 
+                size="small" 
+                onClick={handleDeselectAllYears}
+              >
+                Odznacz wszystko
+              </Button>
+            </Box>
+
+            {/* Wyświetlone zaznaczone lata */}
+            <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5, mb: 2 }}>
+              {selectedYears.sort((a, b) => b - a).map(y => (
+                <Chip
+                  key={y}
+                  label={y}
+                  size="small"
+                  color="primary"
+                  onDelete={() => setSelectedYears(selectedYears.filter(year => year !== y))}
+                />
               ))}
-            </Select>
-          </FormControl>
+            </Box>
+
+            {/* Grid z checkboxami dla lat */}
+            <Box sx={{ 
+              display: 'grid', 
+              gridTemplateColumns: 'repeat(auto-fill, minmax(80px, 1fr))',
+              gap: 1,
+              p: 2,
+              bgcolor: 'background.default',
+              borderRadius: 1,
+              border: '1px solid #e0e0e0'
+            }}>
+              {YEARS.map(y => (
+                <FormControlLabel
+                  key={y}
+                  control={
+                    <Checkbox
+                      checked={selectedYears.includes(y)}
+                      onChange={(e) => {
+                        handleYearClick(y, (e.nativeEvent as KeyboardEvent).shiftKey);
+                      }}
+                    />
+                  }
+                  label={y.toString()}
+                  sx={{ m: 0, whiteSpace: 'nowrap' }}
+                />
+              ))}
+            </Box>
+
+            <Typography variant="caption" sx={{ display: 'block', mt: 1, color: 'text.secondary' }}>
+              💡 Wskazówka: Kliknij rok, trzymaj Shift i kliknij inny rok, aby zaznaczyć zakres
+            </Typography>
+          </Box>
         ) : (
-          <FormControl fullWidth>
-            <InputLabel>Kwartały</InputLabel>
-            <Select
-              multiple
-              value={selectedQuarters}
-              onChange={(e) => {
-  const val = e.target.value as string[];
-  setSelectedQuarters(val);
-}}
-              input={<OutlinedInput label="Kwartały" />}
-              renderValue={(selected) => (
-                <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
-                  {(selected as string[]).map(q => (
+          <Box>
+            {/* 2a. Wybierz lata dla kwartałów */}
+            <Typography variant="subtitle2" fontWeight="bold" sx={{ mb: 1.5 }}>
+              2a. Wybierz lata dla kwartałów
+            </Typography>
+            
+            <Box sx={{ display: 'flex', gap: 1, mb: 2 }}>
+              <Button 
+                variant="outlined" 
+                size="small" 
+                onClick={() => setSelectedQuarterYears([...baseYears])}
+              >
+                Zaznacz wszystko
+              </Button>
+              <Button 
+                variant="outlined" 
+                size="small" 
+                onClick={() => setSelectedQuarterYears([])}
+              >
+                Odznacz wszystko
+              </Button>
+            </Box>
+
+            {/* Wyświetlone zaznaczone lata dla kwartałów */}
+            <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5, mb: 2 }}>
+              {selectedQuarterYears.sort((a, b) => b - a).map(y => (
+                <Chip
+                  key={y}
+                  label={y}
+                  size="small"
+                  color="primary"
+                  onDelete={() => setSelectedQuarterYears(selectedQuarterYears.filter(year => year !== y))}
+                />
+              ))}
+            </Box>
+
+            {/* Grid z checkboxami dla lat */}
+            <Box sx={{ 
+              display: 'grid', 
+              gridTemplateColumns: 'repeat(auto-fill, minmax(80px, 1fr))',
+              gap: 1,
+              p: 2,
+              bgcolor: 'background.default',
+              borderRadius: 1,
+              border: '1px solid #e0e0e0',
+              mb: 3
+            }}>
+              {baseYears.map(y => (
+                <FormControlLabel
+                  key={y}
+                  control={
+                    <Checkbox
+                      checked={selectedQuarterYears.includes(y)}
+                      onChange={(e) => {
+                        if (e.target.checked) {
+                          setSelectedQuarterYears([...selectedQuarterYears, y].sort((a, b) => b - a));
+                        } else {
+                          setSelectedQuarterYears(selectedQuarterYears.filter(year => year !== y));
+                        }
+                      }}
+                    />
+                  }
+                  label={y.toString()}
+                  sx={{ m: 0, whiteSpace: 'nowrap' }}
+                />
+              ))}
+            </Box>
+
+            {/* 2b. Wybierz kwartały */}
+            <Typography variant="subtitle2" fontWeight="bold" sx={{ mb: 1.5 }}>
+              2b. Wybierz kwartały {selectedQuarterYears.length > 0 ? `(z lat: ${selectedQuarterYears.sort((a,b) => b - a).join(', ')})` : '(najpierw wybierz lata)'}
+            </Typography>
+
+            {selectedQuarterYears.length === 0 ? (
+              <Typography variant="body2" color="text.secondary" sx={{ p: 2, bgcolor: '#fff3e0', borderRadius: 1 }}>
+                ℹ️ Wybierz najpierw lata powyżej, aby zobaczyć dostępne kwartały
+              </Typography>
+            ) : (
+              <>
+                {/* Przyciski szybkiego wyboru */}
+                <Box sx={{ display: 'flex', gap: 1, mb: 2 }}>
+                  <Button 
+                    variant="outlined" 
+                    size="small" 
+                    onClick={() => {
+                      const allQuarters = QUARTER_OPTIONS
+                        .filter(q => selectedQuarterYears.includes(q.year))
+                        .map(q => q.label);
+                      setSelectedQuarters(allQuarters);
+                    }}
+                  >
+                    Zaznacz wszystko
+                  </Button>
+                  <Button 
+                    variant="outlined" 
+                    size="small" 
+                    onClick={() => setSelectedQuarters([])}
+                  >
+                    Odznacz wszystko
+                  </Button>
+                </Box>
+
+                {/* Wyświetlone zaznaczone kwartały */}
+                <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5, mb: 2 }}>
+                  {selectedQuarters.map(q => (
                     <Chip
                       key={q}
                       label={q}
                       size="small"
                       color="primary"
-                      onDelete={(e) => {
-                        e.stopPropagation();
-                        setSelectedQuarters(selectedQuarters.filter(sq => sq !== q));
-                      }}
-                      onMouseDown={(e) => e.stopPropagation()}
+                      onDelete={() => setSelectedQuarters(selectedQuarters.filter(sq => sq !== q))}
                     />
                   ))}
                 </Box>
-              )}
-            >
-              <div style={{ color: 'red' }}>
-  {JSON.stringify(selectedQuarters)}
-</div>
-              {QUARTER_OPTIONS.map(q => (
-                <MenuItem key={q.label} value={q.label} sx={{
-                  backgroundColor: selectedQuarters.includes(q.label) ? '#1976d2 !important' : 'inherit',
-                  color: selectedQuarters.includes(q.label) ? 'white !important' : 'inherit',
-                  '&.Mui-selected': { backgroundColor: '#1976d2 !important', color: 'white !important' },
-                  '&.Mui-selected:hover': { backgroundColor: '#1565c0 !important' },
+
+                {/* Grid z checkboxami dla kwartałów */}
+                <Box sx={{ 
+                  display: 'grid', 
+                  gridTemplateColumns: 'repeat(auto-fill, minmax(100px, 1fr))',
+                  gap: 1,
+                  p: 2,
+                  bgcolor: 'background.default',
+                  borderRadius: 1,
+                  border: '1px solid #e0e0e0'
                 }}>
-                  {q.label}
-                </MenuItem>
-              ))}
-            </Select>
-          </FormControl>
+                  {QUARTER_OPTIONS
+                    .filter(q => selectedQuarterYears.includes(q.year))
+                    .sort((a, b) => b.year - a.year || a.quarter - b.quarter)
+                    .map(q => (
+                      <FormControlLabel
+                        key={q.label}
+                        control={
+                          <Checkbox
+                            checked={selectedQuarters.includes(q.label)}
+                            onChange={(e) => {
+                              handleQuarterClick(q.label, (e.nativeEvent as KeyboardEvent).shiftKey);
+                            }}
+                          />
+                        }
+                        label={q.label}
+                        sx={{ m: 0, whiteSpace: 'nowrap' }}
+                      />
+                    ))}
+                </Box>
+
+                <Typography variant="caption" sx={{ display: 'block', mt: 1, color: 'text.secondary' }}>
+                  💡 Wskazówka: Kliknij kwartał, trzymaj Shift i kliknij inny kwartał, aby zaznaczyć zakres
+                </Typography>
+              </>
+            )}
+          </Box>
         )}
       </Paper>
 
       {/* 3. Wybierz wskaźniki */}
       <Paper sx={{ p: 3, mb: 3 }}>
         <Typography variant="h6" gutterBottom>3. Wybierz wskaźniki</Typography>
+        
+        {groups.length > 0 && (
+          <Box sx={{ mb: 2 }}>
+            <FormControl fullWidth>
+              <InputLabel>Grupy wskaźników (opcjonalnie)</InputLabel>
+              <Select
+                value={selectedGroup}
+                label="Grupy wskaźników (opcjonalnie)"
+                onChange={(e) => handleGroupChange(e.target.value as number | '')}
+              >
+                <MenuItem value="">Brak grupy</MenuItem>
+                {groups.map(group => (
+                  <MenuItem key={group.id} value={group.id}>
+                    {group.name} ({group.indicator_ids?.length || 0} wskaźników)
+                  </MenuItem>
+                ))}
+              </Select>
+            </FormControl>
+            {selectedGroup !== '' && (
+              <Typography variant="caption" color="text.secondary" sx={{ display: 'block', mt: 1 }}>
+                ℹ️ Grupa automatycznie zaznaczyła wybrane wskaźniki. Możesz dodać lub usunąć wskaźniki ręcznie.
+              </Typography>
+            )}
+          </Box>
+        )}
+
         <Tabs
           value={indicatorTab}
           onChange={(_, v) => setIndicatorTab(v)}
@@ -538,6 +771,7 @@ const periods =
                 key={i.id}
                 label={i.display_name}
                 onClick={() => {
+                  setSelectedGroup('');  // Clear group selection when manually selecting indicators
                   if (selectedIndicators.includes(i.id)) {
                     setSelectedIndicators(selectedIndicators.filter(id => id !== i.id));
                   } else {
@@ -603,11 +837,17 @@ const periods =
     startIcon={<UploadIcon />}
     onClick={() => {
       const init: Record<string, string> = {};
+      const initExisting: Record<string, boolean> = {};
+      const initSelectedVar: Record<string, string> = {};
       selectedIndicatorObjects.forEach(ind => {
         init[ind.display_name] = ind.display_name.toLowerCase().replace(/\s+/g, '_');
+        initExisting[ind.display_name] = false;
+        initSelectedVar[ind.display_name] = '';
       });
       setVarNames(init);
       setVarCategories({});
+      setUseExistingVar(initExisting);
+      setSelectedExistingVar(initSelectedVar);
       setSaveAsVarDialogOpen(true);
     }}
     sx={{ px: 4, py: 1.5 }}
@@ -776,57 +1016,127 @@ const periods =
         <Alert severity={snackbar.severity}>{snackbar.message}</Alert>
       </Snackbar>
 
-<Dialog open={saveAsVarDialogOpen} onClose={() => setSaveAsVarDialogOpen(false)} maxWidth="sm" fullWidth>
+<Dialog open={saveAsVarDialogOpen} onClose={() => setSaveAsVarDialogOpen(false)} maxWidth="md" fullWidth>
   <DialogTitle>Zapisz wskaźniki jako zmienne</DialogTitle>
   <DialogContent sx={{ pt: '16px !important' }}>
     <Typography variant="body2" color="text.secondary" sx={{ mb: 2 }}>
       Możesz zmienić nazwy zmiennych pod którymi zostaną zapisane wskaźniki i przypisać je do kategorii.
     </Typography>
+    <Typography variant="body2" color="text.secondary" sx={{ mb: 2, fontStyle: 'italic' }}>
+      Opcja „Zmienna już istnieje" pozwala na dopisanie obliczeń do istniejącej zmiennej zamiast tworzenia nowej.
+    </Typography>
     <Table size="small">
       <TableHead>
         <TableRow sx={{ backgroundColor: '#f5f5f5' }}>
           <TableCell><strong>Wskaźnik</strong></TableCell>
+          <TableCell align="center"><strong>Istnieje?</strong></TableCell>
           <TableCell><strong>Nazwa zmiennej</strong></TableCell>
           <TableCell><strong>Kategoria (opcj.)</strong></TableCell>
         </TableRow>
       </TableHead>
       <TableBody>
-        {selectedIndicatorObjects.map(ind => (
-          <TableRow key={ind.id}>
-            <TableCell>{ind.display_name}</TableCell>
-            <TableCell>
-              <TextField
-                size="small"
-                value={varNames[ind.display_name] || ''}
-                onChange={(e) => setVarNames(prev => ({
-                  ...prev,
-                  [ind.display_name]: e.target.value.toLowerCase().replace(/\s+/g, '_')
-                }))}
-                sx={{ width: 150 }}
-              />
-            </TableCell>
-            <TableCell>
-              <Autocomplete
-                freeSolo
-                size="small"
-                options={Array.from(new Set(indicators.map(i => i.category).filter(Boolean)))}
-                value={varCategories[ind.display_name] || ''}
-                onChange={(_, value) => setVarCategories(prev => ({
-                  ...prev,
-                  [ind.display_name]: value || ''
-                }))}
-                onInputChange={(_, value) => setVarCategories(prev => ({
-                  ...prev,
-                  [ind.display_name]: value
-                }))}
-                renderInput={(params) => (
-                  <TextField {...params} placeholder="Np. Profitability" />
+        {selectedCompanyObjects.length > 0 && selectedIndicatorObjects.map(ind => {
+  const companyId = selectedCompanyObjects[0].id;
+          
+          // Załaduj zmienne domyślne z localStorage
+          const defaultVars = JSON.parse(localStorage.getItem('defaultVariables') || '[]');
+          
+          // Utwórz listę ze zmiennych z backendu i zmiennych domyślnych
+          const existingVars = {
+            ...defaultVars.reduce((acc: Record<string, any>, v: string) => {
+              acc[v] = true;
+              return acc;
+            }, {}),
+            ...Object.keys(existingData[companyId] || {})
+              .reduce((acc: Record<string, any>, year) => {
+                Object.keys((existingData[companyId] || {})[year] || {}).forEach(v => {
+                  if (!acc[v]) acc[v] = true;
+                });
+                return acc;
+              }, {})
+          };
+          
+          return (
+            <TableRow key={ind.id}>
+              <TableCell>{ind.display_name}</TableCell>
+              <TableCell align="center">
+                <FormControlLabel
+                  control={
+                    <Checkbox
+                      checked={useExistingVar[ind.display_name] || false}
+                      onChange={(e) => {
+                        setUseExistingVar(prev => ({
+                          ...prev,
+                          [ind.display_name]: e.target.checked
+                        }));
+                        if (e.target.checked && !selectedExistingVar[ind.display_name]) {
+                          setSelectedExistingVar(prev => ({
+                            ...prev,
+                            [ind.display_name]: Object.keys(existingVars)[0] || ''
+                          }));
+                        }
+                      }}
+                    />
+                  }
+                  label=""
+                  sx={{ m: 0 }}
+                />
+              </TableCell>
+              <TableCell>
+                {useExistingVar[ind.display_name] ? (
+                  <FormControl size="small" fullWidth>
+                    <Select
+                      value={selectedExistingVar[ind.display_name] || ''}
+                      onChange={(e) => setSelectedExistingVar(prev => ({
+                        ...prev,
+                        [ind.display_name]: e.target.value
+                      }))}
+                      sx={{ width: '100%' }}
+                    >
+                      {Object.keys(existingVars)
+                        .sort()
+                        .map(varName => (
+                          <MenuItem key={varName} value={varName}>
+                            {varName}
+                          </MenuItem>
+                        ))}
+                    </Select>
+                  </FormControl>
+                ) : (
+                  <TextField
+                    size="small"
+                    value={varNames[ind.display_name] || ''}
+                    onChange={(e) => setVarNames(prev => ({
+                      ...prev,
+                      [ind.display_name]: e.target.value.toLowerCase().replace(/\s+/g, '_')
+                    }))}
+                    sx={{ width: '100%' }}
+                  />
                 )}
-                sx={{ width: 150 }}
-              />
-            </TableCell>
-          </TableRow>
-        ))}
+              </TableCell>
+              <TableCell>
+                <Autocomplete
+                  freeSolo
+                  size="small"
+                  options={Array.from(new Set(indicators.map(i => i.category).filter(Boolean)))}
+                  value={varCategories[ind.display_name] || ''}
+                  onChange={(_, value) => setVarCategories(prev => ({
+                    ...prev,
+                    [ind.display_name]: value || ''
+                  }))}
+                  onInputChange={(_, value) => setVarCategories(prev => ({
+                    ...prev,
+                    [ind.display_name]: value
+                  }))}
+                  renderInput={(params) => (
+                    <TextField {...params} placeholder="Np. Profitability" size="small" />
+                  )}
+                  sx={{ width: '100%' }}
+                />
+              </TableCell>
+            </TableRow>
+          );
+        })}
       </TableBody>
     </Table>
   </DialogContent>
@@ -835,7 +1145,7 @@ const periods =
     <Button
       variant="contained"
       color="success"
-      onClick={() => handleSaveIndicatorsToData(selectedCompanyObjects[0].id, varNames, varCategories)}
+      onClick={() => handleSaveIndicatorsToData(selectedCompanyObjects[0].id, varNames, varCategories, useExistingVar, selectedExistingVar)}
     >
       Zapisz
     </Button>
